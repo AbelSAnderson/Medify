@@ -4,7 +4,6 @@ import 'package:medify/Database/model_base.dart';
 
 @HiveType(typeId: 2)
 class MedicationInfo extends ModelBase {
-
   @HiveField(0)
   int id;
 
@@ -15,10 +14,14 @@ class MedicationInfo extends ModelBase {
   int pillsRemaining;
 
   @HiveField(3)
-  int repeat;
+  DateTime takeAt;
 
   @HiveField(4)
+  int repeat;
+
+  @HiveField(5)
   Medication medication;
 
-  MedicationInfo(this.id, this.medicationType, this.pillsRemaining, this.repeat, this.medication);
+  MedicationInfo(this.id, this.medicationType, this.pillsRemaining, this.takeAt,
+      this.repeat, this.medication);
 }

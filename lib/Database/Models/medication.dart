@@ -3,7 +3,6 @@ import 'package:medify/Database/model_base.dart';
 
 @HiveType(typeId: 1)
 class Medication extends ModelBase {
-
   @HiveField(0)
   int id;
 
@@ -16,5 +15,12 @@ class Medication extends ModelBase {
   @HiveField(3)
   String precaution;
 
-  Medication(this.id, this.brandName, this.usage, this.precaution);
+  @HiveField(4)
+  String dosage;
+
+  @HiveField(5)
+  String ingredient;
+
+  Medication(this.id, this.brandName, this.usage, this.precaution, this.dosage,
+      this.ingredient);
 }
