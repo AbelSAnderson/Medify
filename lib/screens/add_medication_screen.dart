@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medify/widgets/medication_form.dart';
 
 class AddMedication extends StatefulWidget {
   @override
@@ -6,10 +7,8 @@ class AddMedication extends StatefulWidget {
 }
 
 class _AddMedicationState extends State<AddMedication> {
-  final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
-    return Form(child: null);
+    return MedicationForm();
   }
 }

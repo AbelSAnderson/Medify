@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medify/screens/add_medication_screen.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -16,7 +17,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Container(),
+      body: AddMedication(),
     );
   }
 }
