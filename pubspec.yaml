@@ -26,6 +26,7 @@ dependencies:
   hive: ^1.4.4+1
   build_runner: ^1.11.1
   date_format: ^1.0.9
+  table_calendar: ^2.3.3
 
 
   # The following adds the Cupertino Icons font to your application.

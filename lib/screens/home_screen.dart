@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medify/screens/add_medication_screen.dart';
+import 'package:medify/screens/calendar_screen.dart';
+import 'package:medify/screens/profile_screen.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -11,13 +13,42 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _selectedIndex = 0;
+
+  final screens = [CalendarScreen(), AddMedication(), ProfileScreen()];
+
+  onTabSelected(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: AddMedication(),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: onTabSelected,
+        selectedItemColor: Theme.of(context).accentColor,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: "Search",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "Profile",
+          ),
+        ],
+      ),
+      body: screens.elementAt(_selectedIndex),
     );
   }
 }
