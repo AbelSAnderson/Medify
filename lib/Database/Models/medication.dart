@@ -21,6 +21,5 @@ class Medication extends ModelBase {
   @HiveField(5)
   String ingredient;
 
-  Medication(this.id, this.brandName, this.usage, this.precaution, this.dosage,
-      this.ingredient);
+  Medication(this.id, this.brandName, this.usage, this.precaution, this.dosage, this.ingredient);
 }

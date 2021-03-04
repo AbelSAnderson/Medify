@@ -3,7 +3,6 @@ import 'package:medify/Database/model_base.dart';
 
 @HiveType(typeId: 0)
 class User extends ModelBase {
-
   @HiveField(0)
   int id;
 

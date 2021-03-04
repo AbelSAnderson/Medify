@@ -2,11 +2,29 @@ import 'package:flutter/material.dart';
 
 class MedicineType extends StatefulWidget {
   @override
-  _MedicineTypeState createState() => _MedicineTypeState();
+  MedicineTypeState createState() => MedicineTypeState();
+
+  final Function onMedIndexChanged;
+
+  MedicineType({@required this.onMedIndexChanged});
 }
 
-class _MedicineTypeState extends State<MedicineType> {
+class MedicineTypeState extends State<MedicineType> {
   var _selectedImage = 0;
+
+  Widget _medTypeImage(int medIndex, String imageUrl, String imageSelectedUrl) {
+    return GestureDetector(
+      child: Image(
+        image: AssetImage(_selectedImage == medIndex ? imageSelectedUrl : imageUrl),
+      ),
+      onTap: () {
+        setState(() {
+          widget.onMedIndexChanged(_selectedImage = medIndex);
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -18,33 +36,12 @@ class _MedicineTypeState extends State<MedicineType> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            GestureDetector(
-              child: Image(
-                image: AssetImage(_selectedImage == 0
-                    ? "assets/images/heart_selected.png"
-                    : "assets/images/heart.png"),
-              ),
-              onTap: () {
-                setState(() {
-                  _selectedImage = 0;
-                });
-              },
-            ),
-            Image(
-              image: AssetImage("assets/images/dots.png"),
-            ),
-            Image(
-              image: AssetImage("assets/images/sun.png"),
-            ),
-            Image(
-              image: AssetImage("assets/images/tear.png"),
-            ),
-            Image(
-              image: AssetImage("assets/images/moon.png"),
-            ),
-            Image(
-              image: AssetImage("assets/images/shield.png"),
-            ),
+            _medTypeImage(0, "assets/images/heart.png", "assets/images/heart_selected.png"),
+            _medTypeImage(1, "assets/images/dots.png", "assets/images/dots_selected.png"),
+            _medTypeImage(2, "assets/images/sun.png", "assets/images/sun_selected.png"),
+            _medTypeImage(3, "assets/images/tear.png", "assets/images/tear_selected.png"),
+            _medTypeImage(4, "assets/images/moon.png", "assets/images/moon_selected.png"),
+            _medTypeImage(5, "assets/images/shield.png", "assets/images/shield_selected.png"),
           ],
         ),
       ],

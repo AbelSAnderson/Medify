@@ -20,6 +20,5 @@ class MedicationEvent extends ModelBase {
   @HiveField(4)
   int amountTaken;
 
-  MedicationEvent(this.id, this.datetime, this.medicationInfo, this.medTaken,
-      this.amountTaken);
+  MedicationEvent(this.id, this.datetime, this.medicationInfo, this.medTaken, this.amountTaken);
 }

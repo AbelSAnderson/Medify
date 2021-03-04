@@ -22,6 +22,5 @@ class MedicationInfo extends ModelBase {
   @HiveField(5)
   Medication medication;
 
-  MedicationInfo(this.id, this.medicationType, this.pillsRemaining, this.takeAt,
-      this.repeat, this.medication);
+  MedicationInfo(this.id, this.medicationType, this.pillsRemaining, this.takeAt, this.repeat, this.medication);
 }
