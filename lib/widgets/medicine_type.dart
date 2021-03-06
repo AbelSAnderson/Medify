@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants.dart';
 
 class MedicineType extends StatefulWidget {
   @override
@@ -36,12 +37,12 @@ class MedicineTypeState extends State<MedicineType> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _medTypeImage(0, "assets/images/heart.png", "assets/images/heart_selected.png"),
-            _medTypeImage(1, "assets/images/dots.png", "assets/images/dots_selected.png"),
-            _medTypeImage(2, "assets/images/sun.png", "assets/images/sun_selected.png"),
-            _medTypeImage(3, "assets/images/tear.png", "assets/images/tear_selected.png"),
-            _medTypeImage(4, "assets/images/moon.png", "assets/images/moon_selected.png"),
-            _medTypeImage(5, "assets/images/shield.png", "assets/images/shield_selected.png"),
+            _medTypeImage(0, heartUrl, heartSelectedUrl),
+            _medTypeImage(1, dotsUrl, dotsSelectedUrl),
+            _medTypeImage(2, sunUrl, sunSelectedUrl),
+            _medTypeImage(3, tearUrl, tearSelectedUrl),
+            _medTypeImage(4, moonUrl, moonSelectedUrl),
+            _medTypeImage(5, shieldUrl, shieldSelectedUrl),
           ],
         ),
       ],
