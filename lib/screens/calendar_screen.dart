@@ -20,7 +20,8 @@ class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStat
   @override
   void initState() {
     super.initState();
-    final _selectedDay = DateTime.now();
+    final _today = DateTime.now();
+    final _selectedDay = DateTime(_today.year, _today.month, _today.day);
 
     _createEventsList();
 
