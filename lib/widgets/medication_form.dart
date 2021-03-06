@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medify/widgets/medicine_type.dart';
+import 'package:date_format/date_format.dart';
+import 'medicine_type.dart';
 
 class MedicationForm extends StatefulWidget {
   @override
@@ -8,7 +10,41 @@ class MedicationForm extends StatefulWidget {
 
 class _MedicationFormState extends State<MedicationForm> {
   final _formKey = GlobalKey<FormState>();
-  var repeatsValue = "Weekly";
+  var _repeatsValue = "Weekly";
+
+  DateTime _selectedDate = DateTime.now();
+  TimeOfDay _selectedTime = TimeOfDay.now();
+  int _medicineTypeIndex = 0;
+
+  Future _selectDate(BuildContext context) async {
+    await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1000),
+      lastDate: DateTime(3000),
+    ).then((value) => {
+          if (value != null)
+            {
+              setState(() {
+                _selectedDate = value;
+              })
+            }
+        });
+  }
+
+  Future _selectTime(BuildContext context) async {
+    await showTimePicker(
+      context: context,
+      initialTime: _selectedTime,
+    ).then((value) => {
+          if (value != null)
+            {
+              setState(() {
+                _selectedTime = value;
+              })
+            }
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +67,7 @@ class _MedicationFormState extends State<MedicationForm> {
                       if (value.isEmpty) {
                         return "This field is required";
                       }
+                      return null;
                     },
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -43,7 +80,7 @@ class _MedicationFormState extends State<MedicationForm> {
                   Text("Repeats*"),
                   SizedBox(height: 10),
                   DropdownButtonFormField<String>(
-                      value: repeatsValue,
+                      value: _repeatsValue,
                       elevation: 16,
                       isExpanded: true,
                       decoration: InputDecoration(
@@ -55,8 +92,7 @@ class _MedicationFormState extends State<MedicationForm> {
                           ),
                         ),
                       ),
-                      items: <String>["Daily", "Weekly", "Bi-Weekly", "Monthly"]
-                          .map((String value) {
+                      items: <String>["Daily", "Weekly", "Bi-Weekly", "Monthly"].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
@@ -64,9 +100,69 @@ class _MedicationFormState extends State<MedicationForm> {
                       }).toList(),
                       onChanged: (String newValue) {
                         setState(() {
-                          repeatsValue = newValue;
+                          _repeatsValue = newValue;
                         });
                       }),
+                  SizedBox(height: 20),
+                  Text("Start Date*"),
+                  SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () {
+                      _selectDate(context);
+                    },
+                    child: Container(
+                      alignment: Alignment.topRight,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: Text(formatDate(_selectedDate, [mm, '-', dd, '-', yyyy])),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.calendar_today),
+                            onPressed: () {
+                              _selectDate(context);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text("Time*"),
+                  SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () {
+                      _selectTime(context);
+                    },
+                    child: Container(
+                      alignment: Alignment.topRight,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: Text(_selectedTime.format(context)),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.access_time),
+                            onPressed: () {
+                              _selectTime(context);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 20),
                   Text(
                     "Pill Amount",
@@ -82,47 +178,10 @@ class _MedicationFormState extends State<MedicationForm> {
                     keyboardType: TextInputType.number,
                   ),
                   SizedBox(height: 20),
-                  Text("Start Date*"),
-                  SizedBox(height: 10),
-                  Container(
-                    alignment: Alignment.topRight,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.calendar_today),
-                      onPressed: () {
-                        showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1000),
-                          lastDate: DateTime(3000),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text("Time*"),
-                  SizedBox(height: 10),
-                  Container(
-                    alignment: Alignment.topRight,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.access_time),
-                      onPressed: () {
-                        showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.now(),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  MedicineType(),
+                  MedicineType(onMedIndexChanged: (index) {
+                    _medicineTypeIndex = index;
+                    print("Form ID: " + index.toString());
+                  }),
                   SizedBox(height: 20),
                 ],
               ),

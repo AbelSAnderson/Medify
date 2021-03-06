@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:medify/Database/model_base.dart';
+import 'package:medify/database/model_base.dart';
 
 @HiveType(typeId: 1)
 class Medication extends ModelBase {
@@ -21,6 +21,5 @@ class Medication extends ModelBase {
   @HiveField(5)
   String ingredient;
 
-  Medication(this.id, this.brandName, this.usage, this.precaution, this.dosage,
-      this.ingredient);
+  Medication(this.id, this.brandName, this.usage, this.precaution, this.dosage, this.ingredient);
 }

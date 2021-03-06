@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:medify/Database/model_base.dart';
+import 'package:medify/database/model_base.dart';
 
 import 'medication_info.dart';
 
@@ -20,6 +20,5 @@ class MedicationEvent extends ModelBase {
   @HiveField(4)
   int amountTaken;
 
-  MedicationEvent(this.id, this.datetime, this.medicationInfo, this.medTaken,
-      this.amountTaken);
+  MedicationEvent(this.id, this.datetime, this.medicationInfo, this.medTaken, this.amountTaken);
 }

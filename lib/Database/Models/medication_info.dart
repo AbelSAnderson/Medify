@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
-import 'package:medify/Database/Models/medication.dart';
-import 'package:medify/Database/model_base.dart';
+import 'package:medify/database/models/medication.dart';
+import 'package:medify/database/model_base.dart';
 
 @HiveType(typeId: 2)
 class MedicationInfo extends ModelBase {
@@ -8,7 +8,7 @@ class MedicationInfo extends ModelBase {
   int id;
 
   @HiveField(1)
-  String medicationType;
+  int medicationType;
 
   @HiveField(2)
   int pillsRemaining;
@@ -22,6 +22,5 @@ class MedicationInfo extends ModelBase {
   @HiveField(5)
   Medication medication;
 
-  MedicationInfo(this.id, this.medicationType, this.pillsRemaining, this.takeAt,
-      this.repeat, this.medication);
+  MedicationInfo(this.id, this.medicationType, this.pillsRemaining, this.takeAt, this.repeat, this.medication);
 }

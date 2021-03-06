@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:medify/screens/add_medication_screen.dart';
 
 import 'screens/home_screen.dart';
 
@@ -28,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: MaterialColor(0xFF0169FF, colors),
-        primaryColor: Color.fromRGBO(1, 105, 255, 1),
+        //primaryColor: Color.fromRGBO(1, 105, 255, 1),
         accentColor: Color.fromRGBO(230, 0, 233, 1),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),

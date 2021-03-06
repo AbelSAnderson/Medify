@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
+import '../constants.dart';
 
 class MedicineType extends StatefulWidget {
   @override
-  _MedicineTypeState createState() => _MedicineTypeState();
+  MedicineTypeState createState() => MedicineTypeState();
+
+  final Function onMedIndexChanged;
+
+  MedicineType({@required this.onMedIndexChanged});
 }
 
-class _MedicineTypeState extends State<MedicineType> {
+class MedicineTypeState extends State<MedicineType> {
   var _selectedImage = 0;
+
+  Widget _medTypeImage(int medIndex, String imageUrl, String imageSelectedUrl) {
+    return GestureDetector(
+      child: Image(
+        image: AssetImage(_selectedImage == medIndex ? imageSelectedUrl : imageUrl),
+      ),
+      onTap: () {
+        setState(() {
+          widget.onMedIndexChanged(_selectedImage = medIndex);
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -18,33 +37,12 @@ class _MedicineTypeState extends State<MedicineType> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            GestureDetector(
-              child: Image(
-                image: AssetImage(_selectedImage == 0
-                    ? "assets/images/heart_selected.png"
-                    : "assets/images/heart.png"),
-              ),
-              onTap: () {
-                setState(() {
-                  _selectedImage = 0;
-                });
-              },
-            ),
-            Image(
-              image: AssetImage("assets/images/dots.png"),
-            ),
-            Image(
-              image: AssetImage("assets/images/sun.png"),
-            ),
-            Image(
-              image: AssetImage("assets/images/tear.png"),
-            ),
-            Image(
-              image: AssetImage("assets/images/moon.png"),
-            ),
-            Image(
-              image: AssetImage("assets/images/shield.png"),
-            ),
+            _medTypeImage(0, heartUrl, heartSelectedUrl),
+            _medTypeImage(1, dotsUrl, dotsSelectedUrl),
+            _medTypeImage(2, sunUrl, sunSelectedUrl),
+            _medTypeImage(3, tearUrl, tearSelectedUrl),
+            _medTypeImage(4, moonUrl, moonSelectedUrl),
+            _medTypeImage(5, shieldUrl, shieldSelectedUrl),
           ],
         ),
       ],

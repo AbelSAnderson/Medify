@@ -1,9 +1,8 @@
 import 'package:hive/hive.dart';
-import 'package:medify/Database/model_base.dart';
+import 'package:medify/database/model_base.dart';
 
 @HiveType(typeId: 0)
 class User extends ModelBase {
-
   @HiveField(0)
   int id;
 
