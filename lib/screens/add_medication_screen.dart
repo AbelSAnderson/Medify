@@ -9,6 +9,11 @@ class AddMedication extends StatefulWidget {
 class _AddMedicationState extends State<AddMedication> {
   @override
   Widget build(BuildContext context) {
-    return MedicationForm();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Add Medication"),
+      ),
+      body: MedicationForm(),
+    );
   }
 }
