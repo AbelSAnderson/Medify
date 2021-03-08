@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:medify/database/models/medication.dart';
 import 'package:medify/screens/add_medication_screen.dart';
 import 'package:medify/screens/calendar_screen.dart';
 import 'package:medify/screens/profile_screen.dart';
+import 'package:medify/screens/search_medication_screen.dart';
+import 'package:medify/widgets/medication_details.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -15,7 +18,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  final screens = [CalendarScreen(), AddMedication(), ProfileScreen()];
+  final screens = [CalendarScreen(), SearchMedicationScreen(), MedicationDetails(Medication(0, "brandName", "usageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusage", "precaution", "dosage", "ingredient"))];
 
   onTabSelected(int index) {
     setState(() {
