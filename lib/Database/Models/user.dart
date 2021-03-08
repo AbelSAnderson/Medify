@@ -1,6 +1,8 @@
 import 'package:hive/hive.dart';
 import 'package:medify/database/model_base.dart';
 
+// part 'user.g.dart';
+
 @HiveType(typeId: 0)
 class User extends ModelBase {
   @HiveField(0)
@@ -18,5 +20,6 @@ class User extends ModelBase {
   @HiveField(4)
   String doctorNumber;
 
-  User(this.id, this.firstName, this.lastName, this.pharmacyNumber, this.doctorNumber);
+  User(this.id, this.firstName, this.lastName, this.pharmacyNumber,
+      this.doctorNumber);
 }
