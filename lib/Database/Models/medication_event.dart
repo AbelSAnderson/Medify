@@ -3,7 +3,7 @@ import 'package:medify/database/model_base.dart';
 
 import 'medication_info.dart';
 
-// part 'medication_event.g.dart';
+part 'medication_event.g.dart';
 
 @HiveType(typeId: 3)
 class MedicationEvent extends ModelBase {

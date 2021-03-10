@@ -6,12 +6,12 @@ import 'package:medify/widgets/medication_form.dart';
 
 class MedicationResultsList extends StatelessWidget {
   final _medicationList = [
-    Medication(0, "brandName", "usage", "precaution", "dosage", "ingredient"),
-    Medication(1, "brandName2", "usage2", "precaution2", "dosage2", "ingredient2"),
-    Medication(2, "brandName3", "usage3", "precaution3", "dosage3", "ingredient3"),
-    Medication(3, "brandName4", "usage4", "precaution4", "dosage4", "ingredient4"),
-    Medication(4, "brandName5", "usage5", "precaution5", "dosage5", "ingredient5"),
-    Medication(5, "brandName6", "usage6", "precaution6", "dosage6", "ingredient6"),
+    Medication("0", "brandName", "usage", "precaution", "dosage", "ingredient"),
+    Medication("1", "brandName2", "usage2", "precaution2", "dosage2", "ingredient2"),
+    Medication("2", "brandName3", "usage3", "precaution3", "dosage3", "ingredient3"),
+    Medication("3", "brandName4", "usage4", "precaution4", "dosage4", "ingredient4"),
+    Medication("4", "brandName5", "usage5", "precaution5", "dosage5", "ingredient5"),
+    Medication("5", "brandName6", "usage6", "precaution6", "dosage6", "ingredient6"),
   ];
 
   @override

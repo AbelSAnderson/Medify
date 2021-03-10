@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:medify/database/model_base.dart';
 
-// part 'user.g.dart';
+part 'user.g.dart';
 
 @HiveType(typeId: 0)
 class User extends ModelBase {

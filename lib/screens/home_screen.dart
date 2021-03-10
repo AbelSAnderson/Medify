@@ -18,7 +18,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  final screens = [CalendarScreen(), SearchMedicationScreen(), MedicationDetails(Medication(0, "brandName", "usageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusage", "precaution", "dosage", "ingredient"))];
+  final screens = [CalendarScreen(), SearchMedicationScreen(), MedicationDetails(Medication("0", "brandName", "usageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusage", "precaution", "dosage", "ingredient"))];
 
   onTabSelected(int index) {
     setState(() {
