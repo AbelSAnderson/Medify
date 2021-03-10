@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:medify/Database/database_handler.dart';
 
 import 'screens/home_screen.dart';
 
-void main() {
+void main() async {
+  await DatabaseHandler().initializeHive();
+
   runApp(MyApp());
 }
 
