@@ -6,6 +6,8 @@ import 'package:medify/screens/profile_screen.dart';
 import 'package:medify/screens/search_medication_screen.dart';
 import 'package:medify/widgets/medication_details.dart';
 
+import 'clients_screen.dart';
+
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -18,7 +20,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  final screens = [CalendarScreen(), SearchMedicationScreen(), MedicationDetails(Medication(0, "brandName", "usageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusageusage", "precaution", "dosage", "ingredient"))];
+  final screens = [CalendarScreen(), SearchMedicationScreen(), ProfileScreen(), ClientsScreen()];
 
   onTabSelected(int index) {
     setState(() {
@@ -36,6 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
         currentIndex: _selectedIndex,
         onTap: onTabSelected,
         selectedItemColor: Theme.of(context).accentColor,
+        unselectedItemColor: Colors.black54,
+        showUnselectedLabels: true,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -48,6 +52,10 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: "Profile",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.check_box),
+            label: "Clients",
           ),
         ],
       ),

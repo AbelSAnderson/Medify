@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-const String SUCCESS_MESSAGE = " You will be contacted by us very soon.";
 const heartUrl = "assets/images/heart.png";
 const dotsUrl = "assets/images/dots.png";
 const sunUrl = "assets/images/sun.png";
