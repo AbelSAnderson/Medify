@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/database/models/medication.dart';
 import 'package:medify/screens/add_medication_screen.dart';
 import 'package:medify/screens/calendar_screen.dart';
@@ -18,25 +20,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
-
   final screens = [CalendarScreen(), SearchMedicationScreen(), ProfileScreen(), ClientsScreen()];
-
-  onTabSelected(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<NavBarCubit, NavBarState>(
+      builder: (BuildContext context, NavBarState state) {
+        return _buildPage(state.title, state.index);
+      },
+    );
+  }
+
+  Widget _buildPage(String title, int index) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: onTabSelected,
+        currentIndex: index,
+        onTap: (index) => BlocProvider.of<NavBarCubit>(context).updateIndex(index),
         selectedItemColor: Theme.of(context).accentColor,
         unselectedItemColor: Colors.black54,
         showUnselectedLabels: true,
@@ -59,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: screens.elementAt(_selectedIndex),
+      body: screens.elementAt(index),
     );
   }
 }
