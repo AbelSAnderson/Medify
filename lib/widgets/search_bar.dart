@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SearchBar extends StatelessWidget {
+
   ///Text that suggests what sort of input the field accepts.
   final String hintText;
 
@@ -28,7 +29,7 @@ class SearchBar extends StatelessWidget {
         ),
         onSubmitted: (inputText) {
           if (onSearch != null) {
-            onSearch();
+            onSearch(inputText);
           }
         },
       ),

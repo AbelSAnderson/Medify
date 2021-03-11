@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medify/database/models/medication.dart';
+import 'package:medify/Database/Models/medication.dart';
 
 class MedicationDetails extends StatefulWidget {
   final Medication medication;

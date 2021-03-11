@@ -15,7 +15,7 @@ class ApiHandler {
     var responseJson;
 
     try {
-      final response = await http.get(_openFDAUrl + url, headers: {
+      final response = await http.get(Uri.parse(_openFDAUrl + url), headers: {
         'Content-type': 'application/json',
         'Accept': 'application/json',
         HttpHeaders.authorizationHeader: _token
@@ -33,7 +33,7 @@ class ApiHandler {
   Future<dynamic> getPostData(String url, Map<String, dynamic> body) async {
     var responseJson;
     try {
-      final response = await http.post(_openFDAUrl + url,
+      final response = await http.post(Uri.parse(_openFDAUrl + url),
           headers: {
             'Content-type': 'application/json',
             'Accept': 'application/json',
