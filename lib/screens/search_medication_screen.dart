@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medify/Blocs/search_bloc.dart';
+import 'package:medify/blocs/search_bloc.dart';
 import 'package:medify/widgets/medication_results_list.dart';
 import 'package:medify/widgets/search_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

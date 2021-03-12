@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:medify/Database/database_handler.dart';
+import 'package:medify/database/database_handler.dart';
 
 import 'screens/home_screen.dart';
 

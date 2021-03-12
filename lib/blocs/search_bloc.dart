@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:medify/Database/Models/medication.dart';
-import 'package:medify/Database/openFDA_queries.dart';
+import 'package:medify/database/models/medication.dart';
+import 'package:medify/database/openFDA_queries.dart';
 
 class SearchCubit extends Cubit<List<Medication>> {
   SearchCubit() : super([]);
