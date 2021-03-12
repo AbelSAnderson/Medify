@@ -20,6 +20,6 @@ class OpenFDAQueries {
 
   /// Retrieve multiple Medications by Medication Name
   Future<List<Medication>> retrieveMedicationsWhereName(String equals) async {
-    return (await retrieveMedications("brand_name=$equals"));
+    return (await retrieveMedications("search=_exists_:openfda.brand_name+AND+openfda.brand_name:$equals&limit=20"));
   }
 }

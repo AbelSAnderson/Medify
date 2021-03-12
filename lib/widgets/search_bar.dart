@@ -21,7 +21,7 @@ class SearchBar extends StatelessWidget {
             icon: Icon(Icons.search),
             onPressed: () {
               if (onSearch != null) {
-                onSearch();
+                //onSearch();
               }
             },
           ),

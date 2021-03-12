@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:medify/database/model_base.dart';
+import 'package:medify/Database/model_base.dart';
 
 part 'medication.g.dart';
 
@@ -29,16 +29,11 @@ class Medication extends ModelBase {
   // Decode the Medication from a json file - should be changed later to handle lack of information
   Medication.fromJson(Map<String, dynamic> json)
       : this.id = json["id"],
-        this.brandName = json["brand_name"] != null
-            ? json["brand_name"]
-            : '', // Potential fix on missing information - needs to be tested
-        this.usage = json[
-            "indications_and_usage"], // Could also use dosage_and_administration
-        this.precaution =
-            json["warnings"], // Could also use other_safety_information
-        this.dosage = json["dosage_and_administration"],
-        this.ingredient =
-            json["active_ingredient"]; // Could also use inactive_ingredient
+        this.brandName = json["openfda"]["brand_name"].toString(),
+        this.usage = json["indications_and_usage"].toString(), // Could also use dosage_and_administration
+        this.precaution = json["warnings"].toString(), // Could also use other_safety_information
+        this.dosage = json["dosage_and_administration"].toString(),
+        this.ingredient = json["active_ingredient"].toString(); // Could also use inactive_ingredient
 }
 
 /// Medication List Class used to decode a list of Medications
@@ -48,6 +43,5 @@ class MedicationList {
   MedicationList(this.medications);
 
   MedicationList.from(List<dynamic> medicationJson)
-      : medications =
-            medicationJson.map((e) => Medication.fromJson(e)).toList();
+      : medications = medicationJson.map((e) => Medication.fromJson(e)).toList();
 }

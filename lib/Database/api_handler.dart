@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import '../app_exceptions.dart';
 
@@ -18,7 +19,7 @@ class ApiHandler {
       final response = await http.get(Uri.parse(_openFDAUrl + url), headers: {
         'Content-type': 'application/json',
         'Accept': 'application/json',
-        HttpHeaders.authorizationHeader: _token
+        //HttpHeaders.authorizationHeader: _token
       });
 
       responseJson = _returnResponse(response);
@@ -26,7 +27,7 @@ class ApiHandler {
       throw FetchDataException('No Internet connection');
     }
 
-    return responseJson;
+    return responseJson["results"];
   }
 
   /// Retrieve Data with a Get Request
@@ -37,7 +38,7 @@ class ApiHandler {
           headers: {
             'Content-type': 'application/json',
             'Accept': 'application/json',
-            HttpHeaders.authorizationHeader: _token
+            //HttpHeaders.authorizationHeader: _token
           },
           body: jsonEncode(body));
       responseJson = _returnResponse(response);
