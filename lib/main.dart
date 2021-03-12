@@ -1,15 +1,30 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:medify/cubit/search_cubit.dart';
+import 'package:medify/database/database_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
 
 import 'screens/home_screen.dart';
 
-void main() {
+void main() async {
+  // Ensure Widgets are initialized before starting the database
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await DatabaseHandler().initializeHive();
+
+  // Allow Http requests to be sent - should be changed to only allow openFDA & our API requests through
+  HttpOverrides.global = new MyHttpOverrides();
+
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider<NavBarCubit>(
         create: (context) => NavBarCubit(),
       ),
+      BlocProvider<SearchCubit>(
+        create: (context) => SearchCubit(),
+      )
     ],
     child: MyApp(),
   ));
@@ -18,7 +33,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //create custom color swatch for flutter to use on material componenets
+    //create custom color swatch for flutter to use on material components
     const Map<int, Color> colors = {
       50: Color.fromRGBO(1, 105, 255, 0.1),
       100: Color.fromRGBO(1, 105, 255, 0.2),
@@ -42,5 +57,15 @@ class MyApp extends StatelessWidget {
       ),
       home: MyHomePage(title: 'Medify'),
     );
+  }
+}
+
+/// Http override class for allowing Http requests
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
