@@ -1,4 +1,4 @@
-import 'Models/medication.dart';
+import 'models/medication.dart';
 import 'api_handler.dart';
 
 class OpenFDAQueries {

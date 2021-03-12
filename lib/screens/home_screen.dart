@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medify/Database/Models/medication.dart';
+import 'package:medify/database/models/medication.dart';
 import 'package:medify/screens/calendar_screen.dart';
 import 'package:medify/screens/search_medication_screen.dart';
 import 'package:medify/widgets/medication_details.dart';

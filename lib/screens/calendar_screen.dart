@@ -1,7 +1,7 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:medify/constants.dart';
-import 'package:medify/Database/Models/medication.dart';
+import 'package:medify/database/models/medication.dart';
 import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/database/models/medication_info.dart';
 import 'package:table_calendar/table_calendar.dart';

@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:medify/Database/model_base.dart';
+import 'package:medify/database/model_base.dart';
 
 part 'user.g.dart';
 
