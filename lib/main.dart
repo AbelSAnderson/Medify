@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:medify/database/database_handler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/cubit/nav_bar_cubit.dart';
 
 import 'screens/home_screen.dart';
 
@@ -14,7 +16,14 @@ void main() async {
   // Allow Http requests to be sent - should be changed to only allow openFDA & our API requests through
   HttpOverrides.global = new MyHttpOverrides();
 
-  runApp(MyApp());
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider<NavBarCubit>(
+        create: (context) => NavBarCubit(),
+      ),
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
