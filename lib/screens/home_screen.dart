@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
-import 'package:medify/database/models/medication.dart';
-import 'package:medify/screens/add_medication_screen.dart';
 import 'package:medify/screens/calendar_screen.dart';
 import 'package:medify/screens/profile_screen.dart';
 import 'package:medify/screens/search_medication_screen.dart';
-import 'package:medify/widgets/medication_details.dart';
 
 import 'clients_screen.dart';
 
@@ -20,6 +17,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   final screens = [CalendarScreen(), SearchMedicationScreen(), ProfileScreen(), ClientsScreen()];
 
   @override
