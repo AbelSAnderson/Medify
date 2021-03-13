@@ -1,6 +1,8 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/constants.dart';
+import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/database/models/medication.dart';
 import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/database/models/medication_info.dart';
@@ -16,6 +18,7 @@ class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStat
   List _selectedEvents;
   AnimationController _animationController;
   CalendarController _calendarController;
+  final _today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   @override
   void initState() {
@@ -23,7 +26,7 @@ class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStat
     final _today = DateTime.now();
     final _selectedDay = DateTime(_today.year, _today.month, _today.day);
 
-    _createEventsList();
+    // _createEventsList();
 
     _selectedEvents = _events[_selectedDay] ?? [];
     _calendarController = CalendarController();
@@ -44,47 +47,8 @@ class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStat
   }
 
   void _onDaySelected(DateTime day, List events, List holidays) {
-    setState(() {
-      _selectedEvents = events;
-    });
-  }
-
-  void _createEventsList() {
-    Medication med = Medication(null, "Medicine", null, null, null, null);
-    var medInfo = MedicationInfo(null, 1, 100, null, null, med);
-
-    List<MedicationEvent> list = [
-      MedicationEvent(null, DateTime.now(), medInfo, true, null),
-      MedicationEvent(null, DateTime.now(), medInfo, true, null),
-      MedicationEvent(null, DateTime.now(), medInfo, true, null),
-      MedicationEvent(null, DateTime.now().add(Duration(seconds: 2)), medInfo, false, null),
-      MedicationEvent(null, DateTime.utc(2021, 03, 19), medInfo, true, null),
-      MedicationEvent(null, DateTime.utc(2021, 03, 18), medInfo, true, null),
-      MedicationEvent(null, DateTime.utc(2021, 03, 15), medInfo, false, null),
-      MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
-      MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
-      MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
-      MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
-      MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
-      MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
-      MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
-      MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
-      MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
-      MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
-    ];
-
-    for (int i = 0; i < list.length; i++) {
-      var dateTime = list[i].datetime;
-      var date = DateTime(dateTime.year, dateTime.month, dateTime.day);
-
-      if (_events[date] == null) {
-        //create new list
-        _events[date] = [list[i]];
-      } else {
-        //clone the list and add the new value
-        _events[date] = List.from(_events[date])..addAll([list[i]]);
-      }
-    }
+    _selectedEvents = events;
+    BlocProvider.of<CalendarCubit>(context).getMedicationEvents(events);
   }
 
   @override
@@ -99,67 +63,94 @@ class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStat
   }
 
   _buildTableCalendar() {
-    return TableCalendar(
-      calendarController: _calendarController,
-      events: _events,
-      startingDayOfWeek: StartingDayOfWeek.sunday,
-      availableGestures: AvailableGestures.horizontalSwipe,
-      calendarStyle: CalendarStyle(
-        selectedColor: Theme.of(context).primaryColor,
-        todayColor: Theme.of(context).primaryColorLight,
-        markersColor: Theme.of(context).accentColor,
-        outsideDaysVisible: true,
-      ),
-      headerStyle: HeaderStyle(
-        formatButtonVisible: false,
-        centerHeaderTitle: true,
-        formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
-        formatButtonDecoration: BoxDecoration(
-          color: Colors.deepOrange[400],
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-      ),
-      onDaySelected: _onDaySelected,
-      headerVisible: true,
+    return BlocBuilder<CalendarCubit, CalendarState>(
+      buildWhen: (previous, current) => current is CalendarInitial || current is CalendarLoadInProgress || current is CalendarLoaded,
+      builder: (context, state) {
+        if (state is CalendarInitial) {
+          BlocProvider.of<CalendarCubit>(context).getAllMedicationEvents();
+        }
+        if (state is CalendarLoadInProgress) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (state is CalendarLoaded) {
+          _events = state.medicationEvents;
+          return TableCalendar(
+            calendarController: _calendarController,
+            events: _events,
+            startingDayOfWeek: StartingDayOfWeek.sunday,
+            availableGestures: AvailableGestures.horizontalSwipe,
+            calendarStyle: CalendarStyle(
+              selectedColor: Theme.of(context).primaryColor,
+              todayColor: Theme.of(context).primaryColorLight,
+              markersColor: Theme.of(context).accentColor,
+              outsideDaysVisible: true,
+            ),
+            headerStyle: HeaderStyle(
+              formatButtonVisible: false,
+              centerHeaderTitle: true,
+              formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
+              formatButtonDecoration: BoxDecoration(
+                color: Colors.deepOrange[400],
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+            ),
+            onDaySelected: _onDaySelected,
+            headerVisible: true,
+          );
+        }
+        return Container();
+      },
     );
   }
 
   Widget _buildEventList() {
-    return ListView(
-      children: _selectedEvents
-          .map((event) => Container(
-                decoration: BoxDecoration(
-                  border: Border.all(width: 2, color: Colors.grey),
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Image(
-                            image: getMedTypeImage(event.medicationInfo.medicationType, false),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(event.medicationInfo.medication.brandName),
-                          ),
-                        ],
+    return BlocBuilder<CalendarCubit, CalendarState>(
+      builder: (context, state) {
+        if (state is DayLoadInProgress) {
+          BlocProvider.of<CalendarCubit>(context).getMedicationEvents(_events[_today]);
+        }
+        if (state is DayLoaded) {
+          return ListView(
+            children: state.medicationEvents
+                .map((event) => Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 2, color: Colors.grey),
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                      Container(width: 50, child: Text(event.medTaken ? "Taken" : "")),
-                      Text(formatDate(event.datetime, [h, ":", nn, " ", am])),
-                      IconButton(
-                        icon: Icon(Icons.repeat, color: Theme.of(context).accentColor),
-                        onPressed: () {},
-                      )
-                    ],
-                  ),
-                ),
-              ))
-          .toList(),
+                      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Image(
+                                  image: getMedTypeImage(event.medicationInfo.medicationType, false),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Text(event.medicationInfo.medication.brandName),
+                                ),
+                              ],
+                            ),
+                            Container(width: 50, child: Text(event.medTaken ? "Taken" : "")),
+                            Text(formatDate(event.datetime, [h, ":", nn, " ", am])),
+                            IconButton(
+                              icon: Icon(Icons.repeat, color: Theme.of(context).accentColor),
+                              onPressed: () {},
+                            )
+                          ],
+                        ),
+                      ),
+                    ))
+                .toList(),
+          );
+        }
+        return ListView(
+          children: [],
+        );
+      },
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
 
 import 'screens/home_screen.dart';
@@ -9,6 +10,9 @@ void main() {
     providers: [
       BlocProvider<NavBarCubit>(
         create: (context) => NavBarCubit(),
+      ),
+      BlocProvider<CalendarCubit>(
+        create: (context) => CalendarCubit(),
       ),
     ],
     child: MyApp(),
