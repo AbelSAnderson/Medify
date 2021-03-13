@@ -8,6 +8,13 @@ class ClientDetailsScreen extends StatefulWidget {
 class _ClientDetailsScreenState extends State<ClientDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Client Details"),
+      ),
+      body: Center(
+        child: Text("Client Details Screen"),
+      ),
+    );
   }
 }

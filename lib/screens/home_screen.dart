@@ -17,7 +17,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   final screens = [CalendarScreen(), SearchMedicationScreen(), ProfileScreen(), ClientsScreen()];
 
   @override
@@ -59,7 +58,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: screens.elementAt(index),
+      body: IndexedStack(
+        children: screens,
+        index: index,
+      ),
     );
   }
 }

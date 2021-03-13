@@ -2,6 +2,7 @@ import 'package:medify/database/models/medication_event.dart';
 
 import 'database/models/medication.dart';
 import 'database/models/medication_info.dart';
+import 'database/models/user.dart';
 
 Map<DateTime, List<MedicationEvent>> getMedicationEvents(Map<DateTime, List<MedicationEvent>> events) {
   Medication med = Medication(null, "Medicine", null, null, null, null);
@@ -41,4 +42,21 @@ Map<DateTime, List<MedicationEvent>> getMedicationEvents(Map<DateTime, List<Medi
   }
 
   return events;
+}
+
+List<User> getRequestedUsers() {
+  User user1 = User(0, "A", "B", "pharmacyNumber", "doctorNumber");
+  User user2 = User(1, "C", "D", "pharmacyNumber", "doctorNumber");
+
+  return [user1, user2];
+}
+
+List<User> getConnectedUsers() {
+  User user1 = User(0, "E", "F", "pharmacyNumber", "doctorNumber");
+  User user2 = User(1, "G", "H", "pharmacyNumber", "doctorNumber");
+  User user3 = User(0, "I", "J", "pharmacyNumber", "doctorNumber");
+  User user4 = User(1, "K", "L", "pharmacyNumber", "doctorNumber");
+  User user5 = User(1, "M", "N", "pharmacyNumber", "doctorNumber");
+
+  return [user1, user2, user3, user4, user5];
 }

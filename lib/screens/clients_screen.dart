@@ -1,38 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/cubit/clients_cubit.dart';
 import 'package:medify/database/models/user.dart';
+import 'package:medify/screens/client_details_screen.dart';
 
-class ClientsScreen extends StatefulWidget {
+class ClientsScreen extends StatelessWidget {
   @override
-  _ClientsScreenState createState() => _ClientsScreenState();
-}
-
-class _ClientsScreenState extends State<ClientsScreen> {
-  List<User> _users = [];
-  List<User> _requestedUsers = [];
-  List<User> _connectedUsers = [];
-
-  @override
-  void initState() {
-    super.initState();
-    User user = User(0, "firstName", "lastName", "pharmacyNumber", "doctorNumber");
-    _connectedUsers = [user, user, user, user, user];
-    _requestedUsers = [user, user];
-    _users.addAll(_requestedUsers);
-    _users.addAll(_connectedUsers);
+  Widget build(BuildContext context) {
+    return BlocBuilder<ClientsCubit, ClientsState>(
+      builder: (context, state) {
+        if (state is ClientsInitial) {
+          BlocProvider.of<ClientsCubit>(context).loadClients();
+        }
+        if (state is ClientsLoadingInProgress) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (state is ClientsLoaded) {
+          var users = state.clients;
+          return ListView.builder(
+            itemCount: users.length,
+            itemBuilder: (context, index) {
+              var user = users[index];
+              var requestedUsersLength = state.listSeperatorThreshold;
+              return Container(
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
+                child: index < requestedUsersLength ? _requestedUsersItem(context, users, index, requestedUsersLength) : _connectedUsersItem(context, user),
+              );
+            },
+          );
+        }
+        return Container();
+      },
+    );
   }
 
-  Widget _connectedUsersItem(User user) {
+  Widget _connectedUsersItem(BuildContext context, User user) {
     return ListTile(
       title: Text(user.firstName + " " + user.lastName),
       trailing: Icon(Icons.keyboard_arrow_right),
       contentPadding: EdgeInsets.all(8),
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => null));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ClientDetailsScreen()));
       },
     );
   }
 
-  Widget _requestedUsersItem(User user) {
+  Widget _requestedUsersItem(BuildContext context, List<User> users, int index, int threshold) {
+    var user = users[index];
     return ListTile(
       title: Text(user.firstName + " " + user.lastName),
       trailing: Row(
@@ -43,31 +59,22 @@ class _ClientsScreenState extends State<ClientsScreen> {
               Icons.cancel,
               color: Colors.red,
             ),
-            onPressed: () {},
+            onPressed: () {
+              BlocProvider.of<ClientsCubit>(context).declineRequest(users, index, threshold);
+            },
           ),
           IconButton(
             icon: Icon(
               Icons.check_circle,
               color: Theme.of(context).primaryColor,
             ),
-            onPressed: () {},
+            onPressed: () {
+              BlocProvider.of<ClientsCubit>(context).acceptRequest(users, index, threshold);
+            },
           ),
         ],
       ),
       contentPadding: EdgeInsets.all(8),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: _users.length,
-        itemBuilder: (context, index) {
-          var user = _users[index];
-          return Container(
-            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
-            child: index < _requestedUsers.length ? _requestedUsersItem(user) : _connectedUsersItem(user),
-          );
-        });
   }
 }

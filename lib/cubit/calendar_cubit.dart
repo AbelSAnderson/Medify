@@ -9,19 +9,11 @@ part 'calendar_state.dart';
 class CalendarCubit extends Cubit<CalendarState> {
   CalendarCubit() : super(CalendarInitial());
 
-  void getMedicationEvents(List medList) async {
-    await Future<void>.delayed(const Duration(milliseconds: 1));
-    emit(DayLoadInProgress());
-    emit(DayLoaded(medList));
-  }
-
   void getAllMedicationEvents() async {
     await Future<void>.delayed(const Duration(milliseconds: 1));
     emit(CalendarLoadInProgress());
     await Future<void>.delayed(const Duration(seconds: 1));
     var medicationEvents = DummyData.getMedicationEvents({});
     emit(CalendarLoaded(medicationEvents));
-    await Future<void>.delayed(const Duration(milliseconds: 1));
-    emit(DayLoadInProgress());
   }
 }

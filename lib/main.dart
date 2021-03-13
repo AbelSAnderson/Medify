@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:medify/cubit/clients_cubit.dart';
 import 'package:medify/cubit/search_cubit.dart';
 import 'package:medify/database/database_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +29,9 @@ void main() async {
       ),
       BlocProvider<SearchCubit>(
         create: (context) => SearchCubit(),
+      ),
+      BlocProvider<ClientsCubit>(
+        create: (context) => ClientsCubit(),
       )
     ],
     child: MyApp(),

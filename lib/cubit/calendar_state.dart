@@ -23,17 +23,3 @@ class CalendarLoaded extends CalendarState {
   @override
   List<Object> get props => [];
 }
-
-class DayLoadInProgress extends CalendarState {
-  @override
-  List<Object> get props => [];
-}
-
-class DayLoaded extends CalendarState {
-  final List<MedicationEvent> medicationEvents;
-
-  const DayLoaded([this.medicationEvents = const []]);
-
-  @override
-  List<Object> get props => [medicationEvents];
-}
