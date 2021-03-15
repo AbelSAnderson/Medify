@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:medify/cubit/client_details_cubit.dart';
+import 'package:medify/cubit/clients_cubit.dart';
 import 'package:medify/cubit/search_cubit.dart';
 import 'package:medify/database/database_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
 
 import 'screens/home_screen.dart';
@@ -22,8 +25,17 @@ void main() async {
       BlocProvider<NavBarCubit>(
         create: (context) => NavBarCubit(),
       ),
+      BlocProvider<CalendarCubit>(
+        create: (context) => CalendarCubit(),
+      ),
       BlocProvider<SearchCubit>(
         create: (context) => SearchCubit(),
+      ),
+      BlocProvider<ClientsCubit>(
+        create: (context) => ClientsCubit(),
+      ),
+      BlocProvider<ClientDetailsCubit>(
+        create: (context) => ClientDetailsCubit(),
       )
     ],
     child: MyApp(),
@@ -64,8 +76,6 @@ class MyApp extends StatelessWidget {
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
+    return super.createHttpClient(context)..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
   }
 }

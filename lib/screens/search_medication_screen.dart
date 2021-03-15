@@ -13,7 +13,6 @@ class _SearchMedicationScreenState extends State<SearchMedicationScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SearchCubit, SearchState>(builder: (context, state) {
-
       Widget item = Text("");
 
       if (state is SearchArrived) {
@@ -27,10 +26,7 @@ class _SearchMedicationScreenState extends State<SearchMedicationScreen> {
           child: Text(state.errorMessage),
         );
       }
-      return Column(children: [
-        SearchBar((inputText) => BlocProvider.of<SearchCubit>(context).searchFor(inputText)),
-        item
-      ]);
+      return Column(children: [SearchBar((inputText) => BlocProvider.of<SearchCubit>(context).searchFor(inputText)), item]);
     });
   }
 }
