@@ -8,39 +8,53 @@ part 'clients_state.dart';
 class ClientsCubit extends Cubit<ClientsState> {
   ClientsCubit() : super(ClientsInitial());
 
+  ///List for all the clients who sent a request to connect
+  List<User> requestedUsers;
+
+  ///List for all the clients who are connected with the caregiver
+  List<User> connectedUsers;
+
+  ///Loads all the clients (requested and connected users)
   loadClients() async {
-    await Future<void>.delayed(const Duration(milliseconds: 1));
+    //Required wait time or the state does not emit
+    await Future<void>.delayed(const Duration(milliseconds: 100));
     emit(ClientsLoadingInProgress());
-    var connectedUsers = DummyData.getConnectedUsers();
-    var requestedUsers = DummyData.getRequestedUsers();
-    List<User> allClients = List.from(requestedUsers)..addAll(connectedUsers);
-    var listSeperatorThreshold = requestedUsers.length;
-    emit(ClientsLoaded(allClients, listSeperatorThreshold));
+    connectedUsers = DummyData.getConnectedUsers();
+    requestedUsers = DummyData.getRequestedUsers();
+    emit(ClientsLoaded(_createClientList(), _getThreshold()));
   }
 
-  acceptRequest(List users, int index, int listSeperatorThreshold) async {
-    //TODO: SWITCH THE CLIENTS LIST TO A MAP OF <String, List<User>> --> {"Requests": [], "Connected": []}
-    // ^ will allow us to uniquely identify which users are requesting and which are connected in a single map
-    await Future<void>.delayed(const Duration(milliseconds: 1));
+  ///User accepted the request, client is removed from requested users list and added to the connected users list
+  acceptRequest(int index) async {
     emit(ClientsLoadingInProgress());
-    var user = users[index];
-    var updatedList = users
-      ..remove(user)
-      ..add(user);
-    var newThreshold = listSeperatorThreshold - 1;
-    await Future<void>.delayed(const Duration(milliseconds: 1));
-    emit(ClientsLoaded(updatedList, newThreshold));
-    await Future<void>.delayed(const Duration(milliseconds: 1));
+    var user = requestedUsers[index];
+    requestedUsers.remove(user);
+    connectedUsers.add(user);
+    emit(ClientsLoaded(_createClientList(), _getThreshold()));
   }
 
-  declineRequest(List users, int index, int listSeperatorThreshold) async {
-    await Future<void>.delayed(const Duration(milliseconds: 1));
+  ///User declined the request, the client is removed from the requested users list
+  declineRequest(int index) async {
     emit(ClientsLoadingInProgress());
-    var user = users[index];
-    var updatedList = users..remove(user);
-    var newThreshold = listSeperatorThreshold - 1;
-    await Future<void>.delayed(const Duration(milliseconds: 1));
-    emit(ClientsLoaded(updatedList, newThreshold));
-    await Future<void>.delayed(const Duration(milliseconds: 1));
+    var user = requestedUsers[index];
+    requestedUsers.remove(user);
+    emit(ClientsLoaded(_createClientList(), _getThreshold()));
+  }
+
+  ///Removes a connected client from the list
+  removeClient(User user) async {
+    emit(ClientsLoadingInProgress());
+    connectedUsers.remove(user);
+    emit(ClientsLoaded(_createClientList(), _getThreshold()));
+  }
+
+  ///Creates list of clients from the requested users and connected users list
+  List<User> _createClientList() {
+    return List.from(requestedUsers)..addAll(connectedUsers);
+  }
+
+  ///List seperator threshold for the index of when the clients list seperates from requested users to connected users
+  int _getThreshold() {
+    return requestedUsers.length;
   }
 }

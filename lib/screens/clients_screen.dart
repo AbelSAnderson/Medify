@@ -42,7 +42,7 @@ class ClientsScreen extends StatelessWidget {
       trailing: Icon(Icons.keyboard_arrow_right),
       contentPadding: EdgeInsets.all(8),
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ClientDetailsScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ClientDetailsScreen(user)));
       },
     );
   }
@@ -60,7 +60,7 @@ class ClientsScreen extends StatelessWidget {
               color: Colors.red,
             ),
             onPressed: () {
-              BlocProvider.of<ClientsCubit>(context).declineRequest(users, index, threshold);
+              BlocProvider.of<ClientsCubit>(context).declineRequest(index);
             },
           ),
           IconButton(
@@ -69,7 +69,7 @@ class ClientsScreen extends StatelessWidget {
               color: Theme.of(context).primaryColor,
             ),
             onPressed: () {
-              BlocProvider.of<ClientsCubit>(context).acceptRequest(users, index, threshold);
+              BlocProvider.of<ClientsCubit>(context).acceptRequest(index);
             },
           ),
         ],

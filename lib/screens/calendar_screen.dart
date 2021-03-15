@@ -17,8 +17,9 @@ class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStat
   var _events = {};
   List _selectedEvents = [];
   AnimationController _animationController;
-  CalendarController _calendarController;
+  CalendarController _calendarController = CalendarController();
   final _today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  var _calendarCreated = false;
 
   @override
   void initState() {
@@ -106,38 +107,40 @@ class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStat
   Widget _buildEventList() {
     return ListView(
       children: _selectedEvents
-          .map((event) => Container(
-                decoration: BoxDecoration(
-                  border: Border.all(width: 2, color: Colors.grey),
-                  borderRadius: BorderRadius.circular(12.0),
+          .map(
+            (event) => Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: 2, color: Colors.grey),
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Image(
+                          image: getMedTypeImage(event.medicationInfo.medicationType, false),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(event.medicationInfo.medication.brandName),
+                        ),
+                      ],
+                    ),
+                    Container(width: 50, child: Text(event.medTaken ? "Taken" : "")),
+                    Text(formatDate(event.datetime, [h, ":", nn, " ", am])),
+                    IconButton(
+                      icon: Icon(Icons.repeat, color: Theme.of(context).accentColor),
+                      onPressed: () {},
+                    ),
+                  ],
                 ),
-                margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Image(
-                            image: getMedTypeImage(event.medicationInfo.medicationType, false),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(event.medicationInfo.medication.brandName),
-                          ),
-                        ],
-                      ),
-                      Container(width: 50, child: Text(event.medTaken ? "Taken" : "")),
-                      Text(formatDate(event.datetime, [h, ":", nn, " ", am])),
-                      IconButton(
-                        icon: Icon(Icons.repeat, color: Theme.of(context).accentColor),
-                        onPressed: () {},
-                      )
-                    ],
-                  ),
-                ),
-              ))
+              ),
+            ),
+          )
           .toList(),
     );
   }

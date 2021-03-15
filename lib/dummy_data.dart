@@ -60,3 +60,30 @@ List<User> getConnectedUsers() {
 
   return [user1, user2, user3, user4, user5];
 }
+
+List<MedicationEvent> getMedications() {
+  Medication med = Medication(null, "Advil", null, null, null, null);
+  var medInfo = MedicationInfo(null, 1, 100, null, null, med);
+
+  List<MedicationEvent> list = [
+    MedicationEvent(null, DateTime.now(), medInfo, true, null),
+    MedicationEvent(null, DateTime.now(), medInfo, true, null),
+    MedicationEvent(null, DateTime.now(), medInfo, true, null),
+    MedicationEvent(null, DateTime.now().add(Duration(seconds: 2)), medInfo, false, null),
+    MedicationEvent(null, DateTime.utc(2021, 03, 19), medInfo, true, null),
+    MedicationEvent(null, DateTime.utc(2021, 03, 18), medInfo, true, null),
+    MedicationEvent(null, DateTime.utc(2021, 03, 15), medInfo, false, null),
+    MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
+    MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
+    MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
+    MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
+    MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
+    MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
+    MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
+    MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
+    MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
+    MedicationEvent(null, DateTime.utc(2021, 03, 16), medInfo, false, null),
+  ];
+
+  return list;
+}
