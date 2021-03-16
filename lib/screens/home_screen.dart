@@ -30,9 +30,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildPage(String title, int index) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
         onTap: (index) => BlocProvider.of<NavBarCubit>(context).updateIndex(index),

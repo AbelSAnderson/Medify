@@ -7,32 +7,37 @@ import 'package:medify/screens/client_details_screen.dart';
 class ClientsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ClientsCubit, ClientsState>(
-      builder: (context, state) {
-        if (state is ClientsInitial) {
-          BlocProvider.of<ClientsCubit>(context).loadClients();
-        }
-        if (state is ClientsLoadingInProgress) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        if (state is ClientsLoaded) {
-          var users = state.clients;
-          return ListView.builder(
-            itemCount: users.length,
-            itemBuilder: (context, index) {
-              var user = users[index];
-              var requestedUsersLength = state.listSeperatorThreshold;
-              return Container(
-                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
-                child: index < requestedUsersLength ? _requestedUsersItem(context, users, index, requestedUsersLength) : _connectedUsersItem(context, user),
-              );
-            },
-          );
-        }
-        return Container();
-      },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Clients"),
+      ),
+      body: BlocBuilder<ClientsCubit, ClientsState>(
+        builder: (context, state) {
+          if (state is ClientsInitial) {
+            BlocProvider.of<ClientsCubit>(context).loadClients();
+          }
+          if (state is ClientsLoadingInProgress) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (state is ClientsLoaded) {
+            var users = state.clients;
+            return ListView.builder(
+              itemCount: users.length,
+              itemBuilder: (context, index) {
+                var user = users[index];
+                var requestedUsersLength = state.listSeperatorThreshold;
+                return Container(
+                  decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
+                  child: index < requestedUsersLength ? _requestedUsersItem(context, users, index, requestedUsersLength) : _connectedUsersItem(context, user),
+                );
+              },
+            );
+          }
+          return Container();
+        },
+      ),
     );
   }
 

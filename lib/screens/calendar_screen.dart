@@ -51,12 +51,17 @@ class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        _buildTableCalendar(),
-        Expanded(child: _buildEventList()),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Home"),
+      ),
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          _buildTableCalendar(),
+          Expanded(child: _buildEventList()),
+        ],
+      ),
     );
   }
 
