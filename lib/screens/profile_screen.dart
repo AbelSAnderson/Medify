@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/cubit/caregivers_cubit.dart';
 
-class ProfileScreen extends StatefulWidget {
-  @override
-  _ProfileScreenState createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
+class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,17 +58,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: TextStyle(fontSize: 24),
             ),
           ),
-          Expanded(
+          _caregiversList(context),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: ElevatedButton(
+              child: Text("Add Caregiver"),
+              onPressed: () {},
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _caregiversList(BuildContext context) {
+    return BlocBuilder<CaregiversCubit, CaregiversState>(
+      builder: (context, state) {
+        if (state is CaregiversInitial) {
+          BlocProvider.of<CaregiversCubit>(context).loadCaregivers();
+        }
+        if (state is CaregiversLoading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (state is CaregiversLoaded) {
+          return Expanded(
             child: ListView.builder(
-              itemCount: 1,
+              itemCount: state.caregivers.length,
               itemBuilder: (context, index) {
+                var caregiver = state.caregivers[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Container(
                     decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
                     child: ListTile(
                       title: Text(
-                        "Alice",
+                        "${caregiver.firstName} ${caregiver.lastName}",
                         style: TextStyle(fontSize: 20),
                       ),
                       trailing: IconButton(
@@ -87,16 +110,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               },
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: ElevatedButton(
-              child: Text("Add Caregiver"),
-              onPressed: () {},
-            ),
-          ),
-        ],
-      ),
+          );
+        }
+        return Container();
+      },
     );
   }
 }
