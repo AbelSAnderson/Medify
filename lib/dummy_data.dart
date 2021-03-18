@@ -62,7 +62,7 @@ List<User> getConnectedUsers() {
 }
 
 List<MedicationEvent> getMedications() {
-  Medication med = Medication(null, "Advil", null, null, null, null);
+  Medication med = Medication(null, "Advil", "Usage", "Precautions", "Dosage", "Ingredients");
   var medInfo = MedicationInfo(null, 1, 100, null, null, med);
 
   List<MedicationEvent> list = [

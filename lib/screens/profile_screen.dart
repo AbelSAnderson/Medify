@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/cubit/caregivers_cubit.dart';
+import 'package:medify/cubit/medications_cubit.dart';
+import 'package:medify/screens/medications_screen.dart';
+import 'package:medify/widgets/search_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -35,18 +38,35 @@ class ProfileScreen extends StatelessWidget {
               decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Medications: 4",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    ElevatedButton(
-                      child: Text("View Medications"),
-                      onPressed: () {},
-                    ),
-                  ],
+                child: BlocBuilder<MedicationsCubit, MedicationsState>(
+                  builder: (context, state) {
+                    if (state is MedicationsInitial) {
+                      BlocProvider.of<MedicationsCubit>(context).loadMedications();
+                    }
+                    if (state is MedicationsLoading) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (state is MedicationsLoaded) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Medications: ${state.medications.length}",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          ElevatedButton(
+                            child: Text("View Medications"),
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationsScreen(state.medications)));
+                            },
+                          ),
+                        ],
+                      );
+                    }
+                    return Container();
+                  },
                 ),
               ),
             ),
@@ -63,7 +83,12 @@ class ProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             child: ElevatedButton(
               child: Text("Add Caregiver"),
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AddCaregiverAlertDialog(),
+                );
+              },
             ),
           ),
         ],
@@ -114,6 +139,18 @@ class ProfileScreen extends StatelessWidget {
         }
         return Container();
       },
+    );
+  }
+}
+
+class AddCaregiverAlertDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+      content: SearchBar(
+        onSearch: (inputText) {},
+      ),
     );
   }
 }

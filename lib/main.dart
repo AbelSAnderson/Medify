@@ -5,6 +5,7 @@ import 'package:medify/cubit/caregivers_cubit.dart';
 import 'package:medify/cubit/client_details_cubit.dart';
 import 'package:medify/cubit/clients_cubit.dart';
 import 'package:medify/cubit/medication_form_cubit.dart';
+import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/cubit/search_cubit.dart';
 import 'package:medify/database/database_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,6 +36,9 @@ void main() async {
       ),
       BlocProvider<CaregiversCubit>(
         create: (context) => CaregiversCubit(),
+      ),
+      BlocProvider<MedicationsCubit>(
+        create: (context) => MedicationsCubit(),
       ),
       BlocProvider<ClientsCubit>(
         create: (context) => ClientsCubit(),

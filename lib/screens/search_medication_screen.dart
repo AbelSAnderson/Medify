@@ -30,7 +30,12 @@ class _SearchMedicationScreenState extends State<SearchMedicationScreen> {
             child: Text(state.errorMessage),
           );
         }
-        return Column(children: [SearchBar((inputText) => BlocProvider.of<SearchCubit>(context).searchFor(inputText)), item]);
+        return Column(children: [
+          SearchBar(
+            onSearch: (inputText) => BlocProvider.of<SearchCubit>(context).searchFor(inputText),
+          ),
+          item
+        ]);
       }),
     );
   }
