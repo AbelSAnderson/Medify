@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/cubit/add_caregiver_cubit.dart';
 import 'package:medify/cubit/caregivers_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
+import 'package:medify/database/models/user_connection.dart';
 import 'package:medify/screens/medications_screen.dart';
 import 'package:medify/widgets/search_bar.dart';
 
@@ -144,12 +146,90 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class AddCaregiverAlertDialog extends StatelessWidget {
+  Widget _tileTrailingIcon(BuildContext context, Status status) {
+    if (status == Status.connected) {
+      return IconButton(
+        icon: Icon(
+          Icons.add_circle,
+          color: Theme.of(context).primaryColor,
+        ),
+        onPressed: () {},
+      );
+    } else if (status == Status.requested) {
+      return IconButton(
+        icon: Icon(
+          Icons.check_circle,
+          color: Theme.of(context).accentColor,
+        ),
+        onPressed: () {},
+      );
+    } else {
+      return IconButton(
+        icon: Icon(
+          Icons.cancel,
+          color: Colors.red,
+        ),
+        onPressed: () {},
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-      content: SearchBar(
-        onSearch: (inputText) {},
+      scrollable: true,
+      insetPadding: EdgeInsets.all(20),
+      contentPadding: EdgeInsets.all(10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SearchBar(
+            onSearch: (inputText) {},
+          ),
+          BlocBuilder<AddCaregiverCubit, AddCaregiverState>(
+            builder: (context, state) {
+              if (state is AddCaregiverInitial) {
+                BlocProvider.of<AddCaregiverCubit>(context).searchForCaregiver("");
+              }
+              if (state is AddCaregiverLoading) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (state is AddCaregiverLoaded) {
+                print(state.caregivers.length);
+                return Container(
+                  width: double.maxFinite,
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child: ListView.builder(
+                    itemCount: state.caregivers.length,
+                    itemBuilder: (context, index) {
+                      var caregiver = state.caregivers[index];
+                      return ListTile(
+                        title: Text(caregiver.user.firstName),
+                        subtitle: Text(caregiver.user.lastName),
+                        trailing: _tileTrailingIcon(context, caregiver.status),
+                      );
+                    },
+                  ),
+                );
+              }
+              return SizedBox(
+                height: 30,
+              );
+            },
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: TextButton(
+              child: Text("Close"),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop('dialog');
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

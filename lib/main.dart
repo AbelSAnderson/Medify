@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:medify/cubit/add_caregiver_cubit.dart';
 import 'package:medify/cubit/caregivers_cubit.dart';
 import 'package:medify/cubit/client_details_cubit.dart';
 import 'package:medify/cubit/clients_cubit.dart';
@@ -39,6 +40,9 @@ void main() async {
       ),
       BlocProvider<MedicationsCubit>(
         create: (context) => MedicationsCubit(),
+      ),
+      BlocProvider<AddCaregiverCubit>(
+        create: (context) => AddCaregiverCubit(),
       ),
       BlocProvider<ClientsCubit>(
         create: (context) => ClientsCubit(),
