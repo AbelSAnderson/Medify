@@ -58,7 +58,7 @@ class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStat
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          _buildTableCalendar(),
+          InteractiveViewer(child: _buildTableCalendar()),
           Expanded(child: _buildEventList()),
         ],
       ),
@@ -83,7 +83,7 @@ class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStat
             calendarController: _calendarController,
             events: _events,
             startingDayOfWeek: StartingDayOfWeek.sunday,
-            availableGestures: AvailableGestures.horizontalSwipe,
+            availableGestures: AvailableGestures.none,
             initialSelectedDay: _today,
             calendarStyle: CalendarStyle(
               selectedColor: Theme.of(context).primaryColor,
