@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/cubit/add_caregiver_cubit.dart';
@@ -6,13 +7,16 @@ import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/database/models/user_connection.dart';
 import 'package:medify/screens/medications_screen.dart';
 import 'package:medify/widgets/search_bar.dart';
+import 'package:medify/scale.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile"),
+        title: Text(
+          "Profile",
+        ),
         leading: IconButton(
           icon: Icon(Icons.edit),
           onPressed: () {},
@@ -24,76 +28,88 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              "Jane Smith",
-              style: TextStyle(fontSize: 32),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.sh, vertical: 16.sv),
+              child: Text(
+                "Jane Smith",
+                style: TextStyle(fontSize: 32.sf),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Container(
-              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: BlocBuilder<MedicationsCubit, MedicationsState>(
-                  builder: (context, state) {
-                    if (state is MedicationsInitial) {
-                      BlocProvider.of<MedicationsCubit>(context).loadMedications();
-                    }
-                    if (state is MedicationsLoading) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (state is MedicationsLoaded) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Medications: ${state.medications.length}",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          ElevatedButton(
-                            child: Text("View Medications"),
-                            onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationsScreen(state.medications)));
-                            },
-                          ),
-                        ],
-                      );
-                    }
-                    return Container();
-                  },
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.sh, vertical: 16.sv),
+              child: Container(
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.sv),
+                  child: BlocBuilder<MedicationsCubit, MedicationsState>(
+                    builder: (context, state) {
+                      if (state is MedicationsInitial) {
+                        BlocProvider.of<MedicationsCubit>(context).loadMedications();
+                      }
+                      if (state is MedicationsLoading) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (state is MedicationsLoaded) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Medications: ${state.medications.length}",
+                              style: TextStyle(fontSize: 20.sf),
+                            ),
+                            ElevatedButton(
+                              child: Text(
+                                "View Medications",
+                                style: TextStyle(fontSize: 14.sf),
+                              ),
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationsScreen(state.medications)));
+                              },
+                            ),
+                          ],
+                        );
+                      }
+                      return Container();
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text(
-              "Caregivers",
-              style: TextStyle(fontSize: 24),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.sh, vertical: 16.sv),
+              child: Text(
+                "Caregivers",
+                style: TextStyle(fontSize: 24.sf),
+              ),
             ),
-          ),
-          _caregiversList(context),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: ElevatedButton(
-              child: Text("Add Caregiver"),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AddCaregiverAlertDialog(),
-                );
-              },
+            _caregiversList(context),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.sh, vertical: 12.sv),
+              child: ElevatedButton(
+                child: Text(
+                  "Add Caregiver",
+                  style: TextStyle(fontSize: 14.sf),
+                ),
+                onPressed: () {
+                  showModal(
+                    context: context,
+                    configuration: FadeScaleTransitionConfiguration(
+                      transitionDuration: Duration(milliseconds: 500),
+                      reverseTransitionDuration: Duration(milliseconds: 300),
+                    ),
+                    builder: (context) => AddCaregiverAlertDialog(),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -110,19 +126,20 @@ class ProfileScreen extends StatelessWidget {
           );
         }
         if (state is CaregiversLoaded) {
-          return Expanded(
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.35,
             child: ListView.builder(
               itemCount: state.caregivers.length,
               itemBuilder: (context, index) {
                 var caregiver = state.caregivers[index];
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: EdgeInsets.symmetric(horizontal: 16.sh),
                   child: Container(
                     decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
                     child: ListTile(
                       title: Text(
                         "${caregiver.firstName} ${caregiver.lastName}",
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 20.sf),
                       ),
                       trailing: IconButton(
                         icon: Icon(
@@ -152,6 +169,7 @@ class AddCaregiverAlertDialog extends StatelessWidget {
         icon: Icon(
           Icons.add_circle,
           color: Theme.of(context).primaryColor,
+          size: 30.sf,
         ),
         onPressed: () {},
       );
@@ -160,6 +178,7 @@ class AddCaregiverAlertDialog extends StatelessWidget {
         icon: Icon(
           Icons.check_circle,
           color: Theme.of(context).accentColor,
+          size: 30.sf,
         ),
         onPressed: () {},
       );
@@ -168,6 +187,7 @@ class AddCaregiverAlertDialog extends StatelessWidget {
         icon: Icon(
           Icons.cancel,
           color: Colors.red,
+          size: 30.sf,
         ),
         onPressed: () {},
       );
@@ -178,8 +198,8 @@ class AddCaregiverAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       scrollable: true,
-      insetPadding: EdgeInsets.all(20),
-      contentPadding: EdgeInsets.all(10),
+      insetPadding: EdgeInsets.symmetric(horizontal: 20.sh, vertical: 20.sv),
+      contentPadding: EdgeInsets.symmetric(horizontal: 10.sh, vertical: 10.sv),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -201,14 +221,20 @@ class AddCaregiverAlertDialog extends StatelessWidget {
                 print(state.caregivers.length);
                 return Container(
                   width: double.maxFinite,
-                  height: MediaQuery.of(context).size.height * 0.5,
+                  height: MediaQuery.of(context).size.height * 0.45,
                   child: ListView.builder(
                     itemCount: state.caregivers.length,
                     itemBuilder: (context, index) {
                       var caregiver = state.caregivers[index];
                       return ListTile(
-                        title: Text(caregiver.user.firstName),
-                        subtitle: Text(caregiver.user.lastName),
+                        title: Text(
+                          caregiver.user.firstName,
+                          style: TextStyle(fontSize: 20.sf),
+                        ),
+                        subtitle: Text(
+                          caregiver.user.lastName,
+                          style: TextStyle(fontSize: 16.sf),
+                        ),
                         trailing: _tileTrailingIcon(context, caregiver.status),
                       );
                     },
@@ -223,7 +249,10 @@ class AddCaregiverAlertDialog extends StatelessWidget {
           Align(
             alignment: Alignment.bottomRight,
             child: TextButton(
-              child: Text("Close"),
+              child: Text(
+                "Close",
+                style: TextStyle(fontSize: 14.sf),
+              ),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop('dialog');
               },

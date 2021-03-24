@@ -4,6 +4,7 @@ import 'package:medify/cubit/medication_form_cubit.dart';
 import 'package:medify/database/models/medication.dart';
 import 'package:medify/widgets/medicine_type.dart';
 import 'package:date_format/date_format.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'medicine_type.dart';
 
 class MedicationForm extends StatelessWidget {
@@ -42,26 +43,42 @@ class MedicationForm extends StatelessWidget {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ResponsiveRowColumn(
+                columnCrossAxisAlignment: CrossAxisAlignment.start,
+                columnSpacing: 12.5,
+                rowColumn: false,
                 children: [
-                  _nameField(state.medication.brandName),
-                  SizedBox(height: 20),
-                  _repeatsField(context, state.interval),
-                  SizedBox(height: 20),
-                  _startDateField(context, state.startDate),
-                  SizedBox(height: 20),
-                  _timeField(context, state.time),
-                  SizedBox(height: 20),
-                  _pillAmountField(context, state),
-                  SizedBox(height: 20),
-                  MedicineType(onMedIndexChanged: (index) {
+                  ResponsiveRowColumnItem(child: Container(child: _nameField(state.medication.brandName))),
+                  ResponsiveRowColumnItem(child: _repeatsField(context, state.interval)),
+                  ResponsiveRowColumnItem(child: _startDateField(context, state.startDate)),
+                  ResponsiveRowColumnItem(child: _timeField(context, state.time)),
+                  ResponsiveRowColumnItem(child: _pillAmountField(context, state)),
+                  ResponsiveRowColumnItem(child: MedicineType(onMedIndexChanged: (index) {
                     BlocProvider.of<MedicationFormCubit>(context).changeMedicationType(index);
-                  }),
-                  SizedBox(height: 20),
-                  _submitButton(context),
+                  })),
+                  ResponsiveRowColumnItem(child: _submitButton(context)),
                 ],
               ),
+              // child: Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: [
+              //     _nameField(state.medication.brandName),
+              //     SizedBox(height: 20),
+              //     _repeatsField(context, state.interval),
+              //     SizedBox(height: 20),
+              //     _startDateField(context, state.startDate),
+              //     SizedBox(height: 20),
+              //     _timeField(context, state.time),
+              //     SizedBox(height: 20),
+              //     _pillAmountField(context, state),
+              //     SizedBox(height: 20),
+              //     MedicineType(onMedIndexChanged: (index) {
+              //       BlocProvider.of<MedicationFormCubit>(context).changeMedicationType(index);
+              //     }),
+              //     SizedBox(height: 20),
+              //     _submitButton(context),
+              //   ],
+              // ),
             ),
           ),
         );
@@ -88,9 +105,11 @@ class MedicationForm extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(medName),
+              Align(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(medName),
+                ),
               ),
             ],
           ),

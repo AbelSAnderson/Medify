@@ -17,6 +17,8 @@ class MedicineTypeState extends State<MedicineType> {
     return GestureDetector(
       child: Image(
         image: AssetImage(_selectedImage == medIndex ? imageSelectedUrl : imageUrl),
+        height: 40,
+        width: 40,
       ),
       onTap: () {
         setState(() {
@@ -32,7 +34,7 @@ class MedicineTypeState extends State<MedicineType> {
       children: [
         Text(
           "Medicine Type",
-          style: TextStyle(fontSize: 32),
+          style: TextStyle(fontSize: 26),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

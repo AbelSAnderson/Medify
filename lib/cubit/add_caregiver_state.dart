@@ -18,7 +18,7 @@ class AddCaregiverLoading extends AddCaregiverState {
 }
 
 class AddCaregiverLoaded extends AddCaregiverState {
-  final List<CaregiverConnections> caregivers;
+  final List<CaregiverResults> caregivers;
 
   const AddCaregiverLoaded([this.caregivers = const []]);
 

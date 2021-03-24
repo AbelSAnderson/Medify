@@ -14,7 +14,7 @@ class AddCaregiverCubit extends Cubit<AddCaregiverState> {
     emit(AddCaregiverLoading());
     var userConnections = DummyData.getUserConnections();
     var caregivers = DummyData.getConnectedUsers();
-    List<CaregiverConnections> caregiverConnections = [];
+    List<CaregiverResults> caregiverConnections = [];
     for (int i = 0; i < caregivers.length; i++) {
       var caregiverId = caregivers[i].id;
       //check to see if the client already has a connection (requested/connected) with the caregiver
@@ -25,23 +25,23 @@ class AddCaregiverCubit extends Cubit<AddCaregiverState> {
       if (userConnection != null) {
         //check the type of connection the client has with the caregiver
         if (userConnection.status == Status.requested) {
-          caregiverConnections.add(CaregiverConnections(caregivers[i], Status.requested));
+          caregiverConnections.add(CaregiverResults(caregivers[i], Status.requested));
         } else if (userConnection.status == Status.connected) {
-          caregiverConnections.add(CaregiverConnections(caregivers[i], Status.connected));
+          caregiverConnections.add(CaregiverResults(caregivers[i], Status.connected));
         }
       }
       //if its null then user has no connection
       else {
-        caregiverConnections.add(CaregiverConnections(caregivers[i], null));
+        caregiverConnections.add(CaregiverResults(caregivers[i], null));
       }
     }
     emit(AddCaregiverLoaded(caregiverConnections));
   }
 }
 
-class CaregiverConnections {
+class CaregiverResults {
   User user;
   Status status;
 
-  CaregiverConnections(this.user, this.status);
+  CaregiverResults(this.user, this.status);
 }
