@@ -1,4 +1,5 @@
 import 'package:medify/database/models/medication_event.dart';
+import 'package:medify/database/models/user_connection.dart';
 
 import 'database/models/medication.dart';
 import 'database/models/medication_info.dart';
@@ -54,15 +55,15 @@ List<User> getRequestedUsers() {
 List<User> getConnectedUsers() {
   User user1 = User(0, "E", "F", "pharmacyNumber", "doctorNumber");
   User user2 = User(1, "G", "H", "pharmacyNumber", "doctorNumber");
-  User user3 = User(0, "I", "J", "pharmacyNumber", "doctorNumber");
-  User user4 = User(1, "K", "L", "pharmacyNumber", "doctorNumber");
-  User user5 = User(1, "M", "N", "pharmacyNumber", "doctorNumber");
+  User user3 = User(2, "I", "J", "pharmacyNumber", "doctorNumber");
+  User user4 = User(6, "K", "L", "pharmacyNumber", "doctorNumber");
+  User user5 = User(7, "M", "N", "pharmacyNumber", "doctorNumber");
 
   return [user1, user2, user3, user4, user5];
 }
 
 List<MedicationEvent> getMedications() {
-  Medication med = Medication(null, "Advil", null, null, null, null);
+  Medication med = Medication(null, "Advil", "Usage", "Precautions", "Dosage", "Ingredients");
   var medInfo = MedicationInfo(null, 1, 100, null, null, med);
 
   List<MedicationEvent> list = [
@@ -86,4 +87,21 @@ List<MedicationEvent> getMedications() {
   ];
 
   return list;
+}
+
+List<UserConnection> getUserConnections() {
+  User user1 = User(0, "E", "F", "pharmacyNumber", "doctorNumber");
+  User user2 = User(1, "G", "H", "pharmacyNumber", "doctorNumber");
+  User user3 = User(2, "I", "J", "pharmacyNumber", "doctorNumber");
+  User user4 = User(3, "K", "L", "pharmacyNumber", "doctorNumber");
+  User user5 = User(4, "M", "N", "pharmacyNumber", "doctorNumber");
+  UserConnection userConnection1 = UserConnection(user1, Status.requested);
+  UserConnection userConnection2 = UserConnection(user2, Status.connected);
+  UserConnection userConnection3 = UserConnection(user3, Status.requested);
+  UserConnection userConnection4 = UserConnection(user4, Status.connected);
+  UserConnection userConnection5 = UserConnection(user5, Status.connected);
+
+  var userConnections = [userConnection1, userConnection2, userConnection3, userConnection4, userConnection5];
+
+  return userConnections;
 }

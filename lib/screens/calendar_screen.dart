@@ -13,11 +13,12 @@ class CalendarScreen extends StatefulWidget {
   _CalendarScreenState createState() => _CalendarScreenState();
 }
 
-class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStateMixin {
+class _CalendarScreenState extends State<CalendarScreen> {
   var _events = {};
   List _selectedEvents = [];
   AnimationController _animationController;
   CalendarController _calendarController = CalendarController();
+  CalendarController _calendarController2 = CalendarController();
   final _today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   var _calendarCreated = false;
 
@@ -27,19 +28,21 @@ class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStat
 
     // _selectedEvents = [];
     _calendarController = CalendarController();
+    _calendarController2 = CalendarController();
 
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
+    // _animationController = AnimationController(
+    //   vsync: this,
+    //   duration: const Duration(milliseconds: 400),
+    // );
 
-    _animationController.forward();
+    // _animationController.forward();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
     _calendarController.dispose();
+    _calendarController2.dispose();
     super.dispose();
   }
 
@@ -51,12 +54,17 @@ class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        _buildTableCalendar(),
-        Expanded(child: _buildEventList()),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Home"),
+      ),
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          InteractiveViewer(child: _buildTableCalendar()),
+          Expanded(child: _buildEventList()),
+        ],
+      ),
     );
   }
 
@@ -74,12 +82,16 @@ class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStat
 
           _selectedEvents = _events[_today] ?? [];
 
+          if (_calendarCreated) {
+            _calendarController.setCalendarFormat(MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week);
+          }
           return TableCalendar(
             calendarController: _calendarController,
             events: _events,
             startingDayOfWeek: StartingDayOfWeek.sunday,
-            availableGestures: AvailableGestures.horizontalSwipe,
+            availableGestures: AvailableGestures.none,
             initialSelectedDay: _today,
+            initialCalendarFormat: MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week,
             calendarStyle: CalendarStyle(
               selectedColor: Theme.of(context).primaryColor,
               todayColor: Theme.of(context).primaryColorLight,
@@ -95,6 +107,9 @@ class _CalendarScreenState extends State<CalendarScreen> with TickerProviderStat
                 borderRadius: BorderRadius.circular(16.0),
               ),
             ),
+            onCalendarCreated: (first, last, format) {
+              _calendarCreated = true;
+            },
             onDaySelected: _onDaySelected,
             headerVisible: true,
           );

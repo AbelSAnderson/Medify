@@ -1,13 +1,19 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:medify/cubit/add_caregiver_cubit.dart';
+import 'package:medify/cubit/caregivers_cubit.dart';
 import 'package:medify/cubit/client_details_cubit.dart';
 import 'package:medify/cubit/clients_cubit.dart';
+import 'package:medify/cubit/medication_form_cubit.dart';
+import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/cubit/search_cubit.dart';
 import 'package:medify/database/database_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
+import 'package:medify/scale.dart';
+import 'package:responsive_framework/responsive_wrapper.dart';
 
 import 'screens/home_screen.dart';
 
@@ -31,12 +37,24 @@ void main() async {
       BlocProvider<SearchCubit>(
         create: (context) => SearchCubit(),
       ),
+      BlocProvider<CaregiversCubit>(
+        create: (context) => CaregiversCubit(),
+      ),
+      BlocProvider<MedicationsCubit>(
+        create: (context) => MedicationsCubit(),
+      ),
+      BlocProvider<AddCaregiverCubit>(
+        create: (context) => AddCaregiverCubit(),
+      ),
       BlocProvider<ClientsCubit>(
         create: (context) => ClientsCubit(),
       ),
       BlocProvider<ClientDetailsCubit>(
         create: (context) => ClientDetailsCubit(),
-      )
+      ),
+      BlocProvider<MedicationFormCubit>(
+        create: (context) => MedicationFormCubit(),
+      ),
     ],
     child: MyApp(),
   ));
@@ -59,6 +77,21 @@ class MyApp extends StatelessWidget {
       900: Color.fromRGBO(1, 105, 255, 1),
     };
     return MaterialApp(
+      builder: (context, child) {
+        Scale.setup(context, Size(411.43, 683.43));
+        print("Height: ${MediaQuery.of(context).size.height}");
+        print("Width: ${MediaQuery.of(context).size.width}");
+        return ResponsiveWrapper.builder(
+          child,
+          minWidth: 400,
+          defaultScale: false,
+          breakpoints: [
+            ResponsiveBreakpoint.resize(400, name: MOBILE),
+            ResponsiveBreakpoint.autoScale(800, name: TABLET, scaleFactor: 1.5),
+            ResponsiveBreakpoint.autoScale(950, name: "TabletLarge", scaleFactor: 1),
+          ],
+        );
+      },
       title: 'Medify',
       theme: ThemeData(
         brightness: Brightness.light,
