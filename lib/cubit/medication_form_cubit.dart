@@ -27,10 +27,10 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
 
   changePillAmount(String value) {
     var parsedValue = int.tryParse(value);
-    var valid = parsedValue != null ? true : false;
+    var valid = _pillAmountValid(value);
     if (valid) {
       emit(state.copyWith(
-        pillAmount: parsedValue,
+        pillAmount: parsedValue == null ? -1 : parsedValue, //if its null than the user left box empty (-1 represents empty)
         isPillAmountValid: true,
       ));
     } else {
@@ -40,11 +40,23 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
     }
   }
 
+  _pillAmountValid(String value) {
+    if (value == "") return true;
+    var parsedValue = int.tryParse(value);
+    if (parsedValue == null) return false;
+    if (parsedValue < 0) return false;
+    return true;
+  }
+
   changeMedicationType(int index) {
     emit(state.copyWith(medType: index));
   }
 
   submitForm() {
     print(state.toString());
+  }
+
+  resetState() {
+    emit(MedicationFormState.initial());
   }
 }

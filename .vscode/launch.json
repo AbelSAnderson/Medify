@@ -8,6 +8,24 @@
             "name": "Medify",
             "request": "launch",
             "type": "dart"
+        },
+        {
+            "name": "Pixel 2",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "emulator-5554"
+        },
+        {
+            "name": "Pixel 4",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "emulator-5556"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "All Devices",
+            "configurations": ["Pixel 2", "Pixel 4"]
         }
     ]
 }

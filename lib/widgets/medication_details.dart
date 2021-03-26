@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medify/database/models/medication.dart';
+import 'package:medify/scale.dart';
 
 class MedicationDetails extends StatefulWidget {
   final Medication medication;
@@ -35,15 +36,16 @@ class _MedicationDetailsState extends State<MedicationDetails> {
             Container(
               child: Text(
                 "Medication Information",
-                style: TextStyle(fontSize: 28),
+                style: TextStyle(fontSize: 28.sf),
+                textAlign: TextAlign.center,
               ),
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 22),
+              padding: EdgeInsets.symmetric(vertical: 12.sv, horizontal: 22.sh),
               decoration: BoxDecoration(
                 border: Border(bottom: BorderSide(color: Colors.grey, width: 2)),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16.sh, vertical: 8.sv),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -52,12 +54,12 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                     children: [
                       Text(
                         "Purpose",
-                        style: TextStyle(fontSize: 22),
+                        style: TextStyle(fontSize: 22.sf),
                       ),
                       IconButton(
                         icon: Icon(
                           _showPurpose ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                          size: 30,
+                          size: 30.sf,
                         ),
                         onPressed: () {
                           setState(() {
@@ -67,12 +69,18 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                       ),
                     ],
                   ),
-                  _showPurpose ? Text(medication.usage, textAlign: TextAlign.start) : Container(),
+                  _showPurpose
+                      ? Text(
+                          medication.usage,
+                          style: TextStyle(fontSize: 14.sf),
+                          textAlign: TextAlign.start,
+                        )
+                      : Container(),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16.sh, vertical: 8.sv),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -81,12 +89,12 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                     children: [
                       Text(
                         "Warnings",
-                        style: TextStyle(fontSize: 22),
+                        style: TextStyle(fontSize: 22.sf),
                       ),
                       IconButton(
                         icon: Icon(
                           _showWarnings ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                          size: 30,
+                          size: 30.sf,
                         ),
                         onPressed: () {
                           setState(() {
@@ -96,12 +104,18 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                       ),
                     ],
                   ),
-                  _showWarnings ? Text(medication.precaution, textAlign: TextAlign.start) : Container(),
+                  _showWarnings
+                      ? Text(
+                          medication.precaution,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontSize: 14.sf),
+                        )
+                      : Container(),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16.sh, vertical: 8.sv),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -110,12 +124,12 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                     children: [
                       Text(
                         "Dosage & Administration",
-                        style: TextStyle(fontSize: 22),
+                        style: TextStyle(fontSize: 22.sf),
                       ),
                       IconButton(
                         icon: Icon(
                           _showDosage ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                          size: 30,
+                          size: 30.sf,
                         ),
                         onPressed: () {
                           setState(() {
@@ -125,12 +139,18 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                       ),
                     ],
                   ),
-                  _showDosage ? Text(medication.dosage, textAlign: TextAlign.start) : Container(),
+                  _showDosage
+                      ? Text(
+                          medication.dosage,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontSize: 14.sf),
+                        )
+                      : Container(),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16.sh, vertical: 8.sv),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -139,7 +159,7 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                     children: [
                       Text(
                         "Active Ingredients",
-                        style: TextStyle(fontSize: 22),
+                        style: TextStyle(fontSize: 22.sf),
                       ),
                       IconButton(
                         icon: Icon(
@@ -154,7 +174,13 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                       ),
                     ],
                   ),
-                  _showIngredients ? Text(medication.ingredient, textAlign: TextAlign.start) : Container(),
+                  _showIngredients
+                      ? Text(
+                          medication.ingredient,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontSize: 14.sf),
+                        )
+                      : Container(),
                 ],
               ),
             ),

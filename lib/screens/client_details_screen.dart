@@ -6,6 +6,7 @@ import 'package:medify/cubit/client_details_cubit.dart';
 import 'package:medify/cubit/clients_cubit.dart';
 import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/database/models/user.dart';
+import 'package:medify/scale.dart';
 
 class ClientDetailsScreen extends StatelessWidget {
   final User user;
@@ -42,7 +43,10 @@ class ClientDetailsScreen extends StatelessWidget {
           }
           if (state is ClientDetailsError) {
             return Center(
-              child: Text("Error"),
+              child: Text(
+                "Error",
+                style: TextStyle(fontSize: 20.sf),
+              ),
             );
           }
           return Container();
@@ -64,12 +68,28 @@ class ShowMedicationsList extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
           child: ListTile(
-            title: Text(med.medicationInfo.medication.brandName),
-            subtitle: Text(formatDate(med.datetime, ["MM", " ", "d", ", ", "yyyy", " at ", "h", ":", "mm", "am"])),
+            title: Text(
+              med.medicationInfo.medication.brandName,
+              style: TextStyle(fontSize: 18.sf),
+            ),
+            subtitle: Text(
+              formatDate(med.datetime, ["MM", " ", "d", ", ", "yyyy", " at ", "h", ":", "mm", "am"]),
+              style: TextStyle(fontSize: 14.sf),
+            ),
             leading: Image(
               image: getMedTypeImage(med.medicationInfo.medicationType, false),
+              width: 40.sf,
+              height: 40.sf,
             ),
-            trailing: med.medTaken ? Text("Taken") : Text("Not Taken"),
+            trailing: med.medTaken
+                ? Text(
+                    "Taken",
+                    style: TextStyle(fontSize: 14.sf),
+                  )
+                : Text(
+                    "Not Taken",
+                    style: TextStyle(fontSize: 14.sf),
+                  ),
           ),
         );
       },

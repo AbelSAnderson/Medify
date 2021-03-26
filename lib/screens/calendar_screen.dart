@@ -7,6 +7,7 @@ import 'package:medify/database/models/medication.dart';
 import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/database/models/medication_info.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:medify/scale.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -89,7 +90,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             calendarController: _calendarController,
             events: _events,
             startingDayOfWeek: StartingDayOfWeek.sunday,
-            availableGestures: AvailableGestures.none,
+            availableGestures: AvailableGestures.horizontalSwipe,
             initialSelectedDay: _today,
             initialCalendarFormat: MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week,
             calendarStyle: CalendarStyle(
@@ -128,9 +129,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 border: Border.all(width: 2, color: Colors.grey),
                 borderRadius: BorderRadius.circular(12.0),
               ),
-              margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              margin: EdgeInsets.symmetric(horizontal: 8.sh, vertical: 4.sv),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.symmetric(vertical: 8.sv, horizontal: 8.sh),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -140,15 +141,30 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           image: getMedTypeImage(event.medicationInfo.medicationType, false),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Text(event.medicationInfo.medication.brandName),
+                          padding: EdgeInsets.only(left: 10.sh),
+                          child: Text(
+                            event.medicationInfo.medication.brandName,
+                            style: TextStyle(fontSize: 14.sf),
+                          ),
                         ),
                       ],
                     ),
-                    Container(width: 50, child: Text(event.medTaken ? "Taken" : "")),
-                    Text(formatDate(event.datetime, [h, ":", nn, " ", am])),
+                    Container(
+                        width: 50.sh,
+                        child: Text(
+                          event.medTaken ? "Taken" : "",
+                          style: TextStyle(fontSize: 14.sf),
+                        )),
+                    Text(
+                      formatDate(event.datetime, [h, ":", nn, " ", am]),
+                      style: TextStyle(fontSize: 14.sf),
+                    ),
                     IconButton(
-                      icon: Icon(Icons.repeat, color: Theme.of(context).accentColor),
+                      icon: Icon(
+                        Icons.check_circle,
+                        color: Theme.of(context).primaryColor,
+                        size: 24.sf,
+                      ),
                       onPressed: () {},
                     ),
                   ],

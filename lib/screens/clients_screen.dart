@@ -1,9 +1,9 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/cubit/clients_cubit.dart';
 import 'package:medify/database/models/user.dart';
 import 'package:medify/screens/client_details_screen.dart';
+import 'package:medify/scale.dart';
 
 class ClientsScreen extends StatelessWidget {
   @override
@@ -30,7 +30,7 @@ class ClientsScreen extends StatelessWidget {
                 var user = users[index];
                 var requestedUsersLength = state.listSeperatorThreshold;
                 return Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.symmetric(vertical: 8.sv, horizontal: 8.sh),
                   child: Container(
                     decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
                     child: index < requestedUsersLength ? _requestedUsersItem(context, users, index, requestedUsersLength) : _connectedUsersItem(context, user),
@@ -46,35 +46,29 @@ class ClientsScreen extends StatelessWidget {
   }
 
   Widget _connectedUsersItem(BuildContext context, User user) {
-    return OpenContainer(
-      transitionDuration: Duration(milliseconds: 500),
-      closedElevation: 0,
-      closedColor: Colors.transparent,
-      closedShape: null,
-      closedBuilder: (context, action) {
-        return ListTile(
-          title: Text(user.firstName + " " + user.lastName),
-          trailing: Icon(Icons.keyboard_arrow_right),
-          contentPadding: EdgeInsets.all(12),
-          onTap: action,
-        );
+    return ListTile(
+      title: Text(
+        user.firstName + " " + user.lastName,
+        style: TextStyle(fontSize: 20.sf),
+      ),
+      trailing: Icon(
+        Icons.keyboard_arrow_right,
+        size: 24.sf,
+      ),
+      contentPadding: EdgeInsets.symmetric(vertical: 8.sv, horizontal: 8.sh),
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ClientDetailsScreen(user)));
       },
-      openBuilder: (context, action) => ClientDetailsScreen(user),
     );
-    // return ListTile(
-    //   title: Text(user.firstName + " " + user.lastName),
-    //   trailing: Icon(Icons.keyboard_arrow_right),
-    //   contentPadding: EdgeInsets.all(8),
-    //   onTap: () {
-    //     // Navigator.push(context, MaterialPageRoute(builder: (context) => ClientDetailsScreen(user)));
-    //   },
-    // );
   }
 
   Widget _requestedUsersItem(BuildContext context, List<User> users, int index, int threshold) {
     var user = users[index];
     return ListTile(
-      title: Text(user.firstName + " " + user.lastName),
+      title: Text(
+        user.firstName + " " + user.lastName,
+        style: TextStyle(fontSize: 20.sf),
+      ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -82,7 +76,7 @@ class ClientsScreen extends StatelessWidget {
             icon: Icon(
               Icons.cancel,
               color: Colors.red,
-              size: 30,
+              size: 30.sf,
             ),
             onPressed: () {
               BlocProvider.of<ClientsCubit>(context).declineRequest(index);
@@ -92,7 +86,7 @@ class ClientsScreen extends StatelessWidget {
             icon: Icon(
               Icons.check_circle,
               color: Theme.of(context).primaryColor,
-              size: 30,
+              size: 30.sf,
             ),
             onPressed: () {
               BlocProvider.of<ClientsCubit>(context).acceptRequest(index);
@@ -100,7 +94,7 @@ class ClientsScreen extends StatelessWidget {
           ),
         ],
       ),
-      contentPadding: EdgeInsets.all(8),
+      contentPadding: EdgeInsets.symmetric(vertical: 8.sv, horizontal: 8.sh),
     );
   }
 }

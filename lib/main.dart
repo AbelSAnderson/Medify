@@ -79,8 +79,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       builder: (context, child) {
         Scale.setup(context, Size(411.43, 683.43));
-        print("Height: ${MediaQuery.of(context).size.height}");
-        print("Width: ${MediaQuery.of(context).size.width}");
         return ResponsiveWrapper.builder(
           child,
           minWidth: 400,

@@ -4,6 +4,7 @@ import 'package:medify/constants.dart';
 import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/screens/medication_details_screen.dart';
+import 'package:medify/scale.dart';
 
 class MedicationsScreen extends StatelessWidget {
   final List<MedicationEvent> medications;
@@ -26,22 +27,24 @@ class MedicationsScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         var med = medications[index];
         return Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.symmetric(vertical: 16.sv, horizontal: 16.sh),
           child: Container(
             decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
             child: ListTile(
-              contentPadding: EdgeInsets.all(12),
-              title: Text(med.medicationInfo.medication.brandName),
-              trailing: Icon(Icons.keyboard_arrow_right),
+              contentPadding: EdgeInsets.symmetric(vertical: 12.sv, horizontal: 12.sh),
+              title: Text(
+                med.medicationInfo.medication.brandName,
+                style: TextStyle(fontSize: 20.sf),
+              ),
+              trailing: Icon(
+                Icons.keyboard_arrow_right,
+                size: 24.sf,
+              ),
               leading: Image(
-                image: getMedTypeImage(med.medicationInfo.medicationType, true),
+                image: getMedTypeImage(med.medicationInfo.medicationType, false),
               ),
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MedicationDetailsScreen(med.medicationInfo.medication),
-                    ));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationDetailsScreen(med.medicationInfo.medication)));
               },
             ),
           ),

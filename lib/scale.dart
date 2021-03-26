@@ -8,16 +8,16 @@ class Scale {
   static Size _deviceScreenSize;
 
   static num get _horizontallyScaleFactor {
-    return _deviceScreenSize.width / size.width;
+    return _deviceScreenSize.shortestSide / size.shortestSide;
   }
 
   static num get _verticallyScaleFactor {
-    return _deviceScreenSize.height / size.height;
+    return _deviceScreenSize.longestSide / size.longestSide;
   }
 
   static num get _fontScaleFactor {
-    var deviceSize = (_deviceScreenSize.width + _deviceScreenSize.height);
-    var originalSize = (size.width + size.height);
+    var deviceSize = (_deviceScreenSize.shortestSide + _deviceScreenSize.longestSide);
+    var originalSize = (size.shortestSide + size.longestSide);
     return deviceSize / originalSize;
   }
 
