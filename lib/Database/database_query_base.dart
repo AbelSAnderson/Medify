@@ -1,4 +1,6 @@
 import 'package:hive/hive.dart';
+import 'package:medify/database/api_handler.dart';
+import 'package:medify/database/model_base.dart';
 
 /// Base Class for the Database Queries
 abstract class DatabaseQueryBase<T> {
@@ -12,4 +14,8 @@ abstract class DatabaseQueryBase<T> {
     var itemBox = await Hive.openBox<T>(boxName);
     return itemBox.values.toList();
   }
+
+  Future<List<T>> retrieveAllFromApi();
+
+  Future<T> retrieveOneFromApi(int id);
 }

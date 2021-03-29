@@ -26,14 +26,14 @@ class Medication extends ModelBase {
   Medication(this.id, this.brandName, this.usage, this.precaution, this.dosage,
       this.ingredient);
 
-  // Decode the Medication from a json file - should be changed later to handle lack of information
+  // Decode the Medication from a json file
   Medication.fromJson(Map<String, dynamic> json)
       : this.id = json["id"],
         this.brandName = json["openfda"]["brand_name"].toString(),
         this.usage = json["indications_and_usage"].toString(), // Could also use dosage_and_administration
         this.precaution = json["warnings"].toString(), // Could also use other_safety_information
         this.dosage = json["dosage_and_administration"].toString(),
-        this.ingredient = json["active_ingredient"].toString(); // Could also use inactive_ingredient
+        this.ingredient = json["active_ingredient"].toString();
 }
 
 /// Medication List Class used to decode a list of Medications

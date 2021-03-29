@@ -5,7 +5,7 @@ class OpenFDAQueries {
 
   /// Retrieve multiple medications
   Future<List<Medication>> retrieveMedications(String apiParameters) async {
-    return MedicationList.from(await ApiHandler().getData("?$apiParameters")).medications;
+    return MedicationList.from(await ApiHandler.openFDA().getData("?$apiParameters")).medications;
   }
 
   /// Retrieve a single medication

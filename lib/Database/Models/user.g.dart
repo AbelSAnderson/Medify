@@ -22,6 +22,7 @@ class UserAdapter extends TypeAdapter<User> {
       fields[2] as String,
       fields[3] as String,
       fields[4] as String,
+      fields[5] as String
     );
   }
 
@@ -38,7 +39,9 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(3)
       ..write(obj.pharmacyNumber)
       ..writeByte(4)
-      ..write(obj.doctorNumber);
+      ..write(obj.doctorNumber)
+      ..writeByte(5)
+      ..write(obj.email);
   }
 
   @override
