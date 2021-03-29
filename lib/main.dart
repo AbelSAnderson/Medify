@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/scale.dart';
+import 'package:medify/screens/login_screen.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
 import 'screens/home_screen.dart';
@@ -98,7 +99,8 @@ class MyApp extends StatelessWidget {
         accentColor: Color.fromRGBO(230, 0, 233, 1),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Medify'),
+      // home: MyHomePage(title: 'Medify'),
+      home: LoginScreen(),
     );
   }
 }
