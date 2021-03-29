@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/home_screen.dart';
+import 'package:medify/widgets/reset_password_dialog.dart';
 
 class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -37,7 +38,7 @@ class LoginScreen extends StatelessWidget {
                         _emailField(),
                         SizedBox(height: 20.sv),
                         _passwordField(),
-                        _resetPasswordButton(),
+                        _resetPasswordButton(context),
                         SizedBox(height: 20.sv),
                         _submitButton(context),
                         SizedBox(
@@ -117,7 +118,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _resetPasswordButton() {
+  Widget _resetPasswordButton(BuildContext context) {
     return Align(
       alignment: Alignment.centerRight,
       child: TextButton(
@@ -125,7 +126,12 @@ class LoginScreen extends StatelessWidget {
           "Reset Password?",
           style: TextStyle(fontSize: 14.sf),
         ),
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => ResetPasswordDialog(),
+          );
+        },
       ),
     );
   }
