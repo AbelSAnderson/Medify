@@ -21,7 +21,7 @@ class Scale {
     return deviceSize / originalSize;
   }
 
-  static bool get _isMobile {
+  static bool get isMobile {
     return _deviceScreenSize.shortestSide < 600;
   }
 
@@ -36,19 +36,19 @@ class Scale {
   /// Get the number scaled horizontally.
   static num scaleHorizontally(num number) {
     num newNumber = number * _horizontallyScaleFactor;
-    return _isMobile ? newNumber : number * 1.0;
+    return isMobile ? newNumber : number * 1.0;
   }
 
   /// Get the number scaled vertically.
   static num scaleVertically(num number) {
     num newNumber = number * _verticallyScaleFactor;
-    return _isMobile ? newNumber : number * 1.0;
+    return isMobile ? newNumber : number * 1.0;
   }
 
   /// Get the font scaled.
   static num scaleFont(num number) {
     num newNumber = number * _fontScaleFactor;
-    return _isMobile ? newNumber : number * 1.0;
+    return isMobile ? newNumber : number * 1.0;
   }
 }
 

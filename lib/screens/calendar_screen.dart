@@ -99,6 +99,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               markersColor: Theme.of(context).accentColor,
               outsideDaysVisible: true,
             ),
+            rowHeight: 50.sv,
             headerStyle: HeaderStyle(
               formatButtonVisible: false,
               centerHeaderTitle: true,
@@ -139,22 +140,30 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       children: [
                         Image(
                           image: getMedTypeImage(event.medicationInfo.medicationType, false),
+                          width: 40.sf,
+                          height: 40.sf,
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 10.sh),
-                          child: Text(
-                            event.medicationInfo.medication.brandName,
-                            style: TextStyle(fontSize: 14.sf),
+                          child: Container(
+                            width: 85.sh,
+                            child: Text(
+                              event.medicationInfo.medication.brandName,
+                              style: TextStyle(fontSize: 14.sf),
+                              overflow: TextOverflow.fade,
+                              softWrap: false,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    Container(
-                        width: 50.sh,
-                        child: Text(
-                          event.medTaken ? "Taken" : "",
-                          style: TextStyle(fontSize: 14.sf),
-                        )),
+                    Text(
+                      "Taken",
+                      style: TextStyle(
+                        fontSize: 14.sf,
+                        color: event.medTaken ? Colors.black : Colors.transparent,
+                      ),
+                    ),
                     Text(
                       formatDate(event.datetime, [h, ":", nn, " ", am]),
                       style: TextStyle(fontSize: 14.sf),

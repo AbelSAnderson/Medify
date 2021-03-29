@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/cubit/medication_form_cubit.dart';
+import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/database/models/medication.dart';
 import 'package:medify/widgets/medicine_type.dart';
 import 'package:date_format/date_format.dart';
@@ -49,42 +50,26 @@ class MedicationForm extends StatelessWidget {
           child: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 16.sv, horizontal: 16.sh),
-              child: ResponsiveRowColumn(
-                columnCrossAxisAlignment: CrossAxisAlignment.start,
-                columnSpacing: 12.5.sv,
-                rowColumn: false,
+              child: Wrap(
+                runSpacing: 10.sv,
                 children: [
-                  ResponsiveRowColumnItem(child: Container(child: _nameField(state.medication.brandName))),
-                  ResponsiveRowColumnItem(child: _repeatsField(context, state.interval)),
-                  ResponsiveRowColumnItem(child: _startDateField(context, state.startDate)),
-                  ResponsiveRowColumnItem(child: _timeField(context, state.time)),
-                  ResponsiveRowColumnItem(child: _pillAmountField(context, state)),
-                  ResponsiveRowColumnItem(child: MedicineType(onMedIndexChanged: (index) {
+                  _nameField(state.medication.brandName),
+                  // SizedBox(height: 20),
+                  _repeatsField(context, state.interval),
+                  // SizedBox(height: 20),
+                  _startDateField(context, state.startDate),
+                  // SizedBox(height: 20),
+                  _timeField(context, state.time),
+                  // SizedBox(height: 20),
+                  _pillAmountField(context, state),
+                  // SizedBox(height: 20),
+                  MedicineType(onMedIndexChanged: (index) {
                     BlocProvider.of<MedicationFormCubit>(context).changeMedicationType(index);
-                  })),
-                  ResponsiveRowColumnItem(child: _submitButton(context)),
+                  }),
+                  // SizedBox(height: 20),
+                  _submitButton(context),
                 ],
               ),
-              // child: Column(
-              //   crossAxisAlignment: CrossAxisAlignment.start,
-              //   children: [
-              //     _nameField(state.medication.brandName),
-              //     SizedBox(height: 20),
-              //     _repeatsField(context, state.interval),
-              //     SizedBox(height: 20),
-              //     _startDateField(context, state.startDate),
-              //     SizedBox(height: 20),
-              //     _timeField(context, state.time),
-              //     SizedBox(height: 20),
-              //     _pillAmountField(context, state),
-              //     SizedBox(height: 20),
-              //     MedicineType(onMedIndexChanged: (index) {
-              //       BlocProvider.of<MedicationFormCubit>(context).changeMedicationType(index);
-              //     }),
-              //     SizedBox(height: 20),
-              //     _submitButton(context),
-              //   ],
-              // ),
             ),
           ),
         );
@@ -305,7 +290,9 @@ class MedicationForm extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState.validate()) {
-            BlocProvider.of<MedicationFormCubit>(context).submitForm();
+            BlocProvider.of<MedicationFormCubit>(context).submitForm(context);
+            BlocProvider.of<NavBarCubit>(context).updateIndex(0);
+            Navigator.of(context).pop();
           }
         },
         child: Text("Add Medication"),
