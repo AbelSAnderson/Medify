@@ -1,46 +1,61 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import '../app_exceptions.dart';
 
 import 'package:http/http.dart' as http;
 
 class ApiHandler {
-  final _openFDAUrl = "https://api.fda.gov/drug/label.json";
-  final _medifyUrl = "";
+  static final _openFDAApiHandler = ApiHandler._openFDAApi();
+  static final _medifyAPIHandler = ApiHandler._medifyApi();
 
-  static String _token = "";
+  String url;
+  String _dataName;
+  bool _useToken = false;
+  String _token = "";
+
+  // Singleton Pattern Factories
+  factory ApiHandler.openFDA() {
+    return _openFDAApiHandler;
+  }
+
+  factory ApiHandler.medifyAPI() {
+    return _medifyAPIHandler;
+  }
+
+  ApiHandler._openFDAApi() {
+    url = "https://api.fda.gov/drug/label.json";
+    _dataName = "results";
+  }
+
+  ApiHandler._medifyApi() {
+    url = "https://aanderson.scweb.ca/Medify-API/api/";
+    _dataName = "data";
+    _useToken = true;
+    retrieveToken();
+  }
 
   /// Retrieve Data from with a post request
   Future<dynamic> getData(String url) async {
     var responseJson;
 
     try {
-      final response = await http.get(Uri.parse(_openFDAUrl + url), headers: {
-        'Content-type': 'application/json',
-        'Accept': 'application/json',
-        //HttpHeaders.authorizationHeader: _token
-      });
+      final response =
+          await http.get(Uri.parse(this.url + url), headers: getHeaders());
 
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
 
-    return responseJson["results"];
+    return responseJson[_dataName];
   }
 
   /// Retrieve Data with a Get Request
   Future<dynamic> getPostData(String url, Map<String, dynamic> body) async {
     var responseJson;
     try {
-      final response = await http.post(Uri.parse(_openFDAUrl + url),
-          headers: {
-            'Content-type': 'application/json',
-            'Accept': 'application/json',
-            //HttpHeaders.authorizationHeader: _token
-          },
-          body: jsonEncode(body));
+      final response = await http.post(Uri.parse(this.url + url),
+          headers: getHeaders(), body: jsonEncode(body));
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -66,8 +81,24 @@ class ApiHandler {
     }
   }
 
+  Map<String, String> getHeaders() {
+    if (_useToken) {
+      return {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        HttpHeaders.authorizationHeader: _token
+      };
+    } else {
+      return {'Content-type': 'application/json', 'Accept': 'application/json'};
+    }
+  }
+
   /// Set the token
   setToken(String token) {
     _token = token;
+  }
+
+  retrieveToken() async {
+    _token = await "";
   }
 }
