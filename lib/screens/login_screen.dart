@@ -156,10 +156,7 @@ class LoginScreen extends StatelessWidget {
         },
         style: ElevatedButton.styleFrom(
           primary: Theme.of(context).primaryColor,
-          textStyle: TextStyle(
-            color: Colors.purple,
-            fontSize: 14.sf,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 22.sh),
         ),
       ),
     );
@@ -173,21 +170,18 @@ class LoginScreen extends StatelessWidget {
           "New User?",
           style: TextStyle(fontSize: 14.sf),
         ),
-        Container(
-          width: 70.sh,
-          child: TextButton(
-            style: TextButton.styleFrom(),
-            child: Text(
-              "Sign Up",
-              style: TextStyle(fontSize: 14.sf),
-            ),
-            onPressed: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => RegisterScreen(),
-              ));
-            },
+        TextButton(
+          style: TextButton.styleFrom(),
+          child: Text(
+            "Sign Up",
+            style: TextStyle(fontSize: 14.sf),
           ),
-        )
+          onPressed: () {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => RegisterScreen(),
+            ));
+          },
+        ),
       ],
     );
   }

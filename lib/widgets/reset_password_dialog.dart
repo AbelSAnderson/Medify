@@ -64,13 +64,10 @@ class ResetPasswordDialog extends StatelessWidget {
   Widget _submitButton(BuildContext context) {
     return Center(
       child: ElevatedButton(
-        child: Container(
-          width: 105.sh,
-          child: Text(
-            "Reset Password",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14.sf),
-          ),
+        child: Text(
+          "Reset Password",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 14.sf),
         ),
         onPressed: () {
           //Replace this with password resetting logic
@@ -78,10 +75,7 @@ class ResetPasswordDialog extends StatelessWidget {
         },
         style: ElevatedButton.styleFrom(
           primary: Theme.of(context).primaryColor,
-          textStyle: TextStyle(
-            color: Colors.purple,
-            fontSize: 14.sf,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 16.sh),
         ),
       ),
     );

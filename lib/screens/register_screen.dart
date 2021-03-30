@@ -246,21 +246,18 @@ class RegisterScreen extends StatelessWidget {
           "Already have an account?",
           style: TextStyle(fontSize: 14.sf),
         ),
-        Container(
-          width: 53.sh,
-          child: TextButton(
-            style: TextButton.styleFrom(),
-            child: Text(
-              "Login",
-              style: TextStyle(fontSize: 14.sf),
-            ),
-            onPressed: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => LoginScreen(),
-              ));
-            },
+        TextButton(
+          style: TextButton.styleFrom(),
+          child: Text(
+            "Login",
+            style: TextStyle(fontSize: 14.sf),
           ),
-        )
+          onPressed: () {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => LoginScreen(),
+            ));
+          },
+        ),
       ],
     );
   }
