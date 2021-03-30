@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/home_screen.dart';
+import 'package:medify/screens/register_screen.dart';
 import 'package:medify/widgets/reset_password_dialog.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -40,11 +41,11 @@ class LoginScreen extends StatelessWidget {
                         _passwordField(),
                         _resetPasswordButton(context),
                         SizedBox(height: 20.sv),
-                        _submitButton(context),
+                        _loginButton(context),
                         SizedBox(
                           height: 20.sv,
                         ),
-                        _signUpButtonSection(),
+                        _signUpButtonSection(context),
                       ],
                     ),
                   ),
@@ -136,16 +137,13 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _submitButton(BuildContext context) {
+  Widget _loginButton(BuildContext context) {
     return Center(
       child: ElevatedButton(
-        child: Container(
-          width: 40.sh,
-          child: Text(
-            "Login",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14.sf),
-          ),
+        child: Text(
+          "Login",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 14.sf),
         ),
         onPressed: () {
           if (_formKey.currentState.validate()) {
@@ -167,7 +165,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _signUpButtonSection() {
+  Widget _signUpButtonSection(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -183,7 +181,11 @@ class LoginScreen extends StatelessWidget {
               "Sign Up",
               style: TextStyle(fontSize: 14.sf),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => RegisterScreen(),
+              ));
+            },
           ),
         )
       ],
