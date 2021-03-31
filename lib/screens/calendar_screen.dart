@@ -138,23 +138,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   children: [
                     Row(
                       children: [
-                        Image(
-                          image: getMedTypeImage(event.medicationInfo.medicationType, false),
-                          width: 40.sf,
-                          height: 40.sf,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10.sh),
-                          child: Container(
-                            width: 85.sh,
-                            child: Text(
-                              event.medicationInfo.medication.brandName,
-                              style: TextStyle(fontSize: 14.sf),
-                              overflow: TextOverflow.fade,
-                              softWrap: false,
-                            ),
-                          ),
-                        ),
+                        ///////////////////////////////////////////////////////////////////////////////////////////////////
+                        /****************** UNCOMMENT THIS AFTER API WORKS WITH FOREIGN IDs ******************************/
+                        ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+                        // Image(
+                        //   image: getMedTypeImage(event.medicationInfo.medicationType, false),
+                        //   width: 40.sf,
+                        //   height: 40.sf,
+                        // ),
+                        // Padding(
+                        //   padding: EdgeInsets.only(left: 10.sh),
+                        //   child: Container(
+                        //     width: 85.sh,
+                        //     child: Text(
+                        //       event.medicationInfo.medication.brandName,
+                        //       style: TextStyle(fontSize: 14.sf),
+                        //       overflow: TextOverflow.fade,
+                        //       softWrap: false,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                     Text(
@@ -168,20 +172,35 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       formatDate(event.datetime, [h, ":", nn, " ", am]),
                       style: TextStyle(fontSize: 14.sf),
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.check_circle,
-                        color: Theme.of(context).primaryColor,
-                        size: 24.sf,
-                      ),
-                      onPressed: () {},
-                    ),
+                    !event.medTaken ? _takenIconButton() : _undoIconButton(),
                   ],
                 ),
               ),
             ),
           )
           .toList(),
+    );
+  }
+
+  Widget _takenIconButton() {
+    return IconButton(
+      icon: Icon(
+        Icons.check_circle,
+        color: Theme.of(context).primaryColor,
+        size: 32.sf,
+      ),
+      onPressed: () {},
+    );
+  }
+
+  Widget _undoIconButton() {
+    return IconButton(
+      icon: Icon(
+        Icons.replay_circle_filled,
+        color: Theme.of(context).accentColor,
+        size: 32.sf,
+      ),
+      onPressed: () {},
     );
   }
 }

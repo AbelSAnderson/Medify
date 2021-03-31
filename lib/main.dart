@@ -12,6 +12,8 @@ import 'package:medify/database/database_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
+import 'package:medify/database/model_queries/medication_event_queries.dart';
+import 'package:medify/database/model_queries/medication_info_queries.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/login_screen.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
@@ -33,7 +35,7 @@ void main() async {
         create: (context) => NavBarCubit(),
       ),
       BlocProvider<CalendarCubit>(
-        create: (context) => CalendarCubit(),
+        create: (context) => CalendarCubit(MedicationEventQueries()),
       ),
       BlocProvider<SearchCubit>(
         create: (context) => SearchCubit(),
@@ -42,7 +44,7 @@ void main() async {
         create: (context) => CaregiversCubit(),
       ),
       BlocProvider<MedicationsCubit>(
-        create: (context) => MedicationsCubit(),
+        create: (context) => MedicationsCubit(MedicationInfoQueries()),
       ),
       BlocProvider<AddCaregiverCubit>(
         create: (context) => AddCaregiverCubit(),

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:medify/database/model_queries/medication_event_queries.dart';
 import 'package:medify/database/models/medication_event.dart';
 import 'package:meta/meta.dart';
 import 'package:medify/dummy_data.dart' as DummyData;
@@ -7,15 +8,19 @@ import 'package:medify/dummy_data.dart' as DummyData;
 part 'calendar_state.dart';
 
 class CalendarCubit extends Cubit<CalendarState> {
-  CalendarCubit() : super(CalendarInitial());
+  final MedicationEventQueries medicationEventQueries;
+
+  CalendarCubit(this.medicationEventQueries) : super(CalendarInitial());
 
   ///Load all the medications events
-  void getAllMedicationEvents() async {
+  Future<void> getAllMedicationEvents() async {
     await Future<void>.delayed(const Duration(milliseconds: 1));
     emit(CalendarLoadInProgress());
     await Future<void>.delayed(const Duration(seconds: 1));
-    var medicationEvents = DummyData.getMedicationEvents({});
-    emit(CalendarLoaded(medicationEvents));
+    // var medicationEvents = DummyData.getMedicationEvents({});
+    var medicationEvents = await medicationEventQueries.retrieveAllFromApi();
+    var medEventsMapped = _createMedicationEventsMap(medicationEvents);
+    emit(CalendarLoaded(medEventsMapped));
   }
 
   ///Add a medication event to the calendar
@@ -44,5 +49,24 @@ class CalendarCubit extends Cubit<CalendarState> {
     }
 
     return events;
+  }
+
+  _createMedicationEventsMap(List<MedicationEvent> eventsList) {
+    Map<DateTime, List<MedicationEvent>> eventsMapped = {};
+
+    for (int i = 0; i < eventsList.length; i++) {
+      var dateTime = eventsList[i].datetime;
+      var date = DateTime(dateTime.year, dateTime.month, dateTime.day);
+
+      if (eventsMapped[date] == null) {
+        //create new list
+        eventsMapped[date] = [eventsList[i]];
+      } else {
+        //clone the list and add the new value
+        eventsMapped[date] = List.from(eventsMapped[date])..addAll([eventsList[i]]);
+      }
+    }
+
+    return eventsMapped;
   }
 }

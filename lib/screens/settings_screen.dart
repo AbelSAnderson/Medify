@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medify/scale.dart';
+import 'package:medify/widgets/change_password_dialog.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -34,37 +35,47 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _fontSizeSection() {
     return Column(
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "Font Size",
-            style: TextStyle(fontSize: 18.sf),
+        Padding(
+          padding: EdgeInsets.only(bottom: 8.sv),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Font Size",
+                  style: TextStyle(fontSize: 18.sf),
+                ),
+              ),
+              Row(
+                children: [
+                  Container(
+                    width: 45.sh,
+                    child: Text(
+                      _sliderValue.toInt().toString() + "%",
+                      style: TextStyle(fontSize: 16.sf),
+                    ),
+                  ),
+                  Expanded(
+                    child: Slider.adaptive(
+                      value: _sliderValue,
+                      min: 1,
+                      max: 100,
+                      onChanged: (value) {
+                        setState(() {
+                          _sliderValue = value;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 10.sh),
-              child: Text(
-                _sliderValue.toInt().toString() + "%",
-                style: TextStyle(fontSize: 16.sf),
-              ),
-            ),
-            Expanded(
-              child: Slider.adaptive(
-                value: _sliderValue,
-                min: 1,
-                max: 100,
-                onChanged: (value) {
-                  setState(() {
-                    _sliderValue = value;
-                  });
-                },
-              ),
-            ),
-          ],
+        Divider(
+          thickness: 2,
+          height: 0,
         ),
-        Divider(thickness: 2),
       ],
     );
   }
@@ -72,25 +83,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _caregiverModeSection() {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Caregiver Mode",
-              style: TextStyle(fontSize: 18.sf),
-            ),
-            Switch.adaptive(
-              activeColor: Theme.of(context).primaryColor,
-              value: _switchValue,
-              onChanged: (value) {
-                setState(() {
-                  _switchValue = value;
-                });
-              },
-            ),
-          ],
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.sv),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Caregiver Mode",
+                style: TextStyle(fontSize: 18.sf),
+              ),
+              Switch.adaptive(
+                activeColor: Theme.of(context).primaryColor,
+                value: _switchValue,
+                onChanged: (value) {
+                  setState(() {
+                    _switchValue = value;
+                  });
+                },
+              ),
+            ],
+          ),
         ),
-        Divider(thickness: 2),
+        Divider(
+          thickness: 2,
+          height: 0,
+        ),
       ],
     );
   }
@@ -100,7 +117,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.sv),
+            padding: EdgeInsets.symmetric(vertical: 16.sv),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -115,11 +132,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
-          Divider(thickness: 2),
+          Divider(
+            thickness: 2,
+            height: 0,
+          ),
         ],
       ),
       onTap: () {
-        //Show Change Password Dialog
+        showDialog(
+          context: context,
+          builder: (context) => ChangePasswordDialog(),
+        );
       },
     );
   }
