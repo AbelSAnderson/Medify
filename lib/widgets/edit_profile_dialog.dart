@@ -134,7 +134,7 @@ class EditProfileDialog extends StatelessWidget {
           style: TextStyle(fontSize: 14.sf),
         ),
         onPressed: () {
-          //Replace this with password resetting logic
+          //Replace this with the edit profile logic
           Navigator.of(context, rootNavigator: true).pop('dialog');
         },
         style: ElevatedButton.styleFrom(
