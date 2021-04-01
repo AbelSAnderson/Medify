@@ -142,11 +142,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         /****************** UNCOMMENT THIS AFTER API WORKS WITH FOREIGN IDs ******************************/
                         ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-                        // Image(
-                        //   image: getMedTypeImage(event.medicationInfo.medicationType, false),
-                        //   width: 40.sf,
-                        //   height: 40.sf,
-                        // ),
+                        Image(
+                          image: getMedTypeImage(event.medicationInfo.medicationType, false),
+                          width: 40.sf,
+                          height: 40.sf,
+                        ),
                         // Padding(
                         //   padding: EdgeInsets.only(left: 10.sh),
                         //   child: Container(

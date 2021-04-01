@@ -16,6 +16,7 @@ import 'package:medify/database/model_queries/medication_event_queries.dart';
 import 'package:medify/database/model_queries/medication_info_queries.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/login_screen.dart';
+import 'package:medify/screens/settings_screen.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
 import 'screens/home_screen.dart';

@@ -162,7 +162,7 @@ class ProfileScreen extends StatelessWidget {
                         onPressed: () {
                           showDialog(
                             context: context,
-                            builder: (context) => RemoveCaregiverDialog(),
+                            builder: (context) => RemoveCaregiverDialog(caregiver),
                           );
                         },
                       ),

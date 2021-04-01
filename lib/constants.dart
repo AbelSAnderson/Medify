@@ -36,7 +36,7 @@ AssetImage getMedTypeImage(int imageId, bool selected) {
       imageUrl = !selected ? shieldUrl : shieldSelectedUrl;
       break;
     default:
-      imageUrl = selected ? heartUrl : heartSelectedUrl;
+      imageUrl = !selected ? heartUrl : heartSelectedUrl;
       break;
   }
   return AssetImage(imageUrl);

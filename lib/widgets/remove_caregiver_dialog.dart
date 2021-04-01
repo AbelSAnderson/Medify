@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/cubit/caregivers_cubit.dart';
+import 'package:medify/database/models/user.dart';
 import 'package:medify/scale.dart';
 
 class RemoveCaregiverDialog extends StatelessWidget {
+  final User caregiver;
+
+  RemoveCaregiverDialog(this.caregiver);
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -48,6 +55,7 @@ class RemoveCaregiverDialog extends StatelessWidget {
         ),
         onPressed: () {
           //Replace this with remove caregiver logic
+          BlocProvider.of<CaregiversCubit>(context).removeCaregiver(caregiver);
           Navigator.of(context, rootNavigator: true).pop('dialog');
         },
         style: ElevatedButton.styleFrom(

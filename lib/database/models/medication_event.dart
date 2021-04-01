@@ -28,7 +28,7 @@ class MedicationEvent extends ModelBase {
   MedicationEvent.fromJson(Map<String, dynamic> json)
       : this.id = json["id"],
         this.datetime = DateTime.parse(json["date_time"]),
-        this.medicationInfo = null,
+        this.medicationInfo = MedicationInfo.fromJson(json["med_info"]),
         this.medTaken = json["med_taken"] == 1,
         this.amountTaken = json["amount_taken"];
 }
