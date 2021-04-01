@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants.dart';
+import 'package:medify/scale.dart';
 
 class MedicineType extends StatefulWidget {
   @override
@@ -17,8 +18,8 @@ class MedicineTypeState extends State<MedicineType> {
     return GestureDetector(
       child: Image(
         image: AssetImage(_selectedImage == medIndex ? imageSelectedUrl : imageUrl),
-        height: 40,
-        width: 40,
+        height: 35.sv,
+        width: 35.sh,
       ),
       onTap: () {
         setState(() {
@@ -32,9 +33,12 @@ class MedicineTypeState extends State<MedicineType> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          "Medicine Type",
-          style: TextStyle(fontSize: 26),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 4.sv),
+          child: Text(
+            "Medicine Type",
+            style: TextStyle(fontSize: 26.sf),
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

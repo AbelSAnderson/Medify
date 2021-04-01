@@ -1,7 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/database/models/medication.dart';
+import 'package:medify/database/models/medication_event.dart';
+import 'package:medify/database/models/medication_info.dart';
 import 'package:meta/meta.dart';
 
 part 'medication_form_state.dart';
@@ -27,10 +31,10 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
 
   changePillAmount(String value) {
     var parsedValue = int.tryParse(value);
-    var valid = parsedValue != null ? true : false;
+    var valid = _pillAmountValid(value);
     if (valid) {
       emit(state.copyWith(
-        pillAmount: parsedValue,
+        pillAmount: parsedValue == null ? -1 : parsedValue, //if its null than the user left box empty (-1 represents empty)
         isPillAmountValid: true,
       ));
     } else {
@@ -40,11 +44,27 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
     }
   }
 
+  _pillAmountValid(String value) {
+    if (value == "") return true;
+    var parsedValue = int.tryParse(value);
+    if (parsedValue == null) return false;
+    if (parsedValue < 0) return false;
+    return true;
+  }
+
   changeMedicationType(int index) {
     emit(state.copyWith(medType: index));
   }
 
-  submitForm() {
+  submitForm(BuildContext context) {
     print(state.toString());
+    DateTime dateTime = DateTime(state.startDate.year, state.startDate.month, state.startDate.day, state.time.hour, state.time.minute);
+    MedicationInfo medicationInfo = MedicationInfo(0, state.medType, state.pillAmount, dateTime, 0, state.medication);
+    MedicationEvent medicationEvent = MedicationEvent(0, medicationInfo.takeAt, medicationInfo, false, 0);
+    BlocProvider.of<CalendarCubit>(context).addMedicationEvent(medicationEvent);
+  }
+
+  resetState() {
+    emit(MedicationFormState.initial());
   }
 }

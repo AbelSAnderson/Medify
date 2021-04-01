@@ -89,6 +89,16 @@ List<MedicationEvent> getMedications() {
   return list;
 }
 
+List<MedicationInfo> getMedicationInfos() {
+  Medication med = Medication(null, "Advil", "Usage", "Precautions", "Dosage", "Ingredients");
+  var medInfo = MedicationInfo(null, 1, 100, null, null, med);
+  List<MedicationInfo> medsList = [];
+  for (int i = 0; i < 10; i++) {
+    medsList.add(medInfo);
+  }
+  return medsList;
+}
+
 List<UserConnection> getUserConnections() {
   User user1 = User(0, "E", "F", "pharmacyNumber", "doctorNumber", "fake@email.com");
   User user2 = User(1, "G", "H", "pharmacyNumber", "doctorNumber", "fake@email.com");

@@ -18,7 +18,7 @@ class MedicationsLoading extends MedicationsState {
 }
 
 class MedicationsLoaded extends MedicationsState {
-  final List<MedicationEvent> medications;
+  final List<MedicationInfo> medications;
 
   const MedicationsLoaded([this.medications = const []]);
 

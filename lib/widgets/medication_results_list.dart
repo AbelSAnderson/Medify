@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medify/screens/add_medication_screen.dart';
 import 'package:medify/screens/medication_details_screen.dart';
+import 'package:medify/scale.dart';
 
 class MedicationResultsList extends StatelessWidget {
   final medications;
@@ -18,10 +19,16 @@ class MedicationResultsList extends StatelessWidget {
               border: Border(bottom: BorderSide(color: Colors.black26)),
             ),
             child: ListTile(
-              contentPadding: EdgeInsets.all(10),
-              title: Text(medications[index].brandName),
+              contentPadding: EdgeInsets.symmetric(vertical: 10.sv, horizontal: 10.sh),
+              title: Text(
+                medications[index].brandName,
+                style: TextStyle(fontSize: 16.sf),
+              ),
               trailing: IconButton(
-                icon: Icon(Icons.add),
+                icon: Icon(
+                  Icons.add,
+                  size: 24.sf,
+                ),
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => AddMedicationScreen(medications[index])));
                 },

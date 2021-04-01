@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/cubit/medication_form_cubit.dart';
+import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/database/models/medication.dart';
 import 'package:medify/widgets/medicine_type.dart';
 import 'package:date_format/date_format.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'medicine_type.dart';
+import 'package:medify/scale.dart';
 
 class MedicationForm extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -13,10 +15,10 @@ class MedicationForm extends StatelessWidget {
 
   MedicationForm(this.medication);
 
-  Future _selectDate(BuildContext context) async {
+  Future _selectDate(BuildContext context, DateTime initialDate) async {
     await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: initialDate,
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(Duration(days: 1000)),
     ).then((value) => {
@@ -24,10 +26,10 @@ class MedicationForm extends StatelessWidget {
         });
   }
 
-  Future _selectTime(BuildContext context) async {
+  Future _selectTime(BuildContext context, TimeOfDay initialTime) async {
     await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: initialTime,
     ).then((value) => {
           if (value != null) {BlocProvider.of<MedicationFormCubit>(context).changeTime(value)}
         });
@@ -35,50 +37,39 @@ class MedicationForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //reset the state everytime this screen opens
+    BlocProvider.of<MedicationFormCubit>(context).resetState();
+    //set medication to the medication that is being added
     BlocProvider.of<MedicationFormCubit>(context).changeMedication(medication);
+    //initial value for pill amount textfield
+    BlocProvider.of<MedicationFormCubit>(context).changePillAmount("");
     return BlocBuilder<MedicationFormCubit, MedicationFormState>(
       builder: (context, state) {
         return Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ResponsiveRowColumn(
-                columnCrossAxisAlignment: CrossAxisAlignment.start,
-                columnSpacing: 12.5,
-                rowColumn: false,
+              padding: EdgeInsets.symmetric(vertical: 16.sv, horizontal: 16.sh),
+              child: Wrap(
+                runSpacing: 10.sv,
                 children: [
-                  ResponsiveRowColumnItem(child: Container(child: _nameField(state.medication.brandName))),
-                  ResponsiveRowColumnItem(child: _repeatsField(context, state.interval)),
-                  ResponsiveRowColumnItem(child: _startDateField(context, state.startDate)),
-                  ResponsiveRowColumnItem(child: _timeField(context, state.time)),
-                  ResponsiveRowColumnItem(child: _pillAmountField(context, state)),
-                  ResponsiveRowColumnItem(child: MedicineType(onMedIndexChanged: (index) {
+                  _nameField(state.medication.brandName),
+                  // SizedBox(height: 20),
+                  _repeatsField(context, state.interval),
+                  // SizedBox(height: 20),
+                  _startDateField(context, state.startDate),
+                  // SizedBox(height: 20),
+                  _timeField(context, state.time),
+                  // SizedBox(height: 20),
+                  _pillAmountField(context, state),
+                  // SizedBox(height: 20),
+                  MedicineType(onMedIndexChanged: (index) {
                     BlocProvider.of<MedicationFormCubit>(context).changeMedicationType(index);
-                  })),
-                  ResponsiveRowColumnItem(child: _submitButton(context)),
+                  }),
+                  // SizedBox(height: 20),
+                  _submitButton(context),
                 ],
               ),
-              // child: Column(
-              //   crossAxisAlignment: CrossAxisAlignment.start,
-              //   children: [
-              //     _nameField(state.medication.brandName),
-              //     SizedBox(height: 20),
-              //     _repeatsField(context, state.interval),
-              //     SizedBox(height: 20),
-              //     _startDateField(context, state.startDate),
-              //     SizedBox(height: 20),
-              //     _timeField(context, state.time),
-              //     SizedBox(height: 20),
-              //     _pillAmountField(context, state),
-              //     SizedBox(height: 20),
-              //     MedicineType(onMedIndexChanged: (index) {
-              //       BlocProvider.of<MedicationFormCubit>(context).changeMedicationType(index);
-              //     }),
-              //     SizedBox(height: 20),
-              //     _submitButton(context),
-              //   ],
-              // ),
             ),
           ),
         );
@@ -93,9 +84,10 @@ class MedicationForm extends StatelessWidget {
           alignment: Alignment.topLeft,
           child: Text(
             "Medication*",
+            style: TextStyle(fontSize: 14.sf),
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 10.sv),
         Container(
           alignment: Alignment.topRight,
           decoration: BoxDecoration(
@@ -107,8 +99,11 @@ class MedicationForm extends StatelessWidget {
             children: [
               Align(
                 child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text(medName),
+                  padding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+                  child: Text(
+                    medName,
+                    style: TextStyle(fontSize: 14.sf),
+                  ),
                 ),
               ),
             ],
@@ -124,31 +119,42 @@ class MedicationForm extends StatelessWidget {
       children: [
         Align(
           alignment: Alignment.topLeft,
-          child: Text("Repeats*"),
+          child: Text(
+            "Repeats*",
+            style: TextStyle(fontSize: 14.sf),
+          ),
         ),
-        SizedBox(height: 10),
-        DropdownButtonFormField<String>(
-          value: repeats ?? "Weekly",
-          elevation: 16,
-          isExpanded: true,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.all(14),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey,
-                width: 32,
+        SizedBox(height: 10.sv),
+        Container(
+          height: 47.5.sv,
+          child: DropdownButtonFormField<String>(
+            value: repeats ?? "Weekly",
+            style: TextStyle(fontSize: 14.sf, color: Colors.black),
+            elevation: 16,
+            isExpanded: true,
+            iconSize: 24.sf,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(horizontal: 14),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.grey,
+                  width: 32,
+                ),
               ),
             ),
+            items: <String>["Daily", "Weekly", "Bi-Monthly", "Monthly"].map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: TextStyle(fontSize: 14.sf),
+                ),
+              );
+            }).toList(),
+            onChanged: (String newValue) {
+              BlocProvider.of<MedicationFormCubit>(context).changeRepeats(newValue);
+            },
           ),
-          items: <String>["Daily", "Weekly", "Bi-Monthly", "Monthly"].map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (String newValue) {
-            BlocProvider.of<MedicationFormCubit>(context).changeRepeats(newValue);
-          },
         ),
       ],
     );
@@ -159,14 +165,18 @@ class MedicationForm extends StatelessWidget {
       children: [
         Align(
           alignment: Alignment.topLeft,
-          child: Text("Start Date*"),
+          child: Text(
+            "Start Date*",
+            style: TextStyle(fontSize: 14.sf),
+          ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 10.sv),
         GestureDetector(
           onTap: () {
-            _selectDate(context);
+            _selectDate(context, startDate);
           },
           child: Container(
+            height: 50.sh,
             alignment: Alignment.topRight,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
@@ -176,13 +186,17 @@ class MedicationForm extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Text(formatDate(startDate, [mm, '-', dd, '-', yyyy])),
+                  padding: EdgeInsets.symmetric(horizontal: 14),
+                  child: Text(
+                    formatDate(startDate, [mm, '-', dd, '-', yyyy]),
+                    style: TextStyle(fontSize: 14.sf),
+                  ),
                 ),
                 IconButton(
                   icon: Icon(Icons.calendar_today),
+                  iconSize: 24.sf,
                   onPressed: () {
-                    _selectDate(context);
+                    _selectDate(context, startDate);
                   },
                 ),
               ],
@@ -198,14 +212,18 @@ class MedicationForm extends StatelessWidget {
       children: [
         Align(
           alignment: Alignment.topLeft,
-          child: Text("Time*"),
+          child: Text(
+            "Time*",
+            style: TextStyle(fontSize: 14.sf),
+          ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 10.sv),
         GestureDetector(
           onTap: () {
-            _selectTime(context);
+            _selectTime(context, time);
           },
           child: Container(
+            height: 50.sh,
             alignment: Alignment.topRight,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
@@ -215,13 +233,17 @@ class MedicationForm extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Text(time.format(context)),
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  child: Text(
+                    time.format(context),
+                    style: TextStyle(fontSize: 14.sf),
+                  ),
                 ),
                 IconButton(
                   icon: Icon(Icons.access_time),
+                  iconSize: 24.sf,
                   onPressed: () {
-                    _selectTime(context);
+                    _selectTime(context, time);
                   },
                 ),
               ],
@@ -239,23 +261,25 @@ class MedicationForm extends StatelessWidget {
           alignment: Alignment.topLeft,
           child: Text(
             "Pill Amount",
+            style: TextStyle(fontSize: 14.sf),
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 10.sv),
         TextFormField(
+          style: TextStyle(fontSize: 16.sf),
+          initialValue: "",
           decoration: InputDecoration(
+            isDense: true,
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.all(10),
+            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.number,
           validator: (value) {
             return state.isPillAmountValid ? null : "Please enter a valid number";
           },
-          onFieldSubmitted: (value) {
-            BlocProvider.of<MedicationFormCubit>(context).changePillAmount(value);
-          },
+          onChanged: (value) => BlocProvider.of<MedicationFormCubit>(context).changePillAmount(value),
         ),
       ],
     );
@@ -266,7 +290,9 @@ class MedicationForm extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState.validate()) {
-            BlocProvider.of<MedicationFormCubit>(context).submitForm();
+            BlocProvider.of<MedicationFormCubit>(context).submitForm(context);
+            BlocProvider.of<NavBarCubit>(context).updateIndex(0);
+            Navigator.of(context).pop();
           }
         },
         child: Text("Add Medication"),
@@ -274,6 +300,7 @@ class MedicationForm extends StatelessWidget {
           primary: Theme.of(context).primaryColor,
           textStyle: TextStyle(
             color: Colors.purple,
+            fontSize: 14.sf,
           ),
         ),
       ),

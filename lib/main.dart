@@ -12,7 +12,10 @@ import 'package:medify/database/database_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
+import 'package:medify/database/model_queries/medication_event_queries.dart';
+import 'package:medify/database/model_queries/medication_info_queries.dart';
 import 'package:medify/scale.dart';
+import 'package:medify/screens/login_screen.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
 import 'screens/home_screen.dart';
@@ -32,7 +35,7 @@ void main() async {
         create: (context) => NavBarCubit(),
       ),
       BlocProvider<CalendarCubit>(
-        create: (context) => CalendarCubit(),
+        create: (context) => CalendarCubit(MedicationEventQueries()),
       ),
       BlocProvider<SearchCubit>(
         create: (context) => SearchCubit(),
@@ -41,7 +44,7 @@ void main() async {
         create: (context) => CaregiversCubit(),
       ),
       BlocProvider<MedicationsCubit>(
-        create: (context) => MedicationsCubit(),
+        create: (context) => MedicationsCubit(MedicationInfoQueries()),
       ),
       BlocProvider<AddCaregiverCubit>(
         create: (context) => AddCaregiverCubit(),
@@ -79,8 +82,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       builder: (context, child) {
         Scale.setup(context, Size(411.43, 683.43));
-        print("Height: ${MediaQuery.of(context).size.height}");
-        print("Width: ${MediaQuery.of(context).size.width}");
         return ResponsiveWrapper.builder(
           child,
           minWidth: 400,
@@ -100,7 +101,8 @@ class MyApp extends StatelessWidget {
         accentColor: Color.fromRGBO(230, 0, 233, 1),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Medify'),
+      // home: MyHomePage(title: 'Medify'),
+      home: LoginScreen(),
     );
   }
 }

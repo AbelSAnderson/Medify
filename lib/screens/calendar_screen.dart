@@ -7,6 +7,7 @@ import 'package:medify/database/models/medication.dart';
 import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/database/models/medication_info.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:medify/scale.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -89,7 +90,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             calendarController: _calendarController,
             events: _events,
             startingDayOfWeek: StartingDayOfWeek.sunday,
-            availableGestures: AvailableGestures.none,
+            availableGestures: AvailableGestures.horizontalSwipe,
             initialSelectedDay: _today,
             initialCalendarFormat: MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week,
             calendarStyle: CalendarStyle(
@@ -98,6 +99,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               markersColor: Theme.of(context).accentColor,
               outsideDaysVisible: true,
             ),
+            rowHeight: 50.sv,
             headerStyle: HeaderStyle(
               formatButtonVisible: false,
               centerHeaderTitle: true,
@@ -128,35 +130,77 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 border: Border.all(width: 2, color: Colors.grey),
                 borderRadius: BorderRadius.circular(12.0),
               ),
-              margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              margin: EdgeInsets.symmetric(horizontal: 8.sh, vertical: 4.sv),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.symmetric(vertical: 8.sv, horizontal: 8.sh),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        Image(
-                          image: getMedTypeImage(event.medicationInfo.medicationType, false),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Text(event.medicationInfo.medication.brandName),
-                        ),
+                        ///////////////////////////////////////////////////////////////////////////////////////////////////
+                        /****************** UNCOMMENT THIS AFTER API WORKS WITH FOREIGN IDs ******************************/
+                        ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+                        // Image(
+                        //   image: getMedTypeImage(event.medicationInfo.medicationType, false),
+                        //   width: 40.sf,
+                        //   height: 40.sf,
+                        // ),
+                        // Padding(
+                        //   padding: EdgeInsets.only(left: 10.sh),
+                        //   child: Container(
+                        //     width: 85.sh,
+                        //     child: Text(
+                        //       event.medicationInfo.medication.brandName,
+                        //       style: TextStyle(fontSize: 14.sf),
+                        //       overflow: TextOverflow.fade,
+                        //       softWrap: false,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
-                    Container(width: 50, child: Text(event.medTaken ? "Taken" : "")),
-                    Text(formatDate(event.datetime, [h, ":", nn, " ", am])),
-                    IconButton(
-                      icon: Icon(Icons.repeat, color: Theme.of(context).accentColor),
-                      onPressed: () {},
+                    Text(
+                      "Taken",
+                      style: TextStyle(
+                        fontSize: 14.sf,
+                        color: event.medTaken ? Colors.black : Colors.transparent,
+                      ),
                     ),
+                    Text(
+                      formatDate(event.datetime, [h, ":", nn, " ", am]),
+                      style: TextStyle(fontSize: 14.sf),
+                    ),
+                    !event.medTaken ? _takenIconButton() : _undoIconButton(),
                   ],
                 ),
               ),
             ),
           )
           .toList(),
+    );
+  }
+
+  Widget _takenIconButton() {
+    return IconButton(
+      icon: Icon(
+        Icons.check_circle,
+        color: Theme.of(context).primaryColor,
+        size: 32.sf,
+      ),
+      onPressed: () {},
+    );
+  }
+
+  Widget _undoIconButton() {
+    return IconButton(
+      icon: Icon(
+        Icons.replay_circle_filled,
+        color: Theme.of(context).accentColor,
+        size: 32.sf,
+      ),
+      onPressed: () {},
     );
   }
 }

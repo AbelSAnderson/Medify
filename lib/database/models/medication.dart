@@ -23,17 +23,16 @@ class Medication extends ModelBase {
   @HiveField(5)
   String ingredient;
 
-  Medication(this.id, this.brandName, this.usage, this.precaution, this.dosage,
-      this.ingredient);
+  Medication(this.id, this.brandName, this.usage, this.precaution, this.dosage, this.ingredient);
 
   // Decode the Medication from a json file
   Medication.fromJson(Map<String, dynamic> json)
       : this.id = json["id"],
-        this.brandName = json["openfda"]["brand_name"].toString(),
-        this.usage = json["indications_and_usage"].toString(), // Could also use dosage_and_administration
-        this.precaution = json["warnings"].toString(), // Could also use other_safety_information
-        this.dosage = json["dosage_and_administration"].toString(),
-        this.ingredient = json["active_ingredient"].toString();
+        this.brandName = json["openfda"]["brand_name"][0].toString(),
+        this.usage = json["indications_and_usage"][0].toString(), // Could also use dosage_and_administration
+        this.precaution = json["warnings"][0].toString(), // Could also use other_safety_information
+        this.dosage = json["dosage_and_administration"][0].toString(),
+        this.ingredient = json["active_ingredient"][0].toString(); // Could also use inactive_ingredient
 }
 
 /// Medication List Class used to decode a list of Medications
@@ -42,6 +41,5 @@ class MedicationList {
 
   MedicationList(this.medications);
 
-  MedicationList.from(List<dynamic> medicationJson)
-      : medications = medicationJson.map((e) => Medication.fromJson(e)).toList();
+  MedicationList.from(List<dynamic> medicationJson) : medications = medicationJson.map((e) => Medication.fromJson(e)).toList();
 }

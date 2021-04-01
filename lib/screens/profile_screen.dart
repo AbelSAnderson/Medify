@@ -6,6 +6,9 @@ import 'package:medify/cubit/caregivers_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/database/models/user_connection.dart';
 import 'package:medify/screens/medications_screen.dart';
+import 'package:medify/screens/settings_screen.dart';
+import 'package:medify/widgets/edit_profile_dialog.dart';
+import 'package:medify/widgets/remove_caregiver_dialog.dart';
 import 'package:medify/widgets/search_bar.dart';
 import 'package:medify/scale.dart';
 
@@ -19,12 +22,21 @@ class ProfileScreen extends StatelessWidget {
         ),
         leading: IconButton(
           icon: Icon(Icons.edit),
-          onPressed: () {},
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => EditProfileDialog(),
+            );
+          },
         ),
         actions: [
           IconButton(
             icon: Icon(Icons.settings),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => SettingsScreen(),
+              ));
+            },
           ),
         ],
       ),
@@ -147,7 +159,12 @@ class ProfileScreen extends StatelessWidget {
                           color: Colors.red,
                           size: 35,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => RemoveCaregiverDialog(),
+                          );
+                        },
                       ),
                     ),
                   ),

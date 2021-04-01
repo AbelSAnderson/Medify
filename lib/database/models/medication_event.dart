@@ -22,13 +22,12 @@ class MedicationEvent extends ModelBase {
   @HiveField(4)
   int amountTaken;
 
-  MedicationEvent(this.id, this.datetime, this.medicationInfo, this.medTaken,
-      this.amountTaken);
+  MedicationEvent(this.id, this.datetime, this.medicationInfo, this.medTaken, this.amountTaken);
 
   // Decode the Medication Event from a json file
   MedicationEvent.fromJson(Map<String, dynamic> json)
       : this.id = json["id"],
-        this.datetime = json["date_time"],
+        this.datetime = DateTime.parse(json["date_time"]),
         this.medicationInfo = null,
         this.medTaken = json["med_taken"] == 1,
         this.amountTaken = json["amount_taken"];
@@ -40,6 +39,5 @@ class MedicationEventList {
 
   MedicationEventList(this.medicationEvents);
 
-  MedicationEventList.from(List<dynamic> medicationEventJson)
-      : medicationEvents = medicationEventJson.map((e) => MedicationEvent.fromJson(e)).toList();
+  MedicationEventList.from(List<dynamic> medicationEventJson) : medicationEvents = medicationEventJson.map((e) => MedicationEvent.fromJson(e)).toList();
 }

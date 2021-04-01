@@ -8,20 +8,20 @@ class Scale {
   static Size _deviceScreenSize;
 
   static num get _horizontallyScaleFactor {
-    return _deviceScreenSize.width / size.width;
+    return _deviceScreenSize.shortestSide / size.shortestSide;
   }
 
   static num get _verticallyScaleFactor {
-    return _deviceScreenSize.height / size.height;
+    return _deviceScreenSize.longestSide / size.longestSide;
   }
 
   static num get _fontScaleFactor {
-    var deviceSize = (_deviceScreenSize.width + _deviceScreenSize.height);
-    var originalSize = (size.width + size.height);
+    var deviceSize = (_deviceScreenSize.shortestSide + _deviceScreenSize.longestSide);
+    var originalSize = (size.shortestSide + size.longestSide);
     return deviceSize / originalSize;
   }
 
-  static bool get _isMobile {
+  static bool get isMobile {
     return _deviceScreenSize.shortestSide < 600;
   }
 
@@ -36,19 +36,19 @@ class Scale {
   /// Get the number scaled horizontally.
   static num scaleHorizontally(num number) {
     num newNumber = number * _horizontallyScaleFactor;
-    return _isMobile ? newNumber : number * 1.0;
+    return isMobile ? newNumber : number * 1.0;
   }
 
   /// Get the number scaled vertically.
   static num scaleVertically(num number) {
     num newNumber = number * _verticallyScaleFactor;
-    return _isMobile ? newNumber : number * 1.0;
+    return isMobile ? newNumber : number * 1.0;
   }
 
   /// Get the font scaled.
   static num scaleFont(num number) {
     num newNumber = number * _fontScaleFactor;
-    return _isMobile ? newNumber : number * 1.0;
+    return isMobile ? newNumber : number * 1.0;
   }
 }
 
