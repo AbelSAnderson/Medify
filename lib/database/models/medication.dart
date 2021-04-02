@@ -6,7 +6,7 @@ part 'medication.g.dart';
 @HiveType(typeId: 1)
 class Medication extends ModelBase {
   @HiveField(0)
-  String id;
+  int id;
 
   @HiveField(1)
   String brandName;
@@ -27,7 +27,7 @@ class Medication extends ModelBase {
 
   // Decode the Medication from a json file
   Medication.fromJson(Map<String, dynamic> json)
-      : this.id = json["id"],
+      : this.id = json["id"] ?? 0,
         this.brandName = json["openfda"]["brand_name"][0].toString(),
         this.usage = json["indications_and_usage"][0].toString(), // Could also use dosage_and_administration
         this.precaution = json["warnings"][0].toString(), // Could also use other_safety_information

@@ -34,7 +34,7 @@ class MedicationInfo extends ModelBase {
         this.pillsRemaining = json["pills_remaining"],
         this.takeAt = DateTime.parse(json["take_at"]),
         this.repeat = json["repeat_interval"],
-        this.medication = null;
+        this.medication = Medication.fromJson(json["medication"]);
 }
 
 /// MedicationInfo List Class used to decode a list of Medication Info
