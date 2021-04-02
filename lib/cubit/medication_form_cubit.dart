@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/constants.dart';
 import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/database/models/medication.dart';
 import 'package:medify/database/models/medication_event.dart';
@@ -59,7 +60,7 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
   submitForm(BuildContext context) {
     print(state.toString());
     DateTime dateTime = DateTime(state.startDate.year, state.startDate.month, state.startDate.day, state.time.hour, state.time.minute);
-    MedicationInfo medicationInfo = MedicationInfo(0, state.medType, state.pillAmount, dateTime, 0, state.medication);
+    MedicationInfo medicationInfo = MedicationInfo(0, state.medType, state.pillAmount, dateTime, getRepeatsInt(state.interval), state.medication);
     MedicationEvent medicationEvent = MedicationEvent(0, medicationInfo.takeAt, medicationInfo, false, 0);
     BlocProvider.of<CalendarCubit>(context).addMedicationEvent(medicationEvent);
   }
