@@ -22,29 +22,20 @@ class MedicationsCubit extends Cubit<MedicationsState> {
     });
   }
 
-  // loadMedications() async {
-  //   await Future<void>.delayed(Duration(milliseconds: 1));
-  //   emit(MedicationsLoading());
-  //   // var medications = DummyData.getMedicationInfos();
-  //   var medications = await medicationInfoQueries.retrieveAllFromApi();
-  //   emit(MedicationsLoaded(medications));
-  // }
-
   loadMedications() async {
-    await Future<void>.delayed(Duration(milliseconds: 1));
+    _wait();
     emit(MedicationsLoading());
     medicationInfoRepository.getMedicationInfos();
     var medicationInfos = medicationInfoRepository.medicationInfos;
     emit(MedicationsLoaded(medicationInfos));
   }
 
-  addMedication(MedicationInfo medication) async {
-    if (state is MedicationsLoaded) {
-      var previousState = state as MedicationsLoaded;
-      emit(MedicationsLoading());
-      var newList = previousState.medications..add(medication);
-      emit(MedicationsLoaded(newList));
-    }
+  deleteMedication(MedicationInfo medicationInfo) async {
+    _wait();
+    emit(MedicationsLoading());
+    await medicationInfoRepository.deleteMedicationInfo(medicationInfo);
+    var medicationInfos = medicationInfoRepository.medicationInfos;
+    emit(MedicationsLoaded(medicationInfos));
   }
 
   _wait() async {

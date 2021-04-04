@@ -62,12 +62,27 @@ class ApiHandler {
     return responseJson[_dataName];
   }
 
+  /// Retrieve Data with a Delete Request
+  Future<dynamic> getDeleteData(String url) async {
+    var responseJson;
+    try {
+      final response = await http.delete(Uri.parse(this.url + url), headers: getHeaders());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+
+    return responseJson;
+  }
+
   /// Decode the response into json, or throw an error if the response has an error status code
   dynamic _returnResponse(http.Response response) {
     switch (response.statusCode) {
       case 200:
       case 201:
         return json.decode(response.body.toString());
+      case 204:
+        return response;
       case 400:
         throw BadRequestException(response.body.toString());
       case 401:

@@ -1,6 +1,8 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/constants.dart';
+import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/database/models/medication_info.dart';
 import 'package:medify/scale.dart';
 
@@ -82,6 +84,8 @@ class OccuranceDetails extends StatelessWidget {
                   ),
                   onPressed: () {
                     //Call bloc to remove medication
+                    BlocProvider.of<MedicationsCubit>(context).deleteMedication(medication);
+                    Navigator.of(context).pop();
                   },
                 ),
               ],

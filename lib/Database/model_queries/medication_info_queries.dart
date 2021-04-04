@@ -19,13 +19,12 @@ class MedicationInfoQueries extends DatabaseQueryBase<MedicationInfo> {
     return MedicationInfo.fromJson(jsonData);
   }
 
-  // Future<Response> insertToApi(MedicationInfo data) async {
-  //   var jsonData = await ApiHandler.medifyAPI().getPostData("medicationInfo", data.toJson());
-  //   return jsonData;
-  // }
-
   Future<MedicationInfo> insertToApi(MedicationInfo data) async {
     var jsonData = await ApiHandler.medifyAPI().getPostData("medicationInfo", data.toJson());
     return MedicationInfo.fromJson(jsonData);
+  }
+
+  Future<Response> deleteFromApi(int id) async {
+    return await ApiHandler.medifyAPI().getDeleteData("medicationInfo/$id");
   }
 }
