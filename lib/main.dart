@@ -14,6 +14,9 @@ import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/database/model_queries/medication_event_queries.dart';
 import 'package:medify/database/model_queries/medication_info_queries.dart';
+import 'package:medify/database/model_queries/medication_queries.dart';
+import 'package:medify/repositories/medication_event_repository.dart';
+import 'package:medify/repositories/medication_info_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/login_screen.dart';
 import 'package:medify/screens/settings_screen.dart';
@@ -30,38 +33,50 @@ void main() async {
   // Allow Http requests to be sent - should be changed to only allow openFDA & our API requests through
   HttpOverrides.global = new MyHttpOverrides();
 
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider<NavBarCubit>(
-        create: (context) => NavBarCubit(),
+  runApp(
+    MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(
+          create: (context) => MedicationInfoRepository(),
+        ),
+        RepositoryProvider(
+          create: (context) => MedicationEventRepository(),
+        ),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<NavBarCubit>(
+            create: (context) => NavBarCubit(),
+          ),
+          BlocProvider<CalendarCubit>(
+            create: (context) => CalendarCubit(MedicationEventQueries(), RepositoryProvider.of<MedicationEventRepository>(context)),
+          ),
+          BlocProvider<SearchCubit>(
+            create: (context) => SearchCubit(),
+          ),
+          BlocProvider<CaregiversCubit>(
+            create: (context) => CaregiversCubit(),
+          ),
+          BlocProvider<MedicationsCubit>(
+            create: (context) => MedicationsCubit(MedicationInfoQueries(), RepositoryProvider.of<MedicationInfoRepository>(context)),
+          ),
+          BlocProvider<AddCaregiverCubit>(
+            create: (context) => AddCaregiverCubit(),
+          ),
+          BlocProvider<ClientsCubit>(
+            create: (context) => ClientsCubit(),
+          ),
+          BlocProvider<ClientDetailsCubit>(
+            create: (context) => ClientDetailsCubit(),
+          ),
+          BlocProvider<MedicationFormCubit>(
+            create: (context) => MedicationFormCubit(MedicationQueries(), RepositoryProvider.of<MedicationInfoRepository>(context), RepositoryProvider.of<MedicationEventRepository>(context)),
+          ),
+        ],
+        child: MyApp(),
       ),
-      BlocProvider<CalendarCubit>(
-        create: (context) => CalendarCubit(MedicationEventQueries()),
-      ),
-      BlocProvider<SearchCubit>(
-        create: (context) => SearchCubit(),
-      ),
-      BlocProvider<CaregiversCubit>(
-        create: (context) => CaregiversCubit(),
-      ),
-      BlocProvider<MedicationsCubit>(
-        create: (context) => MedicationsCubit(MedicationInfoQueries()),
-      ),
-      BlocProvider<AddCaregiverCubit>(
-        create: (context) => AddCaregiverCubit(),
-      ),
-      BlocProvider<ClientsCubit>(
-        create: (context) => ClientsCubit(),
-      ),
-      BlocProvider<ClientDetailsCubit>(
-        create: (context) => ClientDetailsCubit(),
-      ),
-      BlocProvider<MedicationFormCubit>(
-        create: (context) => MedicationFormCubit(),
-      ),
-    ],
-    child: MyApp(),
-  ));
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

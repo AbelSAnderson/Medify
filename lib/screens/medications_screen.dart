@@ -47,7 +47,7 @@ class MedicationsScreen extends StatelessWidget {
                 height: 35.sv,
               ),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationDetailsScreen(med)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationDetailsScreen(med.medication)));
               },
             ),
           ),

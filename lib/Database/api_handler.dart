@@ -39,8 +39,7 @@ class ApiHandler {
     var responseJson;
 
     try {
-      final response =
-          await http.get(Uri.parse(this.url + url), headers: getHeaders());
+      final response = await http.get(Uri.parse(this.url + url), headers: getHeaders());
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -54,20 +53,20 @@ class ApiHandler {
   Future<dynamic> getPostData(String url, Map<String, dynamic> body) async {
     var responseJson;
     try {
-      final response = await http.post(Uri.parse(this.url + url),
-          headers: getHeaders(), body: jsonEncode(body));
+      final response = await http.post(Uri.parse(this.url + url), headers: getHeaders(), body: jsonEncode(body));
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
 
-    return responseJson;
+    return responseJson[_dataName];
   }
 
   /// Decode the response into json, or throw an error if the response has an error status code
   dynamic _returnResponse(http.Response response) {
     switch (response.statusCode) {
       case 200:
+      case 201:
         return json.decode(response.body.toString());
       case 400:
         throw BadRequestException(response.body.toString());
@@ -76,8 +75,7 @@ class ApiHandler {
         throw UnauthorisedException(response.body.toString());
       case 500:
       default:
-        throw FetchDataException(
-            'Communication Error with Server. StatusCode : ${response.statusCode}');
+        throw FetchDataException('Communication Error with Server. StatusCode : ${response.body}');
     }
   }
 
@@ -86,10 +84,13 @@ class ApiHandler {
       return {
         'Content-type': 'application/json',
         'Accept': 'application/json',
-        HttpHeaders.authorizationHeader: _token
+        HttpHeaders.authorizationHeader: _token,
       };
     } else {
-      return {'Content-type': 'application/json', 'Accept': 'application/json'};
+      return {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      };
     }
   }
 

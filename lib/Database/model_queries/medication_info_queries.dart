@@ -1,3 +1,4 @@
+import 'package:http/http.dart';
 import 'package:medify/database/models/medication_info.dart';
 import '../api_handler.dart';
 import '../database_query_base.dart';
@@ -15,6 +16,16 @@ class MedicationInfoQueries extends DatabaseQueryBase<MedicationInfo> {
   @override
   Future<MedicationInfo> retrieveOneFromApi(int id) async {
     var jsonData = await ApiHandler.medifyAPI().getData("medicationInfo/$id");
+    return MedicationInfo.fromJson(jsonData);
+  }
+
+  // Future<Response> insertToApi(MedicationInfo data) async {
+  //   var jsonData = await ApiHandler.medifyAPI().getPostData("medicationInfo", data.toJson());
+  //   return jsonData;
+  // }
+
+  Future<MedicationInfo> insertToApi(MedicationInfo data) async {
+    var jsonData = await ApiHandler.medifyAPI().getPostData("medicationInfo", data.toJson());
     return MedicationInfo.fromJson(jsonData);
   }
 }

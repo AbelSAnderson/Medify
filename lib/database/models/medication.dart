@@ -27,12 +27,29 @@ class Medication extends ModelBase {
 
   // Decode the Medication from a json file
   Medication.fromJson(Map<String, dynamic> json)
-      : this.id = json["id"] ?? 0,
-        this.brandName = json["openfda"]["brand_name"][0].toString(),
-        this.usage = json["indications_and_usage"][0].toString(), // Could also use dosage_and_administration
-        this.precaution = json["warnings"][0].toString(), // Could also use other_safety_information
-        this.dosage = json["dosage_and_administration"][0].toString(),
-        this.ingredient = json["active_ingredient"][0].toString(); // Could also use inactive_ingredient
+      : this.id = 0,
+        this.brandName = json["openfda"]["brand_name"][0].toString() ?? "Not Available",
+        this.usage = json["indications_and_usage"][0].toString() ?? "Not Available", // Could also use dosage_and_administration
+        this.precaution = json["warnings"][0].toString() ?? "Not Available", // Could also use other_safety_information
+        this.dosage = json["dosage_and_administration"][0].toString() ?? "Not Available",
+        this.ingredient = json["active_ingredient"][0].toString() ?? "Not Available"; // Could also use inactive_ingredient
+
+  Medication.fromJsonMedifyAPI(Map<String, dynamic> json)
+      : this.id = json["id"],
+        this.brandName = json["brand_name"],
+        this.usage = json["usages"],
+        this.precaution = json["precautions"],
+        this.dosage = json["dosage"],
+        this.ingredient = json["ingredients"];
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'brand_name': brandName,
+        'usages': usage,
+        'precautions': precaution,
+        'dosage': dosage,
+        'ingredients': ingredient,
+      };
 }
 
 /// Medication List Class used to decode a list of Medications
@@ -42,4 +59,5 @@ class MedicationList {
   MedicationList(this.medications);
 
   MedicationList.from(List<dynamic> medicationJson) : medications = medicationJson.map((e) => Medication.fromJson(e)).toList();
+  MedicationList.fromMedifyAPI(List<dynamic> medicationJson) : medications = medicationJson.map((e) => Medication.fromJson(e)).toList();
 }

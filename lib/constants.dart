@@ -44,13 +44,13 @@ AssetImage getMedTypeImage(int imageId, bool selected) {
 
 String getRepeatsString(int value) {
   switch (value) {
-    case 0:
-      return "Daily";
     case 1:
+      return "Daily";
+    case 7:
       return "Weekly";
-    case 2:
+    case 14:
       return "Bi-Monthly";
-    case 3:
+    case 30:
       return "Monthly";
     default:
       return "Error";
@@ -60,14 +60,14 @@ String getRepeatsString(int value) {
 int getRepeatsInt(String value) {
   switch (value) {
     case "Daily":
-      return 0;
-    case "Weekly":
       return 1;
+    case "Weekly":
+      return 7;
     case "Bi-Monthly":
-      return 2;
+      return 14;
     case "Monthly":
-      return 3;
+      return 30;
     default:
-      return 0;
+      return 1;
   }
 }

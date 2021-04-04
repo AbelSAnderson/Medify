@@ -5,7 +5,7 @@ import 'package:medify/widgets/medication_details.dart';
 import 'package:medify/widgets/occurance_details.dart';
 
 class MedicationDetailsScreen extends StatelessWidget {
-  final MedicationInfo _medication;
+  final Medication _medication;
 
   MedicationDetailsScreen(this._medication);
 
@@ -13,13 +13,13 @@ class MedicationDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_medication.medication.brandName),
+        title: Text(_medication.brandName),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            OccuranceDetails(_medication),
-            MedicationDetails(_medication.medication),
+            // OccuranceDetails(_medication),
+            MedicationDetails(_medication),
           ],
         ),
       ),
