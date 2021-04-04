@@ -97,16 +97,23 @@ class MyApp extends StatelessWidget {
     };
     return MaterialApp(
       builder: (context, child) {
+        //Setup scaling for mobile (this is independent from the ResponsiveWrapper Scaling for Tablets)
         Scale.setup(context, Size(411.43, 683.43));
+        List<ResponsiveBreakpoint> breakpoints = [];
+        //Don't have any breakpoints for mobile (we only want to use responsive wrapper for tablets)
+        //This fixes the breakpoints hitting on mobile for landscape orientation causing it to scale and looks huge
+        if (!Scale.isMobile) {
+          breakpoints.addAll([
+            ResponsiveBreakpoint.resize(400, name: MOBILE),
+            ResponsiveBreakpoint.autoScale(800, name: TABLET, scaleFactor: 1.5),
+            ResponsiveBreakpoint.autoScale(950, name: "TabletLarge", scaleFactor: 1),
+          ]);
+        }
         return ResponsiveWrapper.builder(
           child,
           minWidth: 400,
           defaultScale: false,
-          breakpoints: [
-            ResponsiveBreakpoint.resize(400, name: MOBILE),
-            ResponsiveBreakpoint.autoScale(800, name: TABLET, scaleFactor: 1.5),
-            ResponsiveBreakpoint.autoScale(950, name: "TabletLarge", scaleFactor: 1),
-          ],
+          breakpoints: breakpoints,
         );
       },
       title: 'Medify',
