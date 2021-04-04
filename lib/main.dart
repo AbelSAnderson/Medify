@@ -97,7 +97,7 @@ class MyApp extends StatelessWidget {
       800: Color.fromRGBO(1, 105, 255, 0.9),
       900: Color.fromRGBO(1, 105, 255, 1),
     };
-    return PlatformApp(
+    return MaterialApp(
       builder: (context, child) {
         //Setup scaling for mobile (this is independent from the ResponsiveWrapper Scaling for Tablets)
         Scale.setup(context, Size(411.43, 683.43));
@@ -119,21 +119,12 @@ class MyApp extends StatelessWidget {
         );
       },
       title: 'Medify',
-      material: (_, __) => MaterialAppData(
-        theme: ThemeData(
-          brightness: Brightness.light,
-          primarySwatch: MaterialColor(0xFF0169FF, colors),
-          //primaryColor: Color.fromRGBO(1, 105, 255, 1),
-          accentColor: Color.fromRGBO(230, 0, 233, 1),
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-      ),
-      cupertino: (_, __) => CupertinoAppData(
-        theme: CupertinoThemeData(
-          brightness: Brightness.light,
-          primaryColor: Color.fromRGBO(1, 105, 255, 1),
-          primaryContrastingColor: Color.fromRGBO(230, 0, 233, 1),
-        ),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primarySwatch: MaterialColor(0xFF0169FF, colors),
+        //primaryColor: Color.fromRGBO(1, 105, 255, 1),
+        accentColor: Color.fromRGBO(230, 0, 233, 1),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: LoginScreen(),
     );
