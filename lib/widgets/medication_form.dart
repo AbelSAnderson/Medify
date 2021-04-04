@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -28,12 +29,39 @@ class MedicationForm extends StatelessWidget {
   }
 
   Future _selectTime(BuildContext context, TimeOfDay initialTime) async {
-    await showTimePicker(
-      context: context,
-      initialTime: initialTime,
-    ).then((value) => {
+    if (isCupertino(context)) {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) => _cupertinoTimePicker(context, initialTime),
+      );
+    } else {
+      await showTimePicker(
+        context: context,
+        initialTime: initialTime,
+      ).then(
+        (value) => {
           if (value != null) {BlocProvider.of<MedicationFormCubit>(context).changeTime(value)}
-        });
+        },
+      );
+    }
+  }
+
+  Widget _cupertinoTimePicker(BuildContext context, TimeOfDay initialTime) {
+    //we dont need the date (just time)
+    var initialDateTime = DateTime(2000, 1, 1, initialTime.hour, initialTime.minute);
+    return Container(
+      height: 300.sv,
+      child: CupertinoDatePicker(
+        initialDateTime: initialDateTime,
+        mode: CupertinoDatePickerMode.time,
+        onDateTimeChanged: (value) {
+          var time = TimeOfDay(hour: value.hour, minute: value.minute);
+          if (value != null) {
+            BlocProvider.of<MedicationFormCubit>(context).changeTime(time);
+          }
+        },
+      ),
+    );
   }
 
   @override
