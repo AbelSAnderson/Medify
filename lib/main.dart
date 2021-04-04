@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/add_caregiver_cubit.dart';
 import 'package:medify/cubit/caregivers_cubit.dart';
 import 'package:medify/cubit/client_details_cubit.dart';
@@ -95,7 +97,7 @@ class MyApp extends StatelessWidget {
       800: Color.fromRGBO(1, 105, 255, 0.9),
       900: Color.fromRGBO(1, 105, 255, 1),
     };
-    return MaterialApp(
+    return PlatformApp(
       builder: (context, child) {
         //Setup scaling for mobile (this is independent from the ResponsiveWrapper Scaling for Tablets)
         Scale.setup(context, Size(411.43, 683.43));
@@ -117,14 +119,22 @@ class MyApp extends StatelessWidget {
         );
       },
       title: 'Medify',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: MaterialColor(0xFF0169FF, colors),
-        //primaryColor: Color.fromRGBO(1, 105, 255, 1),
-        accentColor: Color.fromRGBO(230, 0, 233, 1),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+      material: (_, __) => MaterialAppData(
+        theme: ThemeData(
+          brightness: Brightness.light,
+          primarySwatch: MaterialColor(0xFF0169FF, colors),
+          //primaryColor: Color.fromRGBO(1, 105, 255, 1),
+          accentColor: Color.fromRGBO(230, 0, 233, 1),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
       ),
-      // home: MyHomePage(title: 'Medify'),
+      cupertino: (_, __) => CupertinoAppData(
+        theme: CupertinoThemeData(
+          brightness: Brightness.light,
+          primaryColor: Color.fromRGBO(1, 105, 255, 1),
+          primaryContrastingColor: Color.fromRGBO(230, 0, 233, 1),
+        ),
+      ),
       home: LoginScreen(),
     );
   }
