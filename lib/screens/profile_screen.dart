@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/add_caregiver_cubit.dart';
 import 'package:medify/cubit/caregivers_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
@@ -75,15 +76,18 @@ class ProfileScreen extends StatelessWidget {
                               "Medications: ${state.medications.length}",
                               style: TextStyle(fontSize: 20.sf),
                             ),
-                            ElevatedButton(
-                              child: Text(
-                                "View Medications",
-                                style: TextStyle(fontSize: 14.sf),
-                              ),
-                              onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationsScreen(state.medications)));
-                              },
-                            ),
+                            PlatformButton(
+                                child: Text(
+                                  "View Medications",
+                                  style: TextStyle(fontSize: 14.sf, color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationsScreen(state.medications)));
+                                },
+                                material: (context, platform) => MaterialRaisedButtonData(
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                                    ),
+                                color: Theme.of(context).primaryColor),
                           ],
                         );
                       }
@@ -103,10 +107,10 @@ class ProfileScreen extends StatelessWidget {
             _caregiversList(context),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.sh, vertical: 12.sv),
-              child: ElevatedButton(
+              child: PlatformButton(
                 child: Text(
                   "Add Caregiver",
-                  style: TextStyle(fontSize: 14.sf),
+                  style: TextStyle(fontSize: 14.sf, color: Colors.white),
                 ),
                 onPressed: () {
                   showModal(
@@ -118,6 +122,10 @@ class ProfileScreen extends StatelessWidget {
                     builder: (context) => AddCaregiverAlertDialog(),
                   );
                 },
+                material: (context, platform) => MaterialRaisedButtonData(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                ),
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ],

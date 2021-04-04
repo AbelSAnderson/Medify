@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/scale.dart';
 
 class ChangePasswordDialog extends StatelessWidget {
@@ -94,20 +95,20 @@ class ChangePasswordDialog extends StatelessWidget {
 
   Widget _submitButton(BuildContext context) {
     return Center(
-      child: ElevatedButton(
+      child: PlatformButton(
         child: Text(
           "Change Password",
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 14.sf),
+          style: TextStyle(fontSize: 14.sf, color: Colors.white),
         ),
         onPressed: () {
           //Replace this with password resetting logic
           Navigator.of(context, rootNavigator: true).pop('dialog');
         },
-        style: ElevatedButton.styleFrom(
-          primary: Theme.of(context).primaryColor,
-          padding: EdgeInsets.symmetric(horizontal: 16.sh),
+        material: (context, platform) => MaterialRaisedButtonData(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
         ),
+        color: Theme.of(context).primaryColor,
       ),
     );
   }

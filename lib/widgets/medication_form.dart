@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/medication_form_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
@@ -287,7 +288,7 @@ class MedicationForm extends StatelessWidget {
 
   Widget _submitButton(BuildContext context) {
     return Center(
-      child: ElevatedButton(
+      child: PlatformButton(
         onPressed: () {
           if (_formKey.currentState.validate()) {
             BlocProvider.of<MedicationFormCubit>(context).submitForm(context);
@@ -295,14 +296,14 @@ class MedicationForm extends StatelessWidget {
             Navigator.of(context).pop();
           }
         },
-        child: Text("Add Medication"),
-        style: ElevatedButton.styleFrom(
-          primary: Theme.of(context).primaryColor,
-          textStyle: TextStyle(
-            color: Colors.purple,
-            fontSize: 14.sf,
-          ),
+        child: Text(
+          "Add Medication",
+          style: TextStyle(fontSize: 14.sf, color: Colors.white),
         ),
+        material: (context, platform) => MaterialRaisedButtonData(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+        ),
+        color: Theme.of(context).primaryColor,
       ),
     );
   }
