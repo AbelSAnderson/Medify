@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/clients_cubit.dart';
 import 'package:medify/database/models/user.dart';
 import 'package:medify/screens/client_details_screen.dart';
@@ -72,7 +73,8 @@ class ClientsScreen extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(
+          PlatformIconButton(
+            padding: EdgeInsets.all(0),
             icon: Icon(
               Icons.cancel,
               color: Colors.red,
@@ -82,7 +84,8 @@ class ClientsScreen extends StatelessWidget {
               BlocProvider.of<ClientsCubit>(context).declineRequest(index);
             },
           ),
-          IconButton(
+          PlatformIconButton(
+            padding: EdgeInsets.all(0),
             icon: Icon(
               Icons.check_circle,
               color: Theme.of(context).primaryColor,

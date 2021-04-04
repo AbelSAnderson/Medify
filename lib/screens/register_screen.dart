@@ -208,6 +208,7 @@ class RegisterScreen extends StatelessWidget {
                   ));
                 }
               },
+              cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
               material: (context, platform) => MaterialRaisedButtonData(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
               ),
@@ -228,6 +229,7 @@ class RegisterScreen extends StatelessWidget {
                   ));
                 }
               },
+              cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
               material: (context, platform) => MaterialRaisedButtonData(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
               ),

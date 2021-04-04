@@ -74,6 +74,7 @@ class ResetPasswordDialog extends StatelessWidget {
           //Replace this with password resetting logic
           Navigator.of(context, rootNavigator: true).pop('dialog');
         },
+        cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
         material: (context, platform) => MaterialRaisedButtonData(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
         ),

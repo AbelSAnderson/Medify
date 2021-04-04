@@ -1,6 +1,7 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/constants.dart';
 import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/database/models/medication.dart';
@@ -192,7 +193,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Widget _takenIconButton() {
-    return IconButton(
+    return PlatformIconButton(
+      padding: EdgeInsets.all(0),
       icon: Icon(
         Icons.check_circle,
         color: Theme.of(context).primaryColor,
@@ -203,7 +205,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Widget _undoIconButton() {
-    return IconButton(
+    return PlatformIconButton(
+      padding: EdgeInsets.all(0),
       icon: Icon(
         Icons.replay_circle_filled,
         color: Theme.of(context).accentColor,

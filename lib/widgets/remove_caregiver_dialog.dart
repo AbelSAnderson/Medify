@@ -21,18 +21,18 @@ class RemoveCaregiverDialog extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 10.sv),
         child: Text(
           "Remove Caregiver",
-          style: TextStyle(fontSize: 22.sf, color: Colors.blue),
+          style: TextStyle(fontSize: 22.sf),
           textAlign: TextAlign.center,
         ),
       ),
       content: Container(
-        width: MediaQuery.of(context).size.width * 0.65,
+        width: 300.sh,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 25.sh),
           child: Column(
             children: [
               Text(
-                "Are you sure you want to \n remove this caregiver?",
+                "Are you sure you want to remove this caregiver?",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16.sf),
               ),
@@ -59,6 +59,7 @@ class RemoveCaregiverDialog extends StatelessWidget {
           BlocProvider.of<CaregiversCubit>(context).removeCaregiver(caregiver);
           Navigator.of(context, rootNavigator: true).pop('dialog');
         },
+        cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
         material: (context, platform) => MaterialRaisedButtonData(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
         ),

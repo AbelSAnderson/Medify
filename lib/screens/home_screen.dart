@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/screens/calendar_screen.dart';
 import 'package:medify/screens/profile_screen.dart';
@@ -31,27 +33,36 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildPage(String title, int index) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: PlatformNavBar(
         currentIndex: index,
-        onTap: (index) => BlocProvider.of<NavBarCubit>(context).updateIndex(index),
-        selectedItemColor: Theme.of(context).accentColor,
-        unselectedItemColor: Colors.black54,
-        showUnselectedLabels: true,
+        itemChanged: (index) => BlocProvider.of<NavBarCubit>(context).updateIndex(index),
+        material: (context, platform) => MaterialNavBarData(
+          selectedItemColor: Theme.of(context).accentColor,
+          unselectedItemColor: Colors.black54,
+          showUnselectedLabels: true,
+        ),
+        cupertino: (context, platform) => CupertinoTabBarData(
+          activeColor: Theme.of(context).accentColor,
+          inactiveColor: Colors.black54,
+        ),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(PlatformIcons(context).home),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(PlatformIcons(context).search),
             label: "Search",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(PlatformIcons(context).person),
             label: "Profile",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.check_box),
+            icon: PlatformWidget(
+              cupertino: (context, platform) => Icon(CupertinoIcons.person_3),
+              material: (context, platform) => Icon(Icons.group),
+            ),
             label: "Clients",
           ),
         ],

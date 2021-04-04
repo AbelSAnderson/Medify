@@ -300,6 +300,7 @@ class MedicationForm extends StatelessWidget {
           "Add Medication",
           style: TextStyle(fontSize: 14.sf, color: Colors.white),
         ),
+        cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
         material: (context, platform) => MaterialRaisedButtonData(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
         ),

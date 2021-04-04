@@ -21,8 +21,9 @@ class ProfileScreen extends StatelessWidget {
         title: Text(
           "Profile",
         ),
-        leading: IconButton(
-          icon: Icon(Icons.edit),
+        leading: PlatformIconButton(
+          padding: EdgeInsets.all(0),
+          icon: Icon(Icons.edit, color: Colors.white),
           onPressed: () {
             showDialog(
               context: context,
@@ -31,8 +32,9 @@ class ProfileScreen extends StatelessWidget {
           },
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.settings),
+          PlatformIconButton(
+            padding: EdgeInsets.all(0),
+            icon: Icon(Icons.settings, color: Colors.white),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => SettingsScreen(),
@@ -87,6 +89,7 @@ class ProfileScreen extends StatelessWidget {
                                 material: (context, platform) => MaterialRaisedButtonData(
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
                                     ),
+                                cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
                                 color: Theme.of(context).primaryColor),
                           ],
                         );
@@ -125,6 +128,7 @@ class ProfileScreen extends StatelessWidget {
                 material: (context, platform) => MaterialRaisedButtonData(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
                 ),
+                cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
                 color: Theme.of(context).primaryColor,
               ),
             ),
@@ -161,7 +165,8 @@ class ProfileScreen extends StatelessWidget {
                         "${caregiver.firstName} ${caregiver.lastName}",
                         style: TextStyle(fontSize: 20.sf),
                       ),
-                      trailing: IconButton(
+                      trailing: PlatformIconButton(
+                        padding: EdgeInsets.all(0),
                         icon: Icon(
                           Icons.cancel,
                           color: Colors.red,
@@ -190,7 +195,8 @@ class ProfileScreen extends StatelessWidget {
 class AddCaregiverAlertDialog extends StatelessWidget {
   Widget _tileTrailingIcon(BuildContext context, Status status) {
     if (status == Status.connected) {
-      return IconButton(
+      return PlatformIconButton(
+        padding: EdgeInsets.all(0),
         icon: Icon(
           Icons.add_circle,
           color: Theme.of(context).primaryColor,
@@ -199,7 +205,8 @@ class AddCaregiverAlertDialog extends StatelessWidget {
         onPressed: () {},
       );
     } else if (status == Status.requested) {
-      return IconButton(
+      return PlatformIconButton(
+        padding: EdgeInsets.all(0),
         icon: Icon(
           Icons.check_circle,
           color: Theme.of(context).accentColor,
@@ -208,7 +215,8 @@ class AddCaregiverAlertDialog extends StatelessWidget {
         onPressed: () {},
       );
     } else {
-      return IconButton(
+      return PlatformIconButton(
+        padding: EdgeInsets.all(0),
         icon: Icon(
           Icons.cancel,
           color: Colors.red,

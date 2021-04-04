@@ -159,6 +159,7 @@ class LoginScreen extends StatelessWidget {
         material: (context, platform) => MaterialRaisedButtonData(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
         ),
+        cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
       ),
     );
   }

@@ -71,6 +71,7 @@ class OccuranceDetails extends StatelessWidget {
                   onPressed: () {
                     //Show phone dialler
                   },
+                  cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
                   material: (context, platform) => MaterialRaisedButtonData(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
                   ),
@@ -86,6 +87,7 @@ class OccuranceDetails extends StatelessWidget {
                     BlocProvider.of<MedicationsCubit>(context).deleteMedication(medication);
                     Navigator.of(context).pop();
                   },
+                  cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
                   material: (context, platform) => MaterialRaisedButtonData(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
                   ),
