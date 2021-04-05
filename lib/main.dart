@@ -107,7 +107,7 @@ class MyApp extends StatelessWidget {
         if (!Scale.isMobile) {
           breakpoints.addAll([
             ResponsiveBreakpoint.resize(400, name: MOBILE),
-            ResponsiveBreakpoint.autoScale(800, name: TABLET, scaleFactor: 1.5),
+            ResponsiveBreakpoint.autoScale(600, name: TABLET, scaleFactor: 1),
             ResponsiveBreakpoint.autoScale(950, name: "TabletLarge", scaleFactor: 1),
           ]);
         }

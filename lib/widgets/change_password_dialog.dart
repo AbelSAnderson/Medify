@@ -3,6 +3,8 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/scale.dart';
 
 class ChangePasswordDialog extends StatelessWidget {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -22,15 +24,20 @@ class ChangePasswordDialog extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.75,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 25.sh),
-          child: Column(
-            children: [
-              _oldPasswordField(),
-              SizedBox(height: 20.sv),
-              _newPasswordField(),
-              SizedBox(height: 20.sv),
-              _submitButton(context),
-              _cancelButton(context),
-            ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                _oldPasswordField(),
+                SizedBox(height: 20.sv),
+                _newPasswordField(),
+                SizedBox(height: 20.sv),
+                _confirmPasswordField(),
+                SizedBox(height: 20.sv),
+                _submitButton(context),
+                _cancelButton(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -81,6 +88,7 @@ class ChangePasswordDialog extends StatelessWidget {
           initialValue: "",
           obscureText: true,
           decoration: InputDecoration(
+            errorMaxLines: 2,
             isDense: true,
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
@@ -88,6 +96,43 @@ class ChangePasswordDialog extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.visiblePassword,
+          validator: (value) {
+            if (value.length < 8) return "Passwords must be 8 or more characters in length";
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _confirmPasswordField() {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Confirm Password",
+            style: TextStyle(fontSize: 14.sf),
+          ),
+        ),
+        SizedBox(height: 10.sv),
+        TextFormField(
+          maxLength: 200,
+          style: TextStyle(fontSize: 16.sf),
+          initialValue: "",
+          obscureText: true,
+          decoration: InputDecoration(
+            counterText: "",
+            isDense: true,
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey, width: 32),
+            ),
+            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+          ),
+          keyboardType: TextInputType.visiblePassword,
+          validator: (value) {
+            return null;
+          },
         ),
       ],
     );
@@ -102,8 +147,10 @@ class ChangePasswordDialog extends StatelessWidget {
           style: TextStyle(fontSize: 14.sf, color: Colors.white),
         ),
         onPressed: () {
-          //Replace this with password resetting logic
-          Navigator.of(context, rootNavigator: true).pop('dialog');
+          if (_formKey.currentState.validate()) {
+            //Replace this with password resetting logic
+            Navigator.of(context, rootNavigator: true).pop('dialog');
+          }
         },
         cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
         material: (context, platform) => MaterialRaisedButtonData(
