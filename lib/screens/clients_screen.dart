@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/clients_cubit.dart';
-import 'package:medify/database/models/user.dart';
 import 'package:medify/database/models/user_connection.dart';
 import 'package:medify/screens/client_details_screen.dart';
 import 'package:medify/scale.dart';
@@ -50,7 +49,7 @@ class ClientsScreen extends StatelessWidget {
     var user = userConnection.user;
     return ListTile(
       title: Text(
-        user.firstName + " " + user.lastName,
+        user.name,
         style: TextStyle(fontSize: 20.sf),
       ),
       trailing: Icon(
@@ -68,7 +67,7 @@ class ClientsScreen extends StatelessWidget {
     var user = userConnection.user;
     return ListTile(
       title: Text(
-        user.firstName + " " + user.lastName,
+        user.name,
         style: TextStyle(fontSize: 20.sf),
       ),
       trailing: Row(

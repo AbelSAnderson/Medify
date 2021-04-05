@@ -9,37 +9,27 @@ class User extends ModelBase {
   int id;
 
   @HiveField(1)
-  String firstName;
+  String name;
 
   @HiveField(2)
-  String lastName;
-
-  @HiveField(3)
   String pharmacyNumber;
 
-  @HiveField(4)
-  String doctorNumber;
-
-  @HiveField(5)
+  @HiveField(3)
   String email;
 
-  User(this.id, this.firstName, this.lastName, this.pharmacyNumber, this.doctorNumber, this.email);
+  User(this.id, this.name, this.pharmacyNumber, this.email);
 
   // Decode the User from a json file
   User.fromJson(Map<String, dynamic> json)
       : this.id = json["id"],
-        this.firstName = json["first_name"].toString(),
-        this.lastName = json["last_name"].toString(),
+        this.name = json["name"].toString(),
         this.pharmacyNumber = json["pharmacy_number"].toString(),
-        this.doctorNumber = json["doctor_number"].toString(),
         this.email = json["email"].toString();
 
   Map<String, dynamic> toJson() => {
         'id': 2,
-        'first_name': "Meta",
-        'last_name': "Lueilwitz",
+        'name': "Meta",
         'pharmacy_number': "5555555555",
-        'doctor_number': "5555555555",
         'is_caregiver': 1,
         'email': "cjacobi@example.com",
       };

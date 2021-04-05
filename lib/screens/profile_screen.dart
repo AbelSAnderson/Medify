@@ -157,7 +157,7 @@ class ProfileScreen extends StatelessWidget {
                     decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
                     child: ListTile(
                       title: Text(
-                        "${caregiver.firstName} ${caregiver.lastName}",
+                        "${caregiver.name}",
                         style: TextStyle(fontSize: 20.sf),
                       ),
                       trailing: PlatformIconButton(
@@ -256,13 +256,14 @@ class AddCaregiverAlertDialog extends StatelessWidget {
                       var caregiver = state.caregivers[index];
                       return ListTile(
                         title: Text(
-                          caregiver.user.firstName,
+                          caregiver.user.name,
                           style: TextStyle(fontSize: 20.sf),
                         ),
-                        subtitle: Text(
-                          caregiver.user.lastName,
-                          style: TextStyle(fontSize: 16.sf),
-                        ),
+                        // TODO: Ensure UI still looks good here - Abel
+                        // subtitle: Text(
+                        //   caregiver.user.lastName,
+                        //   style: TextStyle(fontSize: 16.sf),
+                        // ),
                         trailing: _tileTrailingIcon(context, caregiver.status),
                       );
                     },
