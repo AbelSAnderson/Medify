@@ -1,11 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/medication_form_cubit.dart';
+import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/database/models/medication.dart';
 import 'package:medify/widgets/medicine_type.dart';
 import 'package:date_format/date_format.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'medicine_type.dart';
 import 'package:medify/scale.dart';
 
@@ -27,12 +29,39 @@ class MedicationForm extends StatelessWidget {
   }
 
   Future _selectTime(BuildContext context, TimeOfDay initialTime) async {
-    await showTimePicker(
-      context: context,
-      initialTime: initialTime,
-    ).then((value) => {
+    if (isCupertino(context)) {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) => _cupertinoTimePicker(context, initialTime),
+      );
+    } else {
+      await showTimePicker(
+        context: context,
+        initialTime: initialTime,
+      ).then(
+        (value) => {
           if (value != null) {BlocProvider.of<MedicationFormCubit>(context).changeTime(value)}
-        });
+        },
+      );
+    }
+  }
+
+  Widget _cupertinoTimePicker(BuildContext context, TimeOfDay initialTime) {
+    //we dont need the date (just time)
+    var initialDateTime = DateTime(2000, 1, 1, initialTime.hour, initialTime.minute);
+    return Container(
+      height: 300.sv,
+      child: CupertinoDatePicker(
+        initialDateTime: initialDateTime,
+        mode: CupertinoDatePickerMode.time,
+        onDateTimeChanged: (value) {
+          var time = TimeOfDay(hour: value.hour, minute: value.minute);
+          if (value != null) {
+            BlocProvider.of<MedicationFormCubit>(context).changeTime(time);
+          }
+        },
+      ),
+    );
   }
 
   @override
@@ -287,7 +316,7 @@ class MedicationForm extends StatelessWidget {
 
   Widget _submitButton(BuildContext context) {
     return Center(
-      child: ElevatedButton(
+      child: PlatformButton(
         onPressed: () {
           if (_formKey.currentState.validate()) {
             BlocProvider.of<MedicationFormCubit>(context).submitForm(context);
@@ -295,14 +324,15 @@ class MedicationForm extends StatelessWidget {
             Navigator.of(context).pop();
           }
         },
-        child: Text("Add Medication"),
-        style: ElevatedButton.styleFrom(
-          primary: Theme.of(context).primaryColor,
-          textStyle: TextStyle(
-            color: Colors.purple,
-            fontSize: 14.sf,
-          ),
+        child: Text(
+          "Add Medication",
+          style: TextStyle(fontSize: 14.sf, color: Colors.white),
         ),
+        cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+        material: (context, platform) => MaterialRaisedButtonData(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+        ),
+        color: Theme.of(context).primaryColor,
       ),
     );
   }

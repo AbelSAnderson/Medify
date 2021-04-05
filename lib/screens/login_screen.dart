@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/home_screen.dart';
 import 'package:medify/screens/register_screen.dart';
@@ -139,11 +140,11 @@ class LoginScreen extends StatelessWidget {
 
   Widget _loginButton(BuildContext context) {
     return Center(
-      child: ElevatedButton(
+      child: PlatformButton(
         child: Text(
           "Login",
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 14.sf),
+          style: TextStyle(fontSize: 14.sf, color: Colors.white),
         ),
         onPressed: () {
           if (_formKey.currentState.validate()) {
@@ -154,10 +155,11 @@ class LoginScreen extends StatelessWidget {
             ));
           }
         },
-        style: ElevatedButton.styleFrom(
-          primary: Theme.of(context).primaryColor,
-          padding: EdgeInsets.symmetric(horizontal: 22.sh),
+        color: Theme.of(context).primaryColor,
+        material: (context, platform) => MaterialRaisedButtonData(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
         ),
+        cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
       ),
     );
   }

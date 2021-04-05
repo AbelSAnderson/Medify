@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/add_caregiver_cubit.dart';
 import 'package:medify/cubit/caregivers_cubit.dart';
 import 'package:medify/cubit/client_details_cubit.dart';
@@ -14,8 +16,12 @@ import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/database/model_queries/medication_event_queries.dart';
 import 'package:medify/database/model_queries/medication_info_queries.dart';
+import 'package:medify/database/model_queries/medication_queries.dart';
+import 'package:medify/repositories/medication_event_repository.dart';
+import 'package:medify/repositories/medication_info_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/login_screen.dart';
+import 'package:medify/screens/settings_screen.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
 import 'screens/home_screen.dart';
@@ -29,38 +35,50 @@ void main() async {
   // Allow Http requests to be sent - should be changed to only allow openFDA & our API requests through
   HttpOverrides.global = new MyHttpOverrides();
 
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider<NavBarCubit>(
-        create: (context) => NavBarCubit(),
+  runApp(
+    MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(
+          create: (context) => MedicationInfoRepository(),
+        ),
+        RepositoryProvider(
+          create: (context) => MedicationEventRepository(),
+        ),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<NavBarCubit>(
+            create: (context) => NavBarCubit(),
+          ),
+          BlocProvider<CalendarCubit>(
+            create: (context) => CalendarCubit(MedicationEventQueries(), RepositoryProvider.of<MedicationEventRepository>(context)),
+          ),
+          BlocProvider<SearchCubit>(
+            create: (context) => SearchCubit(),
+          ),
+          BlocProvider<CaregiversCubit>(
+            create: (context) => CaregiversCubit(),
+          ),
+          BlocProvider<MedicationsCubit>(
+            create: (context) => MedicationsCubit(MedicationInfoQueries(), RepositoryProvider.of<MedicationInfoRepository>(context)),
+          ),
+          BlocProvider<AddCaregiverCubit>(
+            create: (context) => AddCaregiverCubit(),
+          ),
+          BlocProvider<ClientsCubit>(
+            create: (context) => ClientsCubit(),
+          ),
+          BlocProvider<ClientDetailsCubit>(
+            create: (context) => ClientDetailsCubit(),
+          ),
+          BlocProvider<MedicationFormCubit>(
+            create: (context) => MedicationFormCubit(MedicationQueries(), RepositoryProvider.of<MedicationInfoRepository>(context), RepositoryProvider.of<MedicationEventRepository>(context)),
+          ),
+        ],
+        child: MyApp(),
       ),
-      BlocProvider<CalendarCubit>(
-        create: (context) => CalendarCubit(MedicationEventQueries()),
-      ),
-      BlocProvider<SearchCubit>(
-        create: (context) => SearchCubit(),
-      ),
-      BlocProvider<CaregiversCubit>(
-        create: (context) => CaregiversCubit(),
-      ),
-      BlocProvider<MedicationsCubit>(
-        create: (context) => MedicationsCubit(MedicationInfoQueries()),
-      ),
-      BlocProvider<AddCaregiverCubit>(
-        create: (context) => AddCaregiverCubit(),
-      ),
-      BlocProvider<ClientsCubit>(
-        create: (context) => ClientsCubit(),
-      ),
-      BlocProvider<ClientDetailsCubit>(
-        create: (context) => ClientDetailsCubit(),
-      ),
-      BlocProvider<MedicationFormCubit>(
-        create: (context) => MedicationFormCubit(),
-      ),
-    ],
-    child: MyApp(),
-  ));
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -81,16 +99,23 @@ class MyApp extends StatelessWidget {
     };
     return MaterialApp(
       builder: (context, child) {
+        //Setup scaling for mobile (this is independent from the ResponsiveWrapper Scaling for Tablets)
         Scale.setup(context, Size(411.43, 683.43));
+        List<ResponsiveBreakpoint> breakpoints = [];
+        //Don't have any breakpoints for mobile (we only want to use responsive wrapper for tablets)
+        //This fixes the breakpoints hitting on mobile for landscape orientation causing it to scale and looks huge
+        if (!Scale.isMobile) {
+          breakpoints.addAll([
+            ResponsiveBreakpoint.resize(400, name: MOBILE),
+            ResponsiveBreakpoint.autoScale(800, name: TABLET, scaleFactor: 1.5),
+            ResponsiveBreakpoint.autoScale(950, name: "TabletLarge", scaleFactor: 1),
+          ]);
+        }
         return ResponsiveWrapper.builder(
           child,
           minWidth: 400,
           defaultScale: false,
-          breakpoints: [
-            ResponsiveBreakpoint.resize(400, name: MOBILE),
-            ResponsiveBreakpoint.autoScale(800, name: TABLET, scaleFactor: 1.5),
-            ResponsiveBreakpoint.autoScale(950, name: "TabletLarge", scaleFactor: 1),
-          ],
+          breakpoints: breakpoints,
         );
       },
       title: 'Medify',
@@ -101,7 +126,6 @@ class MyApp extends StatelessWidget {
         accentColor: Color.fromRGBO(230, 0, 233, 1),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      // home: MyHomePage(title: 'Medify'),
       home: LoginScreen(),
     );
   }

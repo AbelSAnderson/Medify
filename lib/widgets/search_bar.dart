@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/scale.dart';
 
 class SearchBar extends StatelessWidget {
@@ -21,10 +22,12 @@ class SearchBar extends StatelessWidget {
         controller: _controller,
         decoration: InputDecoration(
           hintText: hintText,
-          suffixIcon: IconButton(
+          suffixIcon: PlatformIconButton(
+            padding: EdgeInsets.all(0),
             icon: Icon(
               Icons.search,
               size: 24.sf,
+              color: Colors.grey,
             ),
             onPressed: () {
               if (onSearch != null) {

@@ -36,8 +36,38 @@ AssetImage getMedTypeImage(int imageId, bool selected) {
       imageUrl = !selected ? shieldUrl : shieldSelectedUrl;
       break;
     default:
-      imageUrl = selected ? heartUrl : heartSelectedUrl;
+      imageUrl = !selected ? heartUrl : heartSelectedUrl;
       break;
   }
   return AssetImage(imageUrl);
+}
+
+String getRepeatsString(int value) {
+  switch (value) {
+    case 1:
+      return "Daily";
+    case 7:
+      return "Weekly";
+    case 14:
+      return "Bi-Monthly";
+    case 30:
+      return "Monthly";
+    default:
+      return "Error";
+  }
+}
+
+int getRepeatsInt(String value) {
+  switch (value) {
+    case "Daily":
+      return 1;
+    case "Weekly":
+      return 7;
+    case "Bi-Monthly":
+      return 14;
+    case "Monthly":
+      return 30;
+    default:
+      return 1;
+  }
 }

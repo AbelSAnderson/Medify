@@ -6,6 +6,7 @@ import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/database/models/medication_info.dart';
 import 'package:medify/screens/medication_details_screen.dart';
 import 'package:medify/scale.dart';
+import 'package:medify/screens/medication_occurence_details_screen.dart';
 
 class MedicationsScreen extends StatelessWidget {
   final List<MedicationInfo> medications;
@@ -18,7 +19,15 @@ class MedicationsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Medications"),
       ),
-      body: _medicationsList(medications),
+      body: BlocBuilder<MedicationsCubit, MedicationsState>(builder: (context, state) {
+        if (state is MedicationsLoading) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (state is MedicationsLoaded) {
+          return _medicationsList(medications);
+        }
+        return Container();
+      }),
     );
   }
 
@@ -47,7 +56,7 @@ class MedicationsScreen extends StatelessWidget {
                 height: 35.sv,
               ),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationDetailsScreen(med.medication)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationOccurrenceDetailsScreen(med)));
               },
             ),
           ),

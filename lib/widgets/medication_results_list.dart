@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/screens/add_medication_screen.dart';
 import 'package:medify/screens/medication_details_screen.dart';
 import 'package:medify/scale.dart';
@@ -24,10 +25,12 @@ class MedicationResultsList extends StatelessWidget {
                 medications[index].brandName,
                 style: TextStyle(fontSize: 16.sf),
               ),
-              trailing: IconButton(
+              trailing: PlatformIconButton(
+                padding: EdgeInsets.all(0),
                 icon: Icon(
                   Icons.add,
                   size: 24.sf,
+                  color: Colors.grey,
                 ),
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => AddMedicationScreen(medications[index])));

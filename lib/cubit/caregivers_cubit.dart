@@ -14,4 +14,13 @@ class CaregiversCubit extends Cubit<CaregiversState> {
     var caregivers = DummyData.getConnectedUsers();
     emit(CaregiversLoaded(caregivers));
   }
+
+  removeCaregiver(User caregiver) async {
+    if (state is CaregiversLoaded) {
+      var previousState = state as CaregiversLoaded;
+      emit(CaregiversLoading());
+      var newCaregiversList = previousState.caregivers..removeWhere((element) => element.id == caregiver.id);
+      emit(CaregiversLoaded(newCaregiversList));
+    }
+  }
 }

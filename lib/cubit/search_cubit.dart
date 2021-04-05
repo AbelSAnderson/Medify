@@ -11,9 +11,8 @@ class SearchCubit extends Cubit<SearchState> {
   searchFor(String searchTerm) async {
     emit(SearchSearching());
     try {
-      emit(SearchComplete(
-          await OpenFDAQueries().retrieveMedicationsWhereName(searchTerm)));
-    } catch(e) {
+      emit(SearchComplete(await OpenFDAQueries().retrieveMedicationsWhereName(searchTerm)));
+    } catch (e) {
       emit(SearchError(e.toString()));
     }
   }

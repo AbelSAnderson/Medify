@@ -91,7 +91,7 @@ List<MedicationEvent> getMedications() {
 
 List<MedicationInfo> getMedicationInfos() {
   Medication med = Medication(null, "Advil", "Usage", "Precautions", "Dosage", "Ingredients");
-  var medInfo = MedicationInfo(null, 1, 100, null, null, med);
+  var medInfo = MedicationInfo(null, 1, 100, DateTime.now(), 1, med);
   List<MedicationInfo> medsList = [];
   for (int i = 0; i < 10; i++) {
     medsList.add(medInfo);

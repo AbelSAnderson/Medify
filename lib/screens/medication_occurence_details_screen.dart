@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:medify/database/models/medication.dart';
 import 'package:medify/database/models/medication_info.dart';
 import 'package:medify/widgets/medication_details.dart';
 import 'package:medify/widgets/occurance_details.dart';
 
-class MedicationDetailsScreen extends StatelessWidget {
-  final Medication _medication;
+class MedicationOccurrenceDetailsScreen extends StatelessWidget {
+  final MedicationInfo _medication;
 
-  MedicationDetailsScreen(this._medication);
+  MedicationOccurrenceDetailsScreen(this._medication);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_medication.brandName),
+        title: Text(_medication.medication.brandName),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            MedicationDetails(_medication),
+            OccuranceDetails(_medication),
+            MedicationDetails(_medication.medication),
           ],
         ),
       ),

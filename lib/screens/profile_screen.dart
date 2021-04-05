@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/add_caregiver_cubit.dart';
 import 'package:medify/cubit/caregivers_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
@@ -20,8 +21,9 @@ class ProfileScreen extends StatelessWidget {
         title: Text(
           "Profile",
         ),
-        leading: IconButton(
-          icon: Icon(Icons.edit),
+        leading: PlatformIconButton(
+          padding: EdgeInsets.all(0),
+          icon: Icon(Icons.edit, color: Colors.white),
           onPressed: () {
             showDialog(
               context: context,
@@ -30,8 +32,9 @@ class ProfileScreen extends StatelessWidget {
           },
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.settings),
+          PlatformIconButton(
+            padding: EdgeInsets.all(0),
+            icon: Icon(Icons.settings, color: Colors.white),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => SettingsScreen(),
@@ -75,15 +78,19 @@ class ProfileScreen extends StatelessWidget {
                               "Medications: ${state.medications.length}",
                               style: TextStyle(fontSize: 20.sf),
                             ),
-                            ElevatedButton(
-                              child: Text(
-                                "View Medications",
-                                style: TextStyle(fontSize: 14.sf),
-                              ),
-                              onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationsScreen(state.medications)));
-                              },
-                            ),
+                            PlatformButton(
+                                child: Text(
+                                  "View Medications",
+                                  style: TextStyle(fontSize: 14.sf, color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationsScreen(state.medications)));
+                                },
+                                material: (context, platform) => MaterialRaisedButtonData(
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                                    ),
+                                cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+                                color: Theme.of(context).primaryColor),
                           ],
                         );
                       }
@@ -103,10 +110,10 @@ class ProfileScreen extends StatelessWidget {
             _caregiversList(context),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.sh, vertical: 12.sv),
-              child: ElevatedButton(
+              child: PlatformButton(
                 child: Text(
                   "Add Caregiver",
-                  style: TextStyle(fontSize: 14.sf),
+                  style: TextStyle(fontSize: 14.sf, color: Colors.white),
                 ),
                 onPressed: () {
                   showModal(
@@ -118,6 +125,11 @@ class ProfileScreen extends StatelessWidget {
                     builder: (context) => AddCaregiverAlertDialog(),
                   );
                 },
+                material: (context, platform) => MaterialRaisedButtonData(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                ),
+                cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ],
@@ -153,7 +165,8 @@ class ProfileScreen extends StatelessWidget {
                         "${caregiver.firstName} ${caregiver.lastName}",
                         style: TextStyle(fontSize: 20.sf),
                       ),
-                      trailing: IconButton(
+                      trailing: PlatformIconButton(
+                        padding: EdgeInsets.all(0),
                         icon: Icon(
                           Icons.cancel,
                           color: Colors.red,
@@ -162,7 +175,7 @@ class ProfileScreen extends StatelessWidget {
                         onPressed: () {
                           showDialog(
                             context: context,
-                            builder: (context) => RemoveCaregiverDialog(),
+                            builder: (context) => RemoveCaregiverDialog(caregiver),
                           );
                         },
                       ),
@@ -182,7 +195,8 @@ class ProfileScreen extends StatelessWidget {
 class AddCaregiverAlertDialog extends StatelessWidget {
   Widget _tileTrailingIcon(BuildContext context, Status status) {
     if (status == Status.connected) {
-      return IconButton(
+      return PlatformIconButton(
+        padding: EdgeInsets.all(0),
         icon: Icon(
           Icons.add_circle,
           color: Theme.of(context).primaryColor,
@@ -191,7 +205,8 @@ class AddCaregiverAlertDialog extends StatelessWidget {
         onPressed: () {},
       );
     } else if (status == Status.requested) {
-      return IconButton(
+      return PlatformIconButton(
+        padding: EdgeInsets.all(0),
         icon: Icon(
           Icons.check_circle,
           color: Theme.of(context).accentColor,
@@ -200,7 +215,8 @@ class AddCaregiverAlertDialog extends StatelessWidget {
         onPressed: () {},
       );
     } else {
-      return IconButton(
+      return PlatformIconButton(
+        padding: EdgeInsets.all(0),
         icon: Icon(
           Icons.cancel,
           color: Colors.red,

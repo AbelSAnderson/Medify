@@ -1,6 +1,7 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/constants.dart';
 import 'package:medify/cubit/client_details_cubit.dart';
 import 'package:medify/cubit/clients_cubit.dart';
@@ -19,8 +20,12 @@ class ClientDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(user.firstName + " " + user.lastName),
         actions: [
-          IconButton(
-            icon: Icon(Icons.delete),
+          PlatformIconButton(
+            padding: EdgeInsets.all(0),
+            icon: Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
             onPressed: () {
               BlocProvider.of<ClientsCubit>(context).removeClient(user);
               Navigator.of(context).pop();

@@ -23,8 +23,7 @@ class User extends ModelBase {
   @HiveField(5)
   String email;
 
-  User(this.id, this.firstName, this.lastName, this.pharmacyNumber,
-      this.doctorNumber, this.email);
+  User(this.id, this.firstName, this.lastName, this.pharmacyNumber, this.doctorNumber, this.email);
 
   // Decode the User from a json file
   User.fromJson(Map<String, dynamic> json)
@@ -34,6 +33,16 @@ class User extends ModelBase {
         this.pharmacyNumber = json["pharmacy_number"].toString(),
         this.doctorNumber = json["doctor_number"].toString(),
         this.email = json["email"].toString();
+
+  Map<String, dynamic> toJson() => {
+        'id': 2,
+        'first_name': "Meta",
+        'last_name': "Lueilwitz",
+        'pharmacy_number': "5555555555",
+        'doctor_number': "5555555555",
+        'is_caregiver': 1,
+        'email': "cjacobi@example.com",
+      };
 }
 
 /// User List Class used to decode a list of Users
@@ -42,6 +51,5 @@ class UserList {
 
   UserList(this.users);
 
-  UserList.from(List<dynamic> userJson)
-      : users = userJson.map((e) => User.fromJson(e)).toList();
+  UserList.from(List<dynamic> userJson) : users = userJson.map((e) => User.fromJson(e)).toList();
 }

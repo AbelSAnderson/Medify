@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/login_screen.dart';
 
@@ -192,11 +193,11 @@ class RegisterScreen extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            ElevatedButton(
+            PlatformButton(
               child: Text(
                 "Register as Client",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12.sf),
+                style: TextStyle(fontSize: 12.sf, color: Colors.white),
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
@@ -207,16 +208,17 @@ class RegisterScreen extends StatelessWidget {
                   ));
                 }
               },
-              style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).primaryColor,
-                padding: EdgeInsets.symmetric(horizontal: 6.sh),
+              cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+              material: (context, platform) => MaterialRaisedButtonData(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
               ),
+              color: Theme.of(context).primaryColor,
             ),
-            ElevatedButton(
+            PlatformButton(
               child: Text(
                 "Register as Caregiver",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12.sf),
+                style: TextStyle(fontSize: 12.sf, color: Colors.white),
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
@@ -227,10 +229,11 @@ class RegisterScreen extends StatelessWidget {
                   ));
                 }
               },
-              style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).primaryColor,
-                padding: EdgeInsets.symmetric(horizontal: 6.sh),
+              cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+              material: (context, platform) => MaterialRaisedButtonData(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
               ),
+              color: Theme.of(context).primaryColor,
             ),
           ],
         )
