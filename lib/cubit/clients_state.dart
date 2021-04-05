@@ -18,10 +18,9 @@ class ClientsLoadingInProgress extends ClientsState {
 }
 
 class ClientsLoaded extends ClientsState {
-  final List<User> clients;
-  final int listSeperatorThreshold;
+  final List<UserConnection> clients;
 
-  const ClientsLoaded([this.clients = const [], this.listSeperatorThreshold = 0]);
+  const ClientsLoaded([this.clients = const []]);
 
   @override
   List<Object> get props => [clients];

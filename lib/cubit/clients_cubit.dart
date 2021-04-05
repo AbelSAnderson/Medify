@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:medify/cubit/caregivers_cubit.dart';
 import 'package:medify/database/models/user.dart';
+import 'package:medify/database/models/user_connection.dart';
 import 'package:medify/dummy_data.dart' as DummyData;
 
 part 'clients_state.dart';
@@ -8,53 +10,54 @@ part 'clients_state.dart';
 class ClientsCubit extends Cubit<ClientsState> {
   ClientsCubit() : super(ClientsInitial());
 
-  ///List for all the clients who sent a request to connect
-  List<User> requestedUsers;
-
-  ///List for all the clients who are connected with the caregiver
-  List<User> connectedUsers;
-
   ///Loads all the clients (requested and connected users)
   loadClients() async {
     //Required wait time or the state does not emit
     await Future<void>.delayed(const Duration(milliseconds: 100));
     emit(ClientsLoadingInProgress());
-    connectedUsers = DummyData.getConnectedUsers();
-    requestedUsers = DummyData.getRequestedUsers();
-    emit(ClientsLoaded(_createClientList(), _getThreshold()));
+    var userConnections = DummyData.getUserConnections();
+    userConnections = _sortUserConnections(userConnections);
+    emit(ClientsLoaded(userConnections));
   }
 
   ///User accepted the request, client is removed from requested users list and added to the connected users list
-  acceptRequest(int index) async {
-    emit(ClientsLoadingInProgress());
-    var user = requestedUsers[index];
-    requestedUsers.remove(user);
-    connectedUsers.add(user);
-    emit(ClientsLoaded(_createClientList(), _getThreshold()));
+  acceptRequest(UserConnection userConnection) async {
+    if (state is ClientsLoaded) {
+      var previousState = state as ClientsLoaded;
+      emit(ClientsLoadingInProgress());
+      userConnection.status = Status.connected;
+      var userConnections = previousState.clients..removeWhere((element) => element.user.id == userConnection.user.id);
+      var newUserConnections = userConnections..add(userConnection);
+      //sort user connections so requested are first
+      newUserConnections = _sortUserConnections(newUserConnections);
+      emit(ClientsLoaded(newUserConnections));
+    }
   }
 
   ///User declined the request, the client is removed from the requested users list
-  declineRequest(int index) async {
-    emit(ClientsLoadingInProgress());
-    var user = requestedUsers[index];
-    requestedUsers.remove(user);
-    emit(ClientsLoaded(_createClientList(), _getThreshold()));
+  declineRequest(UserConnection userConnection) async {
+    if (state is ClientsLoaded) {
+      var previousState = state as ClientsLoaded;
+      emit(ClientsLoadingInProgress());
+      var newUserConnections = previousState.clients..removeWhere((element) => element.user.id == userConnection.user.id);
+      //sort user connections so requested are first
+      newUserConnections = _sortUserConnections(newUserConnections);
+      emit(ClientsLoaded(newUserConnections));
+    }
   }
 
   ///Removes a connected client from the list
   removeClient(User user) async {
-    emit(ClientsLoadingInProgress());
-    connectedUsers.remove(user);
-    emit(ClientsLoaded(_createClientList(), _getThreshold()));
+    if (state is ClientsLoaded) {
+      var previousState = state as ClientsLoaded;
+      emit(ClientsLoadingInProgress());
+      var newUserConnections = previousState.clients..removeWhere((element) => element.user.id == user.id);
+      newUserConnections = _sortUserConnections(newUserConnections);
+      emit(ClientsLoaded(newUserConnections));
+    }
   }
 
-  ///Creates list of clients from the requested users and connected users list
-  List<User> _createClientList() {
-    return List.from(requestedUsers)..addAll(connectedUsers);
-  }
-
-  ///List seperator threshold for the index of when the clients list seperates from requested users to connected users
-  int _getThreshold() {
-    return requestedUsers.length;
+  List<UserConnection> _sortUserConnections(List<UserConnection> userConnections) {
+    return userConnections..sort((a, b) => a.status.index.compareTo(b.status.index));
   }
 }

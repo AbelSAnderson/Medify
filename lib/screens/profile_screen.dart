@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -116,12 +115,8 @@ class ProfileScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 14.sf, color: Colors.white),
                 ),
                 onPressed: () {
-                  showModal(
+                  showDialog(
                     context: context,
-                    configuration: FadeScaleTransitionConfiguration(
-                      transitionDuration: Duration(milliseconds: 500),
-                      reverseTransitionDuration: Duration(milliseconds: 300),
-                    ),
                     builder: (context) => AddCaregiverAlertDialog(),
                   );
                 },
