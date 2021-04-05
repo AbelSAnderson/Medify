@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/cubit/settings_cubit.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/widgets/change_password_dialog.dart';
 
@@ -8,7 +10,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  var _sliderValue = 50.0;
+  var _sliderValue = 1.5;
   var _switchValue = false;
 
   @override
@@ -33,50 +35,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _fontSizeSection() {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(bottom: 8.sv),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Font Size",
-                  style: TextStyle(fontSize: 18.sf),
-                ),
-              ),
-              Row(
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      buildWhen: (previous, current) => previous.fontScaleFactor != current.fontScaleFactor,
+      builder: (context, state) {
+        return Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(bottom: 8.sv),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: 45.sh,
+                  Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
-                      _sliderValue.toInt().toString() + "%",
-                      style: TextStyle(fontSize: 16.sf),
+                      "Font Size",
+                      style: TextStyle(fontSize: 18.sf),
                     ),
                   ),
-                  Expanded(
+                  Container(
+                    width: 250.sh,
                     child: Slider.adaptive(
-                      value: _sliderValue,
+                      value: state.fontScaleFactor,
                       min: 1,
-                      max: 100,
+                      max: 2,
                       onChanged: (value) {
-                        setState(() {
-                          _sliderValue = value;
-                        });
+                        BlocProvider.of<SettingsCubit>(context).changeFontScaleFactor(value);
+                        print(state.fontScaleFactor);
                       },
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
-        Divider(
-          thickness: 2,
-          height: 0,
-        ),
-      ],
+            ),
+            Divider(
+              thickness: 2,
+              height: 0,
+            ),
+          ],
+        );
+      },
     );
   }
 

@@ -73,23 +73,30 @@ class ProfileScreen extends StatelessWidget {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Medications: ${state.medications.length}",
-                              style: TextStyle(fontSize: 20.sf),
+                            Flexible(
+                              flex: 2,
+                              child: Text(
+                                "Medications: ${state.medications.length}",
+                                style: TextStyle(fontSize: 20.sf),
+                              ),
                             ),
-                            PlatformButton(
-                                child: Text(
-                                  "View Medications",
-                                  style: TextStyle(fontSize: 14.sf, color: Colors.white),
-                                ),
-                                onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationsScreen(state.medications)));
-                                },
-                                material: (context, platform) => MaterialRaisedButtonData(
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-                                    ),
-                                cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
-                                color: Theme.of(context).primaryColor),
+                            Flexible(
+                              flex: 2,
+                              child: PlatformButton(
+                                  child: Text(
+                                    "View Medications",
+                                    style: TextStyle(fontSize: 14.sf, color: Colors.white),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationsScreen(state.medications)));
+                                  },
+                                  material: (context, platform) => MaterialRaisedButtonData(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                                      ),
+                                  cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+                                  color: Theme.of(context).primaryColor),
+                            ),
                           ],
                         );
                       }
