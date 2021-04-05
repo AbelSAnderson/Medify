@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medify/scale.dart';
 
 class EditProfileDialog extends StatelessWidget {
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -21,17 +22,20 @@ class EditProfileDialog extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.75,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 25.sh),
-          child: Column(
-            children: [
-              _nameField(),
-              SizedBox(height: 20.sv),
-              _emailField(),
-              SizedBox(height: 20.sv),
-              _pharmacyNumField(),
-              SizedBox(height: 20.sv),
-              _submitButton(context),
-              _cancelButton(context),
-            ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                _nameField(),
+                SizedBox(height: 20.sv),
+                _emailField(),
+                SizedBox(height: 20.sv),
+                _pharmacyNumField(),
+                SizedBox(height: 20.sv),
+                _submitButton(context),
+                _cancelButton(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -44,15 +48,17 @@ class EditProfileDialog extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            "Full Name",
+            "Full Name*",
             style: TextStyle(fontSize: 14.sf),
           ),
         ),
         SizedBox(height: 10.sv),
         TextFormField(
+          maxLength: 50,
           style: TextStyle(fontSize: 16.sf),
           initialValue: "",
           decoration: InputDecoration(
+            counterText: "",
             isDense: true,
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
@@ -61,6 +67,7 @@ class EditProfileDialog extends StatelessWidget {
           ),
           keyboardType: TextInputType.name,
           validator: (value) {
+            if (value.length < 1) return "Name field can't be empty";
             return null;
           },
         ),
@@ -74,15 +81,17 @@ class EditProfileDialog extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            "Email",
+            "Email*",
             style: TextStyle(fontSize: 14.sf),
           ),
         ),
         SizedBox(height: 10.sv),
         TextFormField(
+          maxLength: 200,
           style: TextStyle(fontSize: 16.sf),
           initialValue: "",
           decoration: InputDecoration(
+            counterText: "",
             isDense: true,
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
@@ -90,6 +99,11 @@ class EditProfileDialog extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.emailAddress,
+          validator: (value) {
+            final emailRegExp = RegExp(r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
+            if (!emailRegExp.hasMatch(value)) return "Invalid Email";
+            return null;
+          },
         ),
       ],
     );
@@ -107,9 +121,11 @@ class EditProfileDialog extends StatelessWidget {
         ),
         SizedBox(height: 10.sv),
         TextFormField(
+          maxLength: 200,
           style: TextStyle(fontSize: 16.sf),
           initialValue: "",
           decoration: InputDecoration(
+            counterText: "",
             isDense: true,
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
@@ -118,6 +134,9 @@ class EditProfileDialog extends StatelessWidget {
           ),
           keyboardType: TextInputType.phone,
           validator: (value) {
+            var phoneRegExp = RegExp(r'^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$');
+            if (value == "") return null;
+            if (!phoneRegExp.hasMatch(value)) return "Invalid Phone Number";
             return null;
           },
         ),
@@ -134,8 +153,10 @@ class EditProfileDialog extends StatelessWidget {
           style: TextStyle(fontSize: 14.sf),
         ),
         onPressed: () {
-          //Replace this with the edit profile logic
-          Navigator.of(context, rootNavigator: true).pop('dialog');
+          if (_formKey.currentState.validate()) {
+            //Replace this with the edit profile logic
+            Navigator.of(context, rootNavigator: true).pop('dialog');
+          }
         },
         style: ElevatedButton.styleFrom(
           primary: Theme.of(context).primaryColor,

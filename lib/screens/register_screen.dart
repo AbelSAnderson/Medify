@@ -17,7 +17,7 @@ class RegisterScreen extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(bottom: 30.sv),
+                  padding: EdgeInsets.only(bottom: 15.sv),
                   child: Text(
                     "Medify",
                     style: TextStyle(
@@ -39,6 +39,8 @@ class RegisterScreen extends StatelessWidget {
                         _emailField(),
                         SizedBox(height: 12.5.sv),
                         _passwordField(),
+                        SizedBox(height: 12.5.sv),
+                        _confirmPasswordField(),
                         SizedBox(height: 12.5.sv),
                         _pharmacyNumField(),
                         SizedBox(height: 12.5.sv),
@@ -63,15 +65,17 @@ class RegisterScreen extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            "Full Name",
+            "Full Name*",
             style: TextStyle(fontSize: 14.sf),
           ),
         ),
         SizedBox(height: 10.sv),
         TextFormField(
+          maxLength: 50,
           style: TextStyle(fontSize: 16.sf),
           initialValue: "",
           decoration: InputDecoration(
+            counterText: "",
             isDense: true,
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
@@ -80,6 +84,7 @@ class RegisterScreen extends StatelessWidget {
           ),
           keyboardType: TextInputType.name,
           validator: (value) {
+            if (value.length < 1) return "Name field can't be empty";
             return null;
           },
         ),
@@ -93,7 +98,7 @@ class RegisterScreen extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            "Email",
+            "Email*",
             style: TextStyle(fontSize: 14.sf),
           ),
         ),
@@ -101,8 +106,10 @@ class RegisterScreen extends StatelessWidget {
         TextFormField(
           style: TextStyle(fontSize: 16.sf),
           initialValue: "",
+          maxLength: 200,
           decoration: InputDecoration(
             isDense: true,
+            counterText: "",
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
@@ -110,6 +117,8 @@ class RegisterScreen extends StatelessWidget {
           ),
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
+            final emailRegExp = RegExp(r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
+            if (!emailRegExp.hasMatch(value)) return "Invalid Email";
             return null;
           },
         ),
@@ -123,16 +132,52 @@ class RegisterScreen extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            "Password",
+            "Password*",
             style: TextStyle(fontSize: 14.sf),
           ),
         ),
         SizedBox(height: 10.sv),
         TextFormField(
+          maxLength: 200,
           style: TextStyle(fontSize: 16.sf),
           initialValue: "",
           obscureText: true,
           decoration: InputDecoration(
+            counterText: "",
+            isDense: true,
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey, width: 32),
+            ),
+            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+          ),
+          keyboardType: TextInputType.visiblePassword,
+          validator: (value) {
+            if (value.length < 8) return "Passwords must be 8 or more characters in length";
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _confirmPasswordField() {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Confirm Password*",
+            style: TextStyle(fontSize: 14.sf),
+          ),
+        ),
+        SizedBox(height: 10.sv),
+        TextFormField(
+          maxLength: 200,
+          style: TextStyle(fontSize: 16.sf),
+          initialValue: "",
+          obscureText: true,
+          decoration: InputDecoration(
+            counterText: "",
             isDense: true,
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
@@ -160,9 +205,11 @@ class RegisterScreen extends StatelessWidget {
         ),
         SizedBox(height: 10.sv),
         TextFormField(
+          maxLength: 200,
           style: TextStyle(fontSize: 16.sf),
           initialValue: "",
           decoration: InputDecoration(
+            counterText: "",
             isDense: true,
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
@@ -171,6 +218,9 @@ class RegisterScreen extends StatelessWidget {
           ),
           keyboardType: TextInputType.phone,
           validator: (value) {
+            var phoneRegExp = RegExp(r'^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$');
+            if (value == "") return null;
+            if (!phoneRegExp.hasMatch(value)) return "Invalid Phone Number";
             return null;
           },
         ),
@@ -181,15 +231,15 @@ class RegisterScreen extends StatelessWidget {
   Widget _registerAsSection(BuildContext context) {
     return Column(
       children: [
-        Text(
-          "Who do you want to register as?",
-          style: TextStyle(fontSize: 14.sf),
-        ),
-        Text(
-          "(You can change this later)",
-          style: TextStyle(fontSize: 14.sf),
-        ),
-        SizedBox(height: 12.5.sv),
+        // Text(
+        //   "Who do you want to register as?",
+        //   style: TextStyle(fontSize: 14.sf),
+        // ),
+        // Text(
+        //   "(You can change this later)",
+        //   style: TextStyle(fontSize: 14.sf),
+        // ),
+        // SizedBox(height: 12.5.sv),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [

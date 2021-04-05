@@ -18,19 +18,30 @@ class MedicationForm extends StatelessWidget {
   MedicationForm(this.medication);
 
   Future _selectDate(BuildContext context, DateTime initialDate) async {
-    await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 1000)),
-    ).then((value) => {
-          if (value != null) {BlocProvider.of<MedicationFormCubit>(context).changeStartDate(value)}
-        });
+    if (isCupertino(context)) {
+      await showModalBottomSheet(
+        context: context,
+        builder: (context) => _cupertinoDatePicker(context, initialDate),
+      );
+    } else {
+      await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now().add(Duration(days: 365)),
+      ).then(
+        (value) {
+          if (value != null) {
+            BlocProvider.of<MedicationFormCubit>(context).changeStartDate(value);
+          }
+        },
+      );
+    }
   }
 
   Future _selectTime(BuildContext context, TimeOfDay initialTime) async {
     if (isCupertino(context)) {
-      showModalBottomSheet(
+      await showModalBottomSheet(
         context: context,
         builder: (context) => _cupertinoTimePicker(context, initialTime),
       );
@@ -39,11 +50,31 @@ class MedicationForm extends StatelessWidget {
         context: context,
         initialTime: initialTime,
       ).then(
-        (value) => {
-          if (value != null) {BlocProvider.of<MedicationFormCubit>(context).changeTime(value)}
+        (value) {
+          if (value != null) {
+            BlocProvider.of<MedicationFormCubit>(context).changeTime(value);
+          }
         },
       );
     }
+  }
+
+  Widget _cupertinoDatePicker(BuildContext context, DateTime initialDate) {
+    var today = DateTime.now();
+    return Container(
+      height: 300.sv,
+      child: CupertinoDatePicker(
+        initialDateTime: initialDate,
+        minimumDate: DateTime(today.year, today.month, today.day),
+        maximumDate: DateTime.now().add(Duration(days: 365)),
+        mode: CupertinoDatePickerMode.date,
+        onDateTimeChanged: (value) {
+          if (value != null) {
+            BlocProvider.of<MedicationFormCubit>(context).changeStartDate(value);
+          }
+        },
+      ),
+    );
   }
 
   Widget _cupertinoTimePicker(BuildContext context, TimeOfDay initialTime) {

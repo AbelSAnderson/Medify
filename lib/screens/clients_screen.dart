@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/clients_cubit.dart';
 import 'package:medify/database/models/user.dart';
+import 'package:medify/database/models/user_connection.dart';
 import 'package:medify/screens/client_details_screen.dart';
 import 'package:medify/scale.dart';
 
@@ -24,17 +25,16 @@ class ClientsScreen extends StatelessWidget {
             );
           }
           if (state is ClientsLoaded) {
-            var users = state.clients;
+            var userConnections = state.clients;
             return ListView.builder(
-              itemCount: users.length,
+              itemCount: userConnections.length,
               itemBuilder: (context, index) {
-                var user = users[index];
-                var requestedUsersLength = state.listSeperatorThreshold;
+                var userConnection = userConnections[index];
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.sv, horizontal: 8.sh),
                   child: Container(
                     decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
-                    child: index < requestedUsersLength ? _requestedUsersItem(context, users, index, requestedUsersLength) : _connectedUsersItem(context, user),
+                    child: userConnection.status == Status.requested ? _requestedUsersItem(context, userConnection) : _connectedUsersItem(context, userConnection),
                   ),
                 );
               },
@@ -46,7 +46,8 @@ class ClientsScreen extends StatelessWidget {
     );
   }
 
-  Widget _connectedUsersItem(BuildContext context, User user) {
+  Widget _connectedUsersItem(BuildContext context, UserConnection userConnection) {
+    var user = userConnection.user;
     return ListTile(
       title: Text(
         user.firstName + " " + user.lastName,
@@ -63,8 +64,8 @@ class ClientsScreen extends StatelessWidget {
     );
   }
 
-  Widget _requestedUsersItem(BuildContext context, List<User> users, int index, int threshold) {
-    var user = users[index];
+  Widget _requestedUsersItem(BuildContext context, UserConnection userConnection) {
+    var user = userConnection.user;
     return ListTile(
       title: Text(
         user.firstName + " " + user.lastName,
@@ -81,7 +82,7 @@ class ClientsScreen extends StatelessWidget {
               size: 30.sf,
             ),
             onPressed: () {
-              BlocProvider.of<ClientsCubit>(context).declineRequest(index);
+              BlocProvider.of<ClientsCubit>(context).declineRequest(userConnection);
             },
           ),
           PlatformIconButton(
@@ -92,7 +93,7 @@ class ClientsScreen extends StatelessWidget {
               size: 30.sf,
             ),
             onPressed: () {
-              BlocProvider.of<ClientsCubit>(context).acceptRequest(index);
+              BlocProvider.of<ClientsCubit>(context).acceptRequest(userConnection);
             },
           ),
         ],
