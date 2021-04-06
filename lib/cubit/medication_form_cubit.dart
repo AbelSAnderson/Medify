@@ -88,14 +88,16 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
     DateTime dateTime = DateTime(state.startDate.year, state.startDate.month, state.startDate.day, state.time.hour, state.time.minute);
     Medication medication = state.medication;
     MedicationInfo medicationInfo = MedicationInfo(0, state.medType, state.pillAmount, dateTime, getRepeatsInt(state.interval), medication);
-    var medicationFromJson = await medicationQueries.insertToApi(medication);
-    medicationInfo.medication = medicationFromJson;
+    try {
+      var medicationFromJson = await medicationQueries.insertToApi(medication);
+      medicationInfo.medication = medicationFromJson;
 
-    medicationInfoRepository.addMedicationInfo(medicationInfo);
-    // MedicationEvent medicationEvent = MedicationEvent(0, medicationInfo.takeAt, medicationInfo, false, 0);
-    // medicationEventRepository.addMedicationEvents([medicationEvent]);
-    var medicationEvents = _generateMedicationEvents(medicationInfo);
-    medicationEventRepository.addMedicationEvents(await medicationEvents);
+      medicationInfoRepository.addMedicationInfo(medicationInfo);
+      // MedicationEvent medicationEvent = MedicationEvent(0, medicationInfo.takeAt, medicationInfo, false, 0);
+      // medicationEventRepository.addMedicationEvents([medicationEvent]);
+      var medicationEvents = _generateMedicationEvents(medicationInfo);
+      medicationEventRepository.addMedicationEvents(await medicationEvents);
+    } catch (e) {}
   }
 
   Future<List<MedicationEvent>> _generateMedicationEvents(MedicationInfo medicationInfo) async {

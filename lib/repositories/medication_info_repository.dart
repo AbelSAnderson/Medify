@@ -8,13 +8,13 @@ class MedicationInfoRepository {
   final List<MedicationInfo> medicationInfos = [];
   final MedicationInfoQueries medicationInfoQueries = MedicationInfoQueries();
 
-  void getMedicationInfos() async {
+  Future<void> getMedicationInfos() async {
     var medicationInfosFromAPI = await medicationInfoQueries.retrieveAllFromApi();
     medicationInfos.addAll(medicationInfosFromAPI);
     streamController.add(medicationInfos);
   }
 
-  void addMedicationInfo(MedicationInfo medicationInfo) async {
+  Future<void> addMedicationInfo(MedicationInfo medicationInfo) async {
     var medicationInfoFromAPI = await medicationInfoQueries.insertToApi(medicationInfo);
     medicationInfos.add(medicationInfoFromAPI);
     streamController.add(medicationInfos);

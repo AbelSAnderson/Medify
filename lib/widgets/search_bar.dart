@@ -31,7 +31,9 @@ class SearchBar extends StatelessWidget {
             ),
             onPressed: () {
               if (onSearch != null) {
-                onSearch(_controller.text);
+                if (_controller.text != "") {
+                  onSearch(_controller.text);
+                }
               }
               //hide keyboard
               FocusManager.instance.primaryFocus.unfocus();
@@ -41,7 +43,9 @@ class SearchBar extends StatelessWidget {
         ),
         onSubmitted: (inputText) {
           if (onSearch != null) {
-            onSearch(inputText);
+            if (inputText != "") {
+              onSearch(inputText);
+            }
           }
         },
       ),

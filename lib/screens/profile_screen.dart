@@ -100,6 +100,23 @@ class ProfileScreen extends StatelessWidget {
                           ],
                         );
                       }
+                      if (state is MedicationsError) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "No Internet Connection.",
+                                style: TextStyle(fontSize: 18.sf),
+                              ),
+                              TextButton(
+                                child: Text("Try Again"),
+                                onPressed: () => BlocProvider.of<MedicationsCubit>(context).loadMedications(),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                       return Container();
                     },
                   ),

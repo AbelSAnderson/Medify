@@ -20,7 +20,7 @@ class SearchComplete extends SearchState {
 }
 
 class SearchError extends SearchState {
-  final String errorMessage;
+  final Exception error;
 
-  SearchError(this.errorMessage) : super([]);
+  SearchError(this.error) : super([]);
 }
