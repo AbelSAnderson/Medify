@@ -90,7 +90,7 @@ class ApiHandler {
         throw UnauthorisedException(response.body.toString());
       case 500:
       default:
-        throw FetchDataException('Communication Error with Server. StatusCode : ${response.body}');
+        throw FetchDataException('Communication Error with Server. StatusCode : ${response.statusCode}');
     }
   }
 
