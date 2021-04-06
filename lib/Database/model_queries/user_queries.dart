@@ -23,7 +23,16 @@ class UserQueries extends DatabaseQueryBase<User> {
     return jsonData;
   }
 
-  // Future<User> register(String name, String email, String password, String pharmacyPhone) {
-  //
-  // }
+  Future<Map<String, dynamic>> register(String name, String email, String password, String pharmacyPhone, String isCaregiver) async {
+    var body = {
+      'name' : name,
+      'email' : email,
+      'password' : password,
+      'pharmacyPhone' : pharmacyPhone,
+      'is_caregiver' : isCaregiver
+    };
+
+    var jsonData = await ApiHandler.medifyAPI().getPostData("users", body, filterResponse: false);
+    return jsonData;
+  }
 }

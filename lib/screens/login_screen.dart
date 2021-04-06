@@ -10,17 +10,12 @@ import 'package:medify/widgets/reset_password_dialog.dart';
 
 import 'home_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers for the form fields
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
+  final emailController = new TextEditingController();
+  final passwordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -221,6 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
             style: TextStyle(fontSize: 14.sf),
           ),
           onPressed: () {
+            BlocProvider.of<LoginCubit>(context).resetState();
             Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => RegisterScreen(),
             ));

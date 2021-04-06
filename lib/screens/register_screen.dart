@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:medify/cubit/login_cubit.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/login_screen.dart';
 
@@ -7,6 +9,12 @@ import 'home_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
+
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final pharmacyNumberController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +52,7 @@ class RegisterScreen extends StatelessWidget {
                         SizedBox(height: 12.5.sv),
                         _pharmacyNumField(),
                         SizedBox(height: 12.5.sv),
-                        _registerAsSection(context),
+                        _registerAsSectionProvider(context),
                         SizedBox(height: 12.5.sv),
                         _loginButtonSection(context),
                       ],
@@ -73,14 +81,15 @@ class RegisterScreen extends StatelessWidget {
         TextFormField(
           maxLength: 50,
           style: TextStyle(fontSize: 16.sf),
-          initialValue: "",
+          controller: nameController,
           decoration: InputDecoration(
             counterText: "",
             isDense: true,
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.name,
           validator: (value) {
@@ -105,7 +114,7 @@ class RegisterScreen extends StatelessWidget {
         SizedBox(height: 10.sv),
         TextFormField(
           style: TextStyle(fontSize: 16.sf),
-          initialValue: "",
+          controller: emailController,
           maxLength: 200,
           decoration: InputDecoration(
             isDense: true,
@@ -113,11 +122,13 @@ class RegisterScreen extends StatelessWidget {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
-            final emailRegExp = RegExp(r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
+            final emailRegExp = RegExp(
+                r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
             if (!emailRegExp.hasMatch(value)) return "Invalid Email";
             return null;
           },
@@ -140,7 +151,7 @@ class RegisterScreen extends StatelessWidget {
         TextFormField(
           maxLength: 200,
           style: TextStyle(fontSize: 16.sf),
-          initialValue: "",
+          controller: passwordController,
           obscureText: true,
           decoration: InputDecoration(
             counterText: "",
@@ -148,11 +159,13 @@ class RegisterScreen extends StatelessWidget {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
-            if (value.length < 8) return "Passwords must be 8 or more characters in length";
+            if (value.length < 8)
+              return "Passwords must be 8 or more characters in length";
             return null;
           },
         ),
@@ -174,7 +187,7 @@ class RegisterScreen extends StatelessWidget {
         TextFormField(
           maxLength: 200,
           style: TextStyle(fontSize: 16.sf),
-          initialValue: "",
+          controller: confirmPasswordController,
           obscureText: true,
           decoration: InputDecoration(
             counterText: "",
@@ -182,7 +195,8 @@ class RegisterScreen extends StatelessWidget {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
@@ -207,18 +221,20 @@ class RegisterScreen extends StatelessWidget {
         TextFormField(
           maxLength: 200,
           style: TextStyle(fontSize: 16.sf),
-          initialValue: "",
+          controller: pharmacyNumberController,
           decoration: InputDecoration(
             counterText: "",
             isDense: true,
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.phone,
           validator: (value) {
-            var phoneRegExp = RegExp(r'^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$');
+            var phoneRegExp =
+                RegExp(r'^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$');
             if (value == "") return null;
             if (!phoneRegExp.hasMatch(value)) return "Invalid Phone Number";
             return null;
@@ -226,6 +242,30 @@ class RegisterScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget _registerAsSectionProvider(BuildContext context) {
+    return BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
+      if (state is LoginInitial) {
+        return _registerAsSection(context);
+      } else if (state is LoginValidating) {
+        return Center(child: CircularProgressIndicator());
+      } else if (state is LoginFailed) {
+        return Column(
+            children: [_registerAsSection(context), Text(state.errorMessage)]);
+      } else if (state is LoginSucceeded) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => MyHomePage(
+                  title: 'Medify',
+                ),
+              ))
+            });
+        return Center(child: CircularProgressIndicator());
+      }
+
+      return Container();
+    });
   }
 
   Widget _registerAsSection(BuildContext context) {
@@ -251,16 +291,19 @@ class RegisterScreen extends StatelessWidget {
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => MyHomePage(
-                      title: 'Medify',
-                    ),
-                  ));
+                  BlocProvider.of<LoginCubit>(context).registerUser(
+                      nameController.text,
+                      emailController.text,
+                      passwordController.text,
+                      pharmacyNumberController.text,
+                      "0");
                 }
               },
-              cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+              cupertino: (context, platform) => CupertinoButtonData(
+                  padding: EdgeInsets.symmetric(horizontal: 10)),
               material: (context, platform) => MaterialRaisedButtonData(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(4))),
               ),
               color: Theme.of(context).primaryColor,
             ),
@@ -272,16 +315,19 @@ class RegisterScreen extends StatelessWidget {
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => MyHomePage(
-                      title: 'Medify',
-                    ),
-                  ));
+                  BlocProvider.of<LoginCubit>(context).registerUser(
+                      nameController.text,
+                      emailController.text,
+                      passwordController.text,
+                      pharmacyNumberController.text,
+                      "1");
                 }
               },
-              cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+              cupertino: (context, platform) => CupertinoButtonData(
+                  padding: EdgeInsets.symmetric(horizontal: 10)),
               material: (context, platform) => MaterialRaisedButtonData(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(4))),
               ),
               color: Theme.of(context).primaryColor,
             ),
@@ -306,6 +352,7 @@ class RegisterScreen extends StatelessWidget {
             style: TextStyle(fontSize: 14.sf),
           ),
           onPressed: () {
+            BlocProvider.of<LoginCubit>(context).resetState();
             Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => LoginScreen(),
             ));

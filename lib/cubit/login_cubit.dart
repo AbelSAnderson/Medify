@@ -10,28 +10,57 @@ class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitial());
 
   loginUser(String email, String password) async {
-    var jsonResponse = {};
+    emit(LoginValidating());
+
     try {
-      emit(LoginValidating());
-      jsonResponse = await new UserQueries().login(email, password);
+      var jsonResponse = await new UserQueries().login(email, password);
+
+      if (jsonResponse['success'] != null) {
+        // Update the APi token & retrieve the user from the response
+        ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['success']['token']);
+        var user = User.fromJson(jsonResponse['success']['user']);
+
+        // TODO: Save user appropriately in Hive db
+
+        emit(LoginSucceeded());
+      } else if (jsonResponse['error'] != null) {
+        emit(LoginFailed(jsonResponse['error']));
+      } else {
+        emit(LoginFailed("Connection with server failed."));
+      }
     } catch (exception) {
       emit(LoginFailed(exception.toString()));
       return;
     }
+  }
 
-    if (jsonResponse['success'] != null) {
-      // Update the APi token & retrieve the user from the response
-      ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['success']['token']);
-      var user = User.fromJson(jsonResponse['success']['user']);
-      emit(LoginSucceeded());
-    } else if (jsonResponse['error'] != null) {
-      emit(LoginFailed(jsonResponse['error']));
-    } else {
-      emit(LoginFailed("Connection with server failed."));
+  registerUser(String name, String email, String password, String pharmacyPhoneNumber, String isCaregiver) async {
+    emit(LoginValidating());
+
+    try {
+      var jsonResponse = await new UserQueries().register(name, email, password, pharmacyPhoneNumber, isCaregiver);
+
+      if (jsonResponse['status']) {
+
+        ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['data']['token']);
+        var user = User.fromJson(jsonResponse['data']['user']);
+
+        // TODO: Save user appropriately in Hive db
+
+        emit(LoginSucceeded());
+      } else {
+        // TODO: Handle all error messages
+        var errorMessage = "${jsonResponse['message']}: ${jsonResponse['errors']['email'][0]}";
+
+        emit(LoginFailed(errorMessage));
+      }
+    } catch (exception) {
+      emit(LoginFailed(exception.toString()));
+      return;
     }
   }
 
-  // registerUser(String name, String email, String password, String pharmacyPhoneNumber) async {
-  //
-  // }
+  resetState() {
+    emit(LoginInitial());
+  }
 }
