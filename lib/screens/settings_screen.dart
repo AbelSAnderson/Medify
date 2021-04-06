@@ -15,6 +15,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _sliderValue = BlocProvider.of<SettingsCubit>(context).state.fontScaleFactor;
     return Scaffold(
       appBar: AppBar(
         title: Text("Settings"),
@@ -55,12 +56,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Container(
                     width: 250.sh,
                     child: Slider.adaptive(
-                      value: state.fontScaleFactor,
+                      value: _sliderValue,
                       min: 1,
                       max: 2,
                       onChanged: (value) {
+                        setState(() {
+                          _sliderValue = value;
+                        });
                         BlocProvider.of<SettingsCubit>(context).changeFontScaleFactor(value);
-                        print(state.fontScaleFactor);
                       },
                     ),
                   ),
