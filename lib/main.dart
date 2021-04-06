@@ -11,6 +11,7 @@ import 'package:medify/cubit/login_cubit.dart';
 import 'package:medify/cubit/medication_form_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/cubit/search_cubit.dart';
+import 'package:medify/cubit/settings_cubit.dart';
 import 'package:medify/database/database_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/cubit/calendar_cubit.dart';
@@ -50,6 +51,9 @@ void main() async {
         providers: [
           BlocProvider<NavBarCubit>(
             create: (context) => NavBarCubit(),
+          ),
+          BlocProvider(
+            create: (context) => SettingsCubit(),
           ),
           BlocProvider<CalendarCubit>(
             create: (context) => CalendarCubit(MedicationEventQueries(), RepositoryProvider.of<MedicationEventRepository>(context)),
@@ -115,11 +119,16 @@ class MyApp extends StatelessWidget {
             ResponsiveBreakpoint.autoScale(950, name: "TabletLarge", scaleFactor: 1),
           ]);
         }
-        return ResponsiveWrapper.builder(
-          child,
-          minWidth: 400,
-          defaultScale: false,
-          breakpoints: breakpoints,
+        return BlocBuilder<SettingsCubit, SettingsState>(
+          builder: (context, state) {
+            return ResponsiveWrapper.builder(
+              child,
+              minWidth: 400,
+              defaultScale: false,
+              breakpoints: breakpoints,
+              mediaQueryData: MediaQuery.of(context).copyWith(textScaleFactor: state.fontScaleFactor / 1.5),
+            );
+          },
         );
       },
       title: 'Medify',

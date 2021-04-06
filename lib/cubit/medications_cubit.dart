@@ -25,17 +25,25 @@ class MedicationsCubit extends Cubit<MedicationsState> {
   loadMedications() async {
     _wait();
     emit(MedicationsLoading());
-    medicationInfoRepository.getMedicationInfos();
-    var medicationInfos = medicationInfoRepository.medicationInfos;
-    emit(MedicationsLoaded(medicationInfos));
+    try {
+      await medicationInfoRepository.getMedicationInfos();
+      var medicationInfos = medicationInfoRepository.medicationInfos;
+      emit(MedicationsLoaded(medicationInfos));
+    } catch (e) {
+      emit(MedicationsError());
+    }
   }
 
   deleteMedication(MedicationInfo medicationInfo) async {
     _wait();
     emit(MedicationsLoading());
-    await medicationInfoRepository.deleteMedicationInfo(medicationInfo);
-    var medicationInfos = medicationInfoRepository.medicationInfos;
-    emit(MedicationsLoaded(medicationInfos));
+    try {
+      await medicationInfoRepository.deleteMedicationInfo(medicationInfo);
+      var medicationInfos = medicationInfoRepository.medicationInfos;
+      emit(MedicationsLoaded(medicationInfos));
+    } catch (e) {
+      emit(MedicationsError());
+    }
   }
 
   _wait() async {

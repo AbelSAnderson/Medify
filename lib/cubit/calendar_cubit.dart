@@ -25,10 +25,14 @@ class CalendarCubit extends Cubit<CalendarState> {
   Future<void> getAllMedicationEvents() async {
     await Future<void>.delayed(const Duration(milliseconds: 1));
     emit(CalendarLoadInProgress());
-    var medicationEvents = await medicationEventRepository.getMedicationEvents();
-    var medEventsMapped = _createMedicationEventsMap(medicationEvents);
-    await Future.delayed(Duration(seconds: 1));
-    emit(CalendarLoaded(medEventsMapped));
+    try {
+      var medicationEvents = await medicationEventRepository.getMedicationEvents();
+      var medEventsMapped = _createMedicationEventsMap(medicationEvents);
+      await Future.delayed(Duration(seconds: 1));
+      emit(CalendarLoaded(medEventsMapped));
+    } catch (e) {
+      emit(CalendarFailure());
+    }
   }
 
   _createMedicationEventsMap(List<MedicationEvent> eventsList) {
