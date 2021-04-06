@@ -28,7 +28,7 @@ class UserQueries extends DatabaseQueryBase<User> {
       'name' : name,
       'email' : email,
       'password' : password,
-      'pharmacyPhone' : pharmacyPhone,
+      'pharmacy_number' : pharmacyPhone,
       'is_caregiver' : isCaregiver
     };
 
