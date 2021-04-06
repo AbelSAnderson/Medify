@@ -39,8 +39,8 @@ class ApiHandler {
     var responseJson;
 
     try {
-      final response = await http.get(Uri.parse(this.url + url), headers: getHeaders());
-
+      final response = await http.get(Uri.parse(this.url + url), headers: _getHeaders());
+      print(response.toString());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -50,23 +50,23 @@ class ApiHandler {
   }
 
   /// Retrieve Data with a Get Request
-  Future<dynamic> getPostData(String url, Map<String, dynamic> body) async {
+  Future<dynamic> getPostData(String url, Map<String, dynamic> body, {bool filterResponse = true}) async {
     var responseJson;
     try {
-      final response = await http.post(Uri.parse(this.url + url), headers: getHeaders(), body: jsonEncode(body));
+      final response = await http.post(Uri.parse(this.url + url), headers: _getHeaders(), body: jsonEncode(body));
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
 
-    return responseJson[_dataName];
+    return filterResponse ? responseJson[_dataName] : responseJson;
   }
 
   /// Retrieve Data with a Delete Request
   Future<dynamic> getDeleteData(String url) async {
     var responseJson;
     try {
-      final response = await http.delete(Uri.parse(this.url + url), headers: getHeaders());
+      final response = await http.delete(Uri.parse(this.url + url), headers: _getHeaders());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -94,7 +94,7 @@ class ApiHandler {
     }
   }
 
-  Map<String, String> getHeaders() {
+  Map<String, String> _getHeaders() {
     if (_useToken) {
       return {
         'Content-type': 'application/json',
@@ -114,6 +114,7 @@ class ApiHandler {
     _token = token;
   }
 
+  /// Retrieve token from DB - needs to be changed
   retrieveToken() async {
     _token = await "";
   }
