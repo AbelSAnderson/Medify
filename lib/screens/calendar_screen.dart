@@ -59,67 +59,84 @@ class _CalendarScreenState extends State<CalendarScreen> {
           "Home",
         ),
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          InteractiveViewer(child: _buildTableCalendar()),
-          Expanded(child: _buildEventList()),
-        ],
+      body: BlocBuilder<CalendarCubit, CalendarState>(
+        builder: (context, state) {
+          if (state is CalendarInitial) {
+            BlocProvider.of<CalendarCubit>(context).getAllMedicationEvents();
+          }
+          if (state is CalendarLoadInProgress) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (state is CalendarLoaded) {
+            return Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                InteractiveViewer(child: _buildTableCalendar(state)),
+                Expanded(child: _buildEventList()),
+              ],
+            );
+          }
+          if (state is CalendarFailure) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "No Internet Connection.",
+                    style: TextStyle(fontSize: 18.sf),
+                  ),
+                  TextButton(
+                    child: Text("Try Again"),
+                    onPressed: () => BlocProvider.of<CalendarCubit>(context).getAllMedicationEvents(),
+                  ),
+                ],
+              ),
+            );
+          }
+          return Container();
+        },
       ),
     );
   }
 
-  _buildTableCalendar() {
-    return BlocBuilder<CalendarCubit, CalendarState>(
-      builder: (context, state) {
-        if (state is CalendarInitial) {
-          BlocProvider.of<CalendarCubit>(context).getAllMedicationEvents();
-        }
-        if (state is CalendarLoadInProgress) {
-          return Center(child: CircularProgressIndicator());
-        }
-        if (state is CalendarLoaded) {
-          _events = state.medicationEvents;
+  _buildTableCalendar(CalendarLoaded state) {
+    _events = state.medicationEvents;
 
-          _selectedEvents = _events[_today] ?? [];
+    _selectedEvents = _events[_today] ?? [];
 
-          if (_calendarCreated) {
-            _calendarController.setCalendarFormat(MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week);
-          }
-          return TableCalendar(
-            calendarController: _calendarController,
-            events: _events,
-            startingDayOfWeek: StartingDayOfWeek.sunday,
-            availableGestures: AvailableGestures.horizontalSwipe,
-            initialSelectedDay: _today,
-            startDay: DateTime.now().subtract(Duration(days: 30)),
-            endDay: DateTime.now().add(Duration(days: 30)),
-            initialCalendarFormat: MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week,
-            calendarStyle: CalendarStyle(
-              selectedColor: Theme.of(context).primaryColor,
-              todayColor: Theme.of(context).primaryColorLight,
-              markersColor: Theme.of(context).accentColor,
-              outsideDaysVisible: true,
-            ),
-            rowHeight: 50.sv,
-            headerStyle: HeaderStyle(
-              formatButtonVisible: false,
-              centerHeaderTitle: true,
-              formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
-              formatButtonDecoration: BoxDecoration(
-                color: Colors.deepOrange[400],
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-            ),
-            onCalendarCreated: (first, last, format) {
-              _calendarCreated = true;
-            },
-            onDaySelected: _onDaySelected,
-            headerVisible: true,
-          );
-        }
-        return Container();
+    if (_calendarCreated) {
+      _calendarController.setCalendarFormat(MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week);
+    }
+    return TableCalendar(
+      calendarController: _calendarController,
+      events: _events,
+      startingDayOfWeek: StartingDayOfWeek.sunday,
+      availableGestures: AvailableGestures.horizontalSwipe,
+      initialSelectedDay: _today,
+      startDay: DateTime.now().subtract(Duration(days: 30)),
+      endDay: DateTime.now().add(Duration(days: 30)),
+      initialCalendarFormat: MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week,
+      calendarStyle: CalendarStyle(
+        selectedColor: Theme.of(context).primaryColor,
+        todayColor: Theme.of(context).primaryColorLight,
+        markersColor: Theme.of(context).accentColor,
+        outsideDaysVisible: true,
+      ),
+      rowHeight: 50.sv,
+      headerStyle: HeaderStyle(
+        formatButtonVisible: false,
+        centerHeaderTitle: true,
+        formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
+        formatButtonDecoration: BoxDecoration(
+          color: Colors.deepOrange[400],
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+      ),
+      onCalendarCreated: (first, last, format) {
+        _calendarCreated = true;
       },
+      onDaySelected: _onDaySelected,
+      headerVisible: true,
     );
   }
 

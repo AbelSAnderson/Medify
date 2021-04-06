@@ -23,3 +23,8 @@ class CalendarLoaded extends CalendarState {
   @override
   List<Object> get props => [];
 }
+
+class CalendarFailure extends CalendarState {
+  @override
+  List<Object> get props => [];
+}
