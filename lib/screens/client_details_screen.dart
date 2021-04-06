@@ -18,7 +18,7 @@ class ClientDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(user.firstName + " " + user.lastName),
+        title: Text(user.name),
         actions: [
           PlatformIconButton(
             padding: EdgeInsets.all(0),

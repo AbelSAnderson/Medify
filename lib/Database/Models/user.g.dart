@@ -20,9 +20,7 @@ class UserAdapter extends TypeAdapter<User> {
       fields[0] as int,
       fields[1] as String,
       fields[2] as String,
-      fields[3] as String,
-      fields[4] as String,
-      fields[5] as String
+      fields[3] as String
     );
   }
 
@@ -33,14 +31,10 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.firstName)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.lastName)
-      ..writeByte(3)
       ..write(obj.pharmacyNumber)
-      ..writeByte(4)
-      ..write(obj.doctorNumber)
-      ..writeByte(5)
+      ..writeByte(3)
       ..write(obj.email);
   }
 

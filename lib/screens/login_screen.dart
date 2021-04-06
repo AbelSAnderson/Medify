@@ -1,14 +1,21 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:medify/cubit/login_cubit.dart';
 import 'package:medify/scale.dart';
-import 'package:medify/screens/home_screen.dart';
 import 'package:medify/screens/register_screen.dart';
 import 'package:medify/widgets/reset_password_dialog.dart';
 
+import 'home_screen.dart';
+
 class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
+
+  // Controllers for the form fields
+  final emailController = new TextEditingController();
+  final passwordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +49,7 @@ class LoginScreen extends StatelessWidget {
                         _passwordField(),
                         _resetPasswordButton(context),
                         SizedBox(height: 20.sv),
-                        _loginButton(context),
+                        _loginButtonProvider(context),
                         SizedBox(
                           height: 20.sv,
                         ),
@@ -72,13 +79,14 @@ class LoginScreen extends StatelessWidget {
         SizedBox(height: 10.sv),
         TextFormField(
           style: TextStyle(fontSize: 16.sf),
-          initialValue: "",
+          controller: emailController,
           decoration: InputDecoration(
             isDense: true,
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
@@ -102,14 +110,15 @@ class LoginScreen extends StatelessWidget {
         SizedBox(height: 10.sv),
         TextFormField(
           style: TextStyle(fontSize: 16.sf),
-          initialValue: "",
+          controller: passwordController,
           obscureText: true,
           decoration: InputDecoration(
             isDense: true,
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
@@ -138,6 +147,29 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
+  Widget _loginButtonProvider(BuildContext context) {
+    return BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
+      if (state is LoginInitial) {
+        return _loginButton(context);
+      } else if (state is LoginValidating) {
+        return Center(child: CircularProgressIndicator());
+      } else if (state is LoginFailed) {
+        return Column(
+            children: [_loginButton(context), Text(state.errorMessage)]);
+      } else if (state is LoginSucceeded) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => MyHomePage(
+                  title: 'Medify',
+                ),
+              ))
+            });
+        return Center(child: CircularProgressIndicator());
+      }
+      return Container();
+    });
+  }
+
   Widget _loginButton(BuildContext context) {
     return Center(
       child: PlatformButton(
@@ -148,18 +180,23 @@ class LoginScreen extends StatelessWidget {
         ),
         onPressed: () {
           if (_formKey.currentState.validate()) {
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => MyHomePage(
-                title: 'Medify',
-              ),
-            ));
+            BlocProvider.of<LoginCubit>(context)
+                .loginUser(emailController.text, passwordController.text);
+
+            // Navigator.of(context).pushReplacement(MaterialPageRoute(
+            //   builder: (context) => MyHomePage(
+            //     title: 'Medify',
+            //   ),
+            // ));
           }
         },
         color: Theme.of(context).primaryColor,
         material: (context, platform) => MaterialRaisedButtonData(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4))),
         ),
-        cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+        cupertino: (context, platform) =>
+            CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
       ),
     );
   }
@@ -179,6 +216,7 @@ class LoginScreen extends StatelessWidget {
             style: TextStyle(fontSize: 14.sf),
           ),
           onPressed: () {
+            BlocProvider.of<LoginCubit>(context).resetState();
             Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => RegisterScreen(),
             ));

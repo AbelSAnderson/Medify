@@ -46,18 +46,18 @@ Map<DateTime, List<MedicationEvent>> getMedicationEvents(Map<DateTime, List<Medi
 }
 
 List<User> getRequestedUsers() {
-  User user1 = User(0, "A", "B", "pharmacyNumber", "doctorNumber", "fake@email.com");
-  User user2 = User(1, "C", "D", "pharmacyNumber", "doctorNumber", "fake@email.com");
+  User user1 = User(0, "A B", "pharmacyNumber", "fake@email.com");
+  User user2 = User(1, "C D", "pharmacyNumber", "fake@email.com");
 
   return [user1, user2];
 }
 
 List<User> getConnectedUsers() {
-  User user1 = User(0, "E", "F", "pharmacyNumber", "doctorNumber", "fake@email.com");
-  User user2 = User(1, "G", "H", "pharmacyNumber", "doctorNumber", "fake@email.com");
-  User user3 = User(2, "I", "J", "pharmacyNumber", "doctorNumber", "fake@email.com");
-  User user4 = User(6, "K", "L", "pharmacyNumber", "doctorNumber", "fake@email.com");
-  User user5 = User(7, "M", "N", "pharmacyNumber", "doctorNumber", "fake@email.com");
+  User user1 = User(0, "E F", "pharmacyNumber", "fake@email.com");
+  User user3 = User(2, "I J", "pharmacyNumber", "fake@email.com");
+  User user2 = User(1, "G H", "pharmacyNumber", "fake@email.com");
+  User user4 = User(6, "K L", "pharmacyNumber", "fake@email.com");
+  User user5 = User(7, "M N", "pharmacyNumber", "fake@email.com");
 
   return [user1, user2, user3, user4, user5];
 }
@@ -100,11 +100,11 @@ List<MedicationInfo> getMedicationInfos() {
 }
 
 List<UserConnection> getUserConnections() {
-  User user1 = User(0, "E", "F", "pharmacyNumber", "doctorNumber", "fake@email.com");
-  User user2 = User(1, "G", "H", "pharmacyNumber", "doctorNumber", "fake@email.com");
-  User user3 = User(2, "I", "J", "pharmacyNumber", "doctorNumber", "fake@email.com");
-  User user4 = User(3, "K", "L", "pharmacyNumber", "doctorNumber", "fake@email.com");
-  User user5 = User(4, "M", "N", "pharmacyNumber", "doctorNumber", "fake@email.com");
+  User user1 = User(0, "E F", "pharmacyNumber", "fake@email.com");
+  User user2 = User(1, "G H", "pharmacyNumber", "fake@email.com");
+  User user3 = User(2, "I J", "pharmacyNumber", "fake@email.com");
+  User user4 = User(3, "K L", "pharmacyNumber", "fake@email.com");
+  User user5 = User(4, "M N", "pharmacyNumber", "fake@email.com");
   UserConnection userConnection1 = UserConnection(user1, Status.requested);
   UserConnection userConnection2 = UserConnection(user2, Status.connected);
   UserConnection userConnection3 = UserConnection(user3, Status.requested);
