@@ -53,7 +53,7 @@ void main() async {
       child: MultiBlocProvider(
         providers: [
           BlocProvider<NavBarCubit>(
-            create: (context) => NavBarCubit(),
+            create: (context) => NavBarCubit(RepositoryProvider.of<UserRepository>(context)),
           ),
           BlocProvider(
             create: (context) => SettingsCubit(),
@@ -126,6 +126,7 @@ class MyApp extends StatelessWidget {
           ]);
         }
         return BlocBuilder<SettingsCubit, SettingsState>(
+          buildWhen: (previous, current) => previous.fontScaleFactor != current.fontScaleFactor,
           builder: (context, state) {
             return ResponsiveWrapper.builder(
               child,

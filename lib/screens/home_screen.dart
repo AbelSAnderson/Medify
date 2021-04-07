@@ -26,12 +26,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return BlocBuilder<NavBarCubit, NavBarState>(
       builder: (BuildContext context, NavBarState state) {
-        return _buildPage(state.title, state.index);
+        return _buildPage(state.title, state.index, state.showClients);
       },
     );
   }
 
-  Widget _buildPage(String title, int index) {
+  Widget _buildPage(String title, int index, bool showClients) {
     return Scaffold(
       bottomNavigationBar: PlatformNavBar(
         currentIndex: index,
@@ -45,27 +45,42 @@ class _MyHomePageState extends State<MyHomePage> {
           activeColor: Theme.of(context).accentColor,
           inactiveColor: Colors.black54,
         ),
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(PlatformIcons(context).home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(PlatformIcons(context).search),
-            label: "Search",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(PlatformIcons(context).person),
-            label: "Profile",
-          ),
-          BottomNavigationBarItem(
-            icon: PlatformWidget(
-              cupertino: (context, platform) => Icon(CupertinoIcons.person_3),
-              material: (context, platform) => Icon(Icons.group),
-            ),
-            label: "Clients",
-          ),
-        ],
+        items: !showClients
+            ? [
+                BottomNavigationBarItem(
+                  icon: Icon(PlatformIcons(context).home),
+                  label: "Home",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(PlatformIcons(context).search),
+                  label: "Search",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(PlatformIcons(context).person),
+                  label: "Profile",
+                ),
+              ]
+            : [
+                BottomNavigationBarItem(
+                  icon: Icon(PlatformIcons(context).home),
+                  label: "Home",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(PlatformIcons(context).search),
+                  label: "Search",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(PlatformIcons(context).person),
+                  label: "Profile",
+                ),
+                BottomNavigationBarItem(
+                  icon: PlatformWidget(
+                    cupertino: (context, platform) => Icon(CupertinoIcons.person_3),
+                    material: (context, platform) => Icon(Icons.group),
+                  ),
+                  label: "Clients",
+                ),
+              ],
       ),
       body: IndexedStack(
         children: screens,
