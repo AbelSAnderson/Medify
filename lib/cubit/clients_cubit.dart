@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:medify/cubit/caregivers_cubit.dart';
+import 'package:medify/database/model_queries/client_queries.dart';
 import 'package:medify/database/models/user.dart';
 import 'package:medify/database/models/user_connection.dart';
 import 'package:medify/dummy_data.dart' as DummyData;
@@ -8,16 +9,20 @@ import 'package:medify/dummy_data.dart' as DummyData;
 part 'clients_state.dart';
 
 class ClientsCubit extends Cubit<ClientsState> {
-  ClientsCubit() : super(ClientsInitial());
+  ClientsCubit(this.clientQueries) : super(ClientsInitial());
+
+  final ClientQueries clientQueries;
 
   ///Loads all the clients (requested and connected users)
   loadClients() async {
     //Required wait time or the state does not emit
     await Future<void>.delayed(const Duration(milliseconds: 100));
     emit(ClientsLoadingInProgress());
-    var userConnections = DummyData.getUserConnections();
-    userConnections = _sortUserConnections(userConnections);
-    emit(ClientsLoaded(userConnections));
+    try {
+      var userConnections = await clientQueries.retrieveAllFromApi();
+      userConnections = _sortUserConnections(userConnections);
+      emit(ClientsLoaded(userConnections));
+    } catch (e) {}
   }
 
   ///User accepted the request, client is removed from requested users list and added to the connected users list
