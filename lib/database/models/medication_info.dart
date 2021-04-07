@@ -36,13 +36,13 @@ class MedicationInfo extends ModelBase {
         this.repeat = json["repeat_interval"],
         this.medication = Medication.fromJsonMedifyAPI(json["medication"]);
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson(int userId) => {
         'id': id,
         'med_type': medicationType,
         'pills_remaining': pillsRemaining,
         'take_at': takeAt.toString(),
         'repeat_interval': repeat,
-        'user_id': 2,
+        'user_id': userId,
         'medication_id': medication.id,
       };
 }

@@ -27,11 +27,11 @@ class User extends ModelBase {
         this.email = json["email"].toString();
 
   Map<String, dynamic> toJson() => {
-        'id': 2,
-        'name': "Meta",
-        'pharmacy_number': "5555555555",
-        'is_caregiver': 1,
-        'email': "cjacobi@example.com",
+        'id': id,
+        'name': name,
+        'pharmacy_number': pharmacyNumber,
+        'is_caregiver': "0",
+        'email': email,
       };
 }
 

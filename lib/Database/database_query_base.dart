@@ -15,7 +15,7 @@ abstract class DatabaseQueryBase<T> {
     return itemBox.values.toList();
   }
 
-  Future<List<T>> retrieveAllFromApi();
+  Future<List<T>> retrieveAllFromApi(int userId);
 
   Future<T> retrieveOneFromApi(int id);
 }

@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/cubit/profile_cubit.dart';
 import 'package:medify/scale.dart';
 
 class EditProfileDialog extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
+
+  final nameController = TextEditingController(text: "q1w2d3gz"); //need this unique value because widget keeps rebuilding resetting text
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -20,23 +27,38 @@ class EditProfileDialog extends StatelessWidget {
       ),
       content: Container(
         width: MediaQuery.of(context).size.width * 0.75,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25.sh),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                _nameField(),
-                SizedBox(height: 20.sv),
-                _emailField(),
-                SizedBox(height: 20.sv),
-                _pharmacyNumField(),
-                SizedBox(height: 20.sv),
-                _submitButton(context),
-                _cancelButton(context),
-              ],
-            ),
-          ),
+        child: BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, state) {
+            if (state is ProfileLoaded) {
+              var user = state.user;
+              //widget keeps rebuilding when changing text fields focus - this makes sure the values don't keep resetting
+              //Note: The value can be anything that the user won't enter by mistake lol
+              if (nameController.text == "q1w2d3gz") {
+                nameController.text = user.name ?? "";
+                emailController.text = user.email ?? "";
+                phoneController.text = user.pharmacyNumber ?? "";
+              }
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25.sh),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      _nameField(),
+                      SizedBox(height: 20.sv),
+                      _emailField(),
+                      SizedBox(height: 20.sv),
+                      _pharmacyNumField(),
+                      SizedBox(height: 20.sv),
+                      _submitButton(context),
+                      _cancelButton(context),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return Container();
+          },
         ),
       ),
     );
@@ -54,9 +76,9 @@ class EditProfileDialog extends StatelessWidget {
         ),
         SizedBox(height: 10.sv),
         TextFormField(
+          controller: nameController,
           maxLength: 50,
           style: TextStyle(fontSize: 16.sf),
-          initialValue: "",
           decoration: InputDecoration(
             counterText: "",
             isDense: true,
@@ -87,9 +109,9 @@ class EditProfileDialog extends StatelessWidget {
         ),
         SizedBox(height: 10.sv),
         TextFormField(
+          controller: emailController,
           maxLength: 200,
           style: TextStyle(fontSize: 16.sf),
-          initialValue: "",
           decoration: InputDecoration(
             counterText: "",
             isDense: true,
@@ -121,9 +143,9 @@ class EditProfileDialog extends StatelessWidget {
         ),
         SizedBox(height: 10.sv),
         TextFormField(
+          controller: phoneController,
           maxLength: 200,
           style: TextStyle(fontSize: 16.sf),
-          initialValue: "",
           decoration: InputDecoration(
             counterText: "",
             isDense: true,
@@ -154,7 +176,11 @@ class EditProfileDialog extends StatelessWidget {
         ),
         onPressed: () {
           if (_formKey.currentState.validate()) {
-            //Replace this with the edit profile logic
+            var user = (BlocProvider.of<ProfileCubit>(context).state as ProfileLoaded).user;
+            user.name = nameController.text;
+            user.email = emailController.text;
+            user.pharmacyNumber = phoneController.text;
+            BlocProvider.of<ProfileCubit>(context).editProfileDetails(user);
             Navigator.of(context, rootNavigator: true).pop('dialog');
           }
         },

@@ -102,19 +102,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
   _buildTableCalendar(CalendarLoaded state) {
     _events = state.medicationEvents;
 
-    _selectedEvents = _events[_today] ?? [];
-
     if (_calendarCreated) {
       _calendarController.setCalendarFormat(MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week);
+      // _calendarController.setSelectedDay(_today);
     }
     return TableCalendar(
       calendarController: _calendarController,
       events: _events,
       startingDayOfWeek: StartingDayOfWeek.sunday,
       availableGestures: AvailableGestures.horizontalSwipe,
-      initialSelectedDay: _today,
       startDay: DateTime.now().subtract(Duration(days: 30)),
       endDay: DateTime.now().add(Duration(days: 30)),
+      initialSelectedDay: _today,
       initialCalendarFormat: MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week,
       calendarStyle: CalendarStyle(
         selectedColor: Theme.of(context).primaryColor,

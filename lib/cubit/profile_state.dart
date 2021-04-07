@@ -7,4 +7,21 @@ abstract class ProfileState extends Equatable {
   List<Object> get props => [];
 }
 
-class ProfileInitial extends ProfileState {}
+class ProfileLoading extends ProfileState {
+  @override
+  List<Object> get props => [];
+}
+
+class ProfileLoaded extends ProfileState {
+  final User user;
+
+  ProfileLoaded(this.user);
+
+  @override
+  List<Object> get props => [user];
+}
+
+class ProfileError extends ProfileState {
+  @override
+  List<Object> get props => [];
+}

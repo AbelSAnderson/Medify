@@ -9,6 +9,7 @@ import 'package:medify/cubit/clients_cubit.dart';
 import 'package:medify/cubit/login_cubit.dart';
 import 'package:medify/cubit/medication_form_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
+import 'package:medify/cubit/profile_cubit.dart';
 import 'package:medify/cubit/search_cubit.dart';
 import 'package:medify/cubit/settings_cubit.dart';
 import 'package:medify/database/database_handler.dart';
@@ -20,6 +21,7 @@ import 'package:medify/database/model_queries/medication_info_queries.dart';
 import 'package:medify/database/model_queries/medication_queries.dart';
 import 'package:medify/repositories/medication_event_repository.dart';
 import 'package:medify/repositories/medication_info_repository.dart';
+import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/login_screen.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
@@ -36,6 +38,9 @@ void main() async {
   runApp(
     MultiRepositoryProvider(
       providers: [
+        RepositoryProvider(
+          create: (context) => UserRepository(),
+        ),
         RepositoryProvider(
           create: (context) => MedicationInfoRepository(),
         ),
@@ -54,6 +59,9 @@ void main() async {
           BlocProvider<CalendarCubit>(
             create: (context) => CalendarCubit(MedicationEventQueries(), RepositoryProvider.of<MedicationEventRepository>(context)),
           ),
+          BlocProvider(
+            create: (context) => ProfileCubit(RepositoryProvider.of<UserRepository>(context)),
+          ),
           BlocProvider<SearchCubit>(
             create: (context) => SearchCubit(),
           ),
@@ -61,7 +69,7 @@ void main() async {
             create: (context) => CaregiversCubit(),
           ),
           BlocProvider<MedicationsCubit>(
-            create: (context) => MedicationsCubit(MedicationInfoQueries(), RepositoryProvider.of<MedicationInfoRepository>(context)),
+            create: (context) => MedicationsCubit(MedicationInfoQueries(), RepositoryProvider.of<MedicationInfoRepository>(context), RepositoryProvider.of<UserRepository>(context)),
           ),
           BlocProvider<AddCaregiverCubit>(
             create: (context) => AddCaregiverCubit(),
@@ -73,10 +81,10 @@ void main() async {
             create: (context) => ClientDetailsCubit(),
           ),
           BlocProvider<MedicationFormCubit>(
-            create: (context) => MedicationFormCubit(MedicationQueries(), RepositoryProvider.of<MedicationInfoRepository>(context), RepositoryProvider.of<MedicationEventRepository>(context)),
+            create: (context) => MedicationFormCubit(MedicationQueries(), RepositoryProvider.of<MedicationInfoRepository>(context), RepositoryProvider.of<MedicationEventRepository>(context), RepositoryProvider.of<UserRepository>(context)),
           ),
           BlocProvider<LoginCubit>(
-            create: (context) => LoginCubit(),
+            create: (context) => LoginCubit(RepositoryProvider.of<UserRepository>(context)),
           )
         ],
         child: MyApp(),

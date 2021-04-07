@@ -8,7 +8,7 @@ class MedicationQueries extends DatabaseQueryBase<Medication> {
   MedicationQueries() : super("medications");
 
   @override
-  Future<List<Medication>> retrieveAllFromApi() async {
+  Future<List<Medication>> retrieveAllFromApi(int userId) async {
     var jsonData = await ApiHandler.medifyAPI().getData("medications");
     return MedicationList.from(jsonData).medications;
   }

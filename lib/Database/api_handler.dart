@@ -62,6 +62,19 @@ class ApiHandler {
     return filterResponse ? responseJson[_dataName] : responseJson;
   }
 
+  /// Retrieve Data with a Put Request
+  Future<dynamic> getPutData(String url, Map<String, dynamic> body, {bool filterResponse = true}) async {
+    var responseJson;
+    try {
+      final response = await http.put(Uri.parse(this.url + url), headers: _getHeaders(), body: jsonEncode(body));
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+
+    return filterResponse ? responseJson[_dataName] : responseJson;
+  }
+
   /// Retrieve Data with a Delete Request
   Future<dynamic> getDeleteData(String url) async {
     var responseJson;
