@@ -194,6 +194,7 @@ class RegisterScreen extends StatelessWidget {
           ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
+            if (passwordController.text != value) return "Passwords must match";
             return null;
           },
         ),
@@ -281,6 +282,7 @@ class RegisterScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 12.sf, color: Colors.white),
               ),
               onPressed: () {
+                BlocProvider.of<LoginCubit>(context).resetState();
                 if (_formKey.currentState.validate()) {
                   BlocProvider.of<LoginCubit>(context).registerUser(nameController.text, emailController.text, passwordController.text, pharmacyNumberController.text, 0);
                 }
@@ -298,6 +300,7 @@ class RegisterScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 12.sf, color: Colors.white),
               ),
               onPressed: () {
+                BlocProvider.of<LoginCubit>(context).resetState();
                 if (_formKey.currentState.validate()) {
                   BlocProvider.of<LoginCubit>(context).registerUser(nameController.text, emailController.text, passwordController.text, pharmacyNumberController.text, 1);
                 }
