@@ -21,7 +21,6 @@ class LoginCubit extends Cubit<LoginState> {
         ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['success']['token']);
         var user = User.fromJson(jsonResponse['success']['user']);
         userRepository.updateUser(user);
-        // TODO: Save user appropriately in Hive db
 
         emit(LoginSucceeded());
       } else if (jsonResponse['error'] != null) {
@@ -30,7 +29,7 @@ class LoginCubit extends Cubit<LoginState> {
         emit(LoginFailed("Connection with server failed."));
       }
     } catch (exception) {
-      emit(LoginFailed(exception.toString()));
+      emit(LoginFailed("Incorrect Email or Password"));
       return;
     }
   }
@@ -45,17 +44,15 @@ class LoginCubit extends Cubit<LoginState> {
         ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['data']['token']);
         var user = User.fromJson(jsonResponse['data']['user']);
         userRepository.updateUser(user);
-        // TODO: Save user appropriately in Hive db
 
         emit(LoginSucceeded());
       } else {
-        // TODO: Handle all error messages
         var errorMessage = "${jsonResponse['message']}: ${jsonResponse['errors']['email'][0]}";
 
         emit(LoginFailed(errorMessage));
       }
     } catch (exception) {
-      emit(LoginFailed(exception.toString()));
+      emit(LoginFailed("Email is already taken"));
       return;
     }
   }

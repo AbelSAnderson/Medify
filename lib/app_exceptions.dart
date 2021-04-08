@@ -1,13 +1,13 @@
 
 /// App Exceptions
 class AppException implements Exception {
-  final _message;
+  final message;
   final _prefix;
 
-  AppException([this._message, this._prefix]);
+  AppException([this.message, this._prefix]);
 
   String toString() {
-    return "$_prefix$_message";
+    return "$_prefix$message";
   }
 }
 
