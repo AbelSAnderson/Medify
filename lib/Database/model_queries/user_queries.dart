@@ -7,7 +7,7 @@ class UserQueries extends DatabaseQueryBase<User> {
   UserQueries() : super("users");
 
   @override
-  Future<List<User>> retrieveAllFromApi() async {
+  Future<List<User>> retrieveAllFromApi(int userId) async {
     var jsonData = await ApiHandler.medifyAPI().getData("users");
     return UserList.from(jsonData).users;
   }
@@ -18,19 +18,18 @@ class UserQueries extends DatabaseQueryBase<User> {
     return User.fromJson(jsonData);
   }
 
+  Future<User> updateToApi(User user) async {
+    var jsonData = await ApiHandler.medifyAPI().getPutData("users/${user.id}", user.toJson());
+    return User.fromJson(jsonData);
+  }
+
   Future<Map<String, dynamic>> login(String email, String password) async {
-    var jsonData = await ApiHandler.medifyAPI().getPostData("login", {'email' : email, 'password': password}, filterResponse: false);
+    var jsonData = await ApiHandler.medifyAPI().getPostData("login", {'email': email, 'password': password}, filterResponse: false);
     return jsonData;
   }
 
-  Future<Map<String, dynamic>> register(String name, String email, String password, String pharmacyPhone, String isCaregiver) async {
-    var body = {
-      'name' : name,
-      'email' : email,
-      'password' : password,
-      'pharmacy_number' : pharmacyPhone,
-      'is_caregiver' : isCaregiver
-    };
+  Future<Map<String, dynamic>> register(String name, String email, String password, String pharmacyPhone, int isCaregiver) async {
+    var body = {'name': name, 'email': email, 'password': password, 'pharmacy_number': pharmacyPhone, 'is_caregiver': isCaregiver};
 
     var jsonData = await ApiHandler.medifyAPI().getPostData("users", body, filterResponse: false);
     return jsonData;

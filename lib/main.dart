@@ -9,17 +9,21 @@ import 'package:medify/cubit/clients_cubit.dart';
 import 'package:medify/cubit/login_cubit.dart';
 import 'package:medify/cubit/medication_form_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
+import 'package:medify/cubit/profile_cubit.dart';
 import 'package:medify/cubit/search_cubit.dart';
 import 'package:medify/cubit/settings_cubit.dart';
 import 'package:medify/database/database_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
+import 'package:medify/database/model_queries/caregivers_queries.dart';
+import 'package:medify/database/model_queries/client_queries.dart';
 import 'package:medify/database/model_queries/medication_event_queries.dart';
 import 'package:medify/database/model_queries/medication_info_queries.dart';
 import 'package:medify/database/model_queries/medication_queries.dart';
 import 'package:medify/repositories/medication_event_repository.dart';
 import 'package:medify/repositories/medication_info_repository.dart';
+import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/login_screen.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
@@ -37,6 +41,9 @@ void main() async {
     MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
+          create: (context) => UserRepository(),
+        ),
+        RepositoryProvider(
           create: (context) => MedicationInfoRepository(),
         ),
         RepositoryProvider(
@@ -46,7 +53,7 @@ void main() async {
       child: MultiBlocProvider(
         providers: [
           BlocProvider<NavBarCubit>(
-            create: (context) => NavBarCubit(),
+            create: (context) => NavBarCubit(RepositoryProvider.of<UserRepository>(context)),
           ),
           BlocProvider(
             create: (context) => SettingsCubit(),
@@ -54,29 +61,32 @@ void main() async {
           BlocProvider<CalendarCubit>(
             create: (context) => CalendarCubit(MedicationEventQueries(), RepositoryProvider.of<MedicationEventRepository>(context)),
           ),
+          BlocProvider(
+            create: (context) => ProfileCubit(RepositoryProvider.of<UserRepository>(context)),
+          ),
           BlocProvider<SearchCubit>(
             create: (context) => SearchCubit(),
           ),
           BlocProvider<CaregiversCubit>(
-            create: (context) => CaregiversCubit(),
+            create: (context) => CaregiversCubit(CaregiversQueries()),
           ),
           BlocProvider<MedicationsCubit>(
-            create: (context) => MedicationsCubit(MedicationInfoQueries(), RepositoryProvider.of<MedicationInfoRepository>(context)),
+            create: (context) => MedicationsCubit(MedicationInfoQueries(), RepositoryProvider.of<MedicationInfoRepository>(context), RepositoryProvider.of<UserRepository>(context)),
           ),
           BlocProvider<AddCaregiverCubit>(
-            create: (context) => AddCaregiverCubit(),
+            create: (context) => AddCaregiverCubit(CaregiversQueries()),
           ),
           BlocProvider<ClientsCubit>(
-            create: (context) => ClientsCubit(),
+            create: (context) => ClientsCubit(ClientQueries()),
           ),
           BlocProvider<ClientDetailsCubit>(
             create: (context) => ClientDetailsCubit(),
           ),
           BlocProvider<MedicationFormCubit>(
-            create: (context) => MedicationFormCubit(MedicationQueries(), RepositoryProvider.of<MedicationInfoRepository>(context), RepositoryProvider.of<MedicationEventRepository>(context)),
+            create: (context) => MedicationFormCubit(MedicationQueries(), RepositoryProvider.of<MedicationInfoRepository>(context), RepositoryProvider.of<MedicationEventRepository>(context), RepositoryProvider.of<UserRepository>(context)),
           ),
           BlocProvider<LoginCubit>(
-            create: (context) => LoginCubit(),
+            create: (context) => LoginCubit(RepositoryProvider.of<UserRepository>(context)),
           )
         ],
         child: MyApp(),
@@ -116,6 +126,7 @@ class MyApp extends StatelessWidget {
           ]);
         }
         return BlocBuilder<SettingsCubit, SettingsState>(
+          buildWhen: (previous, current) => previous.fontScaleFactor != current.fontScaleFactor,
           builder: (context, state) {
             return ResponsiveWrapper.builder(
               child,

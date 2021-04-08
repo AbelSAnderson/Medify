@@ -12,18 +12,20 @@ import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/database/models/medication_info.dart';
 import 'package:medify/repositories/medication_event_repository.dart';
 import 'package:medify/repositories/medication_info_repository.dart';
+import 'package:medify/repositories/user_repository.dart';
 import 'package:meta/meta.dart';
 
 part 'medication_form_state.dart';
 
 class MedicationFormCubit extends Cubit<MedicationFormState> {
-  MedicationFormCubit(this.medicationQueries, this.medicationInfoRepository, this.medicationEventRepository) : super(MedicationFormState.initial());
+  MedicationFormCubit(this.medicationQueries, this.medicationInfoRepository, this.medicationEventRepository, this.userRepository) : super(MedicationFormState.initial());
 
   // MedicationInfoQueries medicationInfoQueries = MedicationInfoQueries();
 
   final MedicationQueries medicationQueries;
   final MedicationInfoRepository medicationInfoRepository;
   final MedicationEventRepository medicationEventRepository;
+  final UserRepository userRepository;
 
   changeMedication(Medication medication) {
     emit(state.copyWith(medication: medication));
@@ -68,21 +70,6 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
     emit(state.copyWith(medType: index));
   }
 
-  // submitForm(BuildContext context) async {
-  //   print(state.toString());
-  //   DateTime dateTime = DateTime(state.startDate.year, state.startDate.month, state.startDate.day, state.time.hour, state.time.minute);
-  //   Medication medication = state.medication;
-  //   MedicationInfo medicationInfo = MedicationInfo(0, state.medType, state.pillAmount, dateTime, getRepeatsInt(state.interval), medication);
-  //   var medicationFromJson = await medicationQueries.insertToApi(medication);
-  //   medicationInfo.medication = medicationFromJson;
-
-  //   var medicationInfoFromJson = await medicationInfoQueries.insertToApi(medicationInfo);
-  //   // BlocProvider.of<MedicationsCubit>(context).addMedication(medicationInfoFromJson);
-
-  // MedicationEvent medicationEvent = MedicationEvent(0, medicationInfo.takeAt, medicationInfo, false, 0);
-  // // BlocProvider.of<CalendarCubit>(context).addMedicationEvent(medicationEvent);
-  // }
-
   submitForm(BuildContext context) async {
     print(state.toString());
     DateTime dateTime = DateTime(state.startDate.year, state.startDate.month, state.startDate.day, state.time.hour, state.time.minute);
@@ -91,10 +78,8 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
     try {
       var medicationFromJson = await medicationQueries.insertToApi(medication);
       medicationInfo.medication = medicationFromJson;
-
-      medicationInfoRepository.addMedicationInfo(medicationInfo);
-      // MedicationEvent medicationEvent = MedicationEvent(0, medicationInfo.takeAt, medicationInfo, false, 0);
-      // medicationEventRepository.addMedicationEvents([medicationEvent]);
+      var currentUser = userRepository.currentUser;
+      medicationInfoRepository.addMedicationInfo(medicationInfo, currentUser.id);
       var medicationEvents = _generateMedicationEvents(medicationInfo);
       medicationEventRepository.addMedicationEvents(await medicationEvents);
     } catch (e) {}

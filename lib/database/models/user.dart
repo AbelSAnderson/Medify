@@ -17,6 +17,8 @@ class User extends ModelBase {
   @HiveField(3)
   String email;
 
+  bool isCaregiver = false;
+
   User(this.id, this.name, this.pharmacyNumber, this.email);
 
   // Decode the User from a json file
@@ -24,14 +26,15 @@ class User extends ModelBase {
       : this.id = json["id"],
         this.name = json["name"].toString(),
         this.pharmacyNumber = json["pharmacy_number"].toString(),
+        this.isCaregiver = json["is_caregiver"] == 0 ? false : true,
         this.email = json["email"].toString();
 
   Map<String, dynamic> toJson() => {
-        'id': 2,
-        'name': "Meta",
-        'pharmacy_number': "5555555555",
-        'is_caregiver': 1,
-        'email': "cjacobi@example.com",
+        'id': id,
+        'name': name,
+        'pharmacy_number': pharmacyNumber,
+        'is_caregiver': isCaregiver == false ? 0 : 1,
+        'email': email,
       };
 }
 

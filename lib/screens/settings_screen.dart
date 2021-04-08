@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/cubit/settings_cubit.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/widgets/change_password_dialog.dart';
@@ -11,7 +12,6 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   var _sliderValue = 1.5;
-  var _switchValue = false;
 
   @override
   Widget build(BuildContext context) {
@@ -81,34 +81,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _caregiverModeSection() {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.sv),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Caregiver Mode",
-                style: TextStyle(fontSize: 18.sf),
+    return BlocConsumer<NavBarCubit, NavBarState>(
+      listener: (context, state) {
+        if (state.isError == true) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text("Error"),
+            ),
+          );
+        }
+      },
+      buildWhen: (previous, current) => previous.showClients != current.showClients,
+      builder: (context, state) {
+        return Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.sv),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Caregiver Mode",
+                    style: TextStyle(fontSize: 18.sf),
+                  ),
+                  Switch.adaptive(
+                    activeColor: Theme.of(context).primaryColor,
+                    value: state.showClients,
+                    onChanged: (value) {
+                      setState(() {
+                        BlocProvider.of<NavBarCubit>(context).showClientsScreen(value);
+                      });
+                    },
+                  ),
+                ],
               ),
-              Switch.adaptive(
-                activeColor: Theme.of(context).primaryColor,
-                value: _switchValue,
-                onChanged: (value) {
-                  setState(() {
-                    _switchValue = value;
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          thickness: 2,
-          height: 0,
-        ),
-      ],
+            ),
+            Divider(
+              thickness: 2,
+              height: 0,
+            ),
+          ],
+        );
+      },
     );
   }
 

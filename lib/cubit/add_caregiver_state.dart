@@ -1,32 +1,30 @@
 part of 'add_caregiver_cubit.dart';
 
-abstract class AddCaregiverState extends Equatable {
-  const AddCaregiverState();
+class AddCaregiverState extends Equatable {
+  final String response;
+  final bool isLoading;
+
+  const AddCaregiverState({
+    this.response,
+    this.isLoading,
+  });
+
+  AddCaregiverState.initial()
+      : this(
+          response: "",
+          isLoading: false,
+        );
+
+  AddCaregiverState copyWith({
+    String response,
+    bool isLoading,
+  }) {
+    return AddCaregiverState(
+      response: response ?? this.response,
+      isLoading: isLoading ?? false,
+    );
+  }
 
   @override
-  List<Object> get props => [];
-}
-
-class AddCaregiverInitial extends AddCaregiverState {
-  @override
-  List<Object> get props => [];
-}
-
-class AddCaregiverLoading extends AddCaregiverState {
-  @override
-  List<Object> get props => [];
-}
-
-class AddCaregiverLoaded extends AddCaregiverState {
-  final List<CaregiverResults> caregivers;
-
-  const AddCaregiverLoaded([this.caregivers = const []]);
-
-  @override
-  List<Object> get props => [caregivers];
-}
-
-class AddCaregiverError extends AddCaregiverState {
-  @override
-  List<Object> get props => [];
+  List<Object> get props => [response, isLoading];
 }

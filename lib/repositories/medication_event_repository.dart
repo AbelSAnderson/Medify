@@ -9,7 +9,7 @@ class MedicationEventRepository {
   final MedicationEventQueries medicationEventQueries = MedicationEventQueries();
 
   Future<List<MedicationEvent>> getMedicationEvents() async {
-    var medicationEventsFromAPI = await medicationEventQueries.retrieveAllFromApi();
+    var medicationEventsFromAPI = await medicationEventQueries.retrieveAllFromApi(0);
     medicationEvents.addAll(medicationEventsFromAPI);
     streamController.add(medicationEvents);
     return medicationEvents;

@@ -8,14 +8,14 @@ class MedicationInfoRepository {
   final List<MedicationInfo> medicationInfos = [];
   final MedicationInfoQueries medicationInfoQueries = MedicationInfoQueries();
 
-  Future<void> getMedicationInfos() async {
-    var medicationInfosFromAPI = await medicationInfoQueries.retrieveAllFromApi();
+  Future<void> getMedicationInfos(int userId) async {
+    var medicationInfosFromAPI = await medicationInfoQueries.retrieveAllFromApi(userId);
     medicationInfos.addAll(medicationInfosFromAPI);
     streamController.add(medicationInfos);
   }
 
-  Future<void> addMedicationInfo(MedicationInfo medicationInfo) async {
-    var medicationInfoFromAPI = await medicationInfoQueries.insertToApi(medicationInfo);
+  Future<void> addMedicationInfo(MedicationInfo medicationInfo, int userId) async {
+    var medicationInfoFromAPI = await medicationInfoQueries.insertToApi(medicationInfo, userId);
     medicationInfos.add(medicationInfoFromAPI);
     streamController.add(medicationInfos);
   }

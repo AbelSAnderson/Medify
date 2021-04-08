@@ -8,7 +8,7 @@ class MedicationEventQueries extends DatabaseQueryBase<MedicationEvent> {
   MedicationEventQueries() : super("medicationEvents");
 
   @override
-  Future<List<MedicationEvent>> retrieveAllFromApi() async {
+  Future<List<MedicationEvent>> retrieveAllFromApi(int userId) async {
     var jsonData = await ApiHandler.medifyAPI().getData("events");
     return MedicationEventList.from(jsonData).medicationEvents;
   }

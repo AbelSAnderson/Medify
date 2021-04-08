@@ -1,27 +1,33 @@
 part of 'nav_bar_cubit.dart';
 
 @immutable
-abstract class NavBarState {
-  final String title = "";
-  final int index = 0;
-}
+class NavBarState {
+  final String title;
+  final int index;
+  final bool showClients;
+  final bool isError;
 
-class ShowHome extends NavBarState {
-  final String title = "Home";
-  final int index = 0;
-}
+  const NavBarState({this.title, this.index, this.showClients, this.isError});
 
-class ShowSearch extends NavBarState {
-  final String title = "Search";
-  final int index = 1;
-}
+  NavBarState.initial()
+      : this(
+          title: "Home",
+          index: 0,
+          showClients: false,
+          isError: false,
+        );
 
-class ShowProfile extends NavBarState {
-  final String title = "Profile";
-  final int index = 2;
-}
-
-class ShowClients extends NavBarState {
-  final String title = "Clients";
-  final int index = 3;
+  NavBarState copyWith({
+    String title,
+    int index,
+    bool showClients,
+    bool isError,
+  }) {
+    return NavBarState(
+      title: title ?? this.title,
+      index: index ?? this.index,
+      showClients: showClients ?? this.showClients,
+      isError: isError ?? false,
+    );
+  }
 }
