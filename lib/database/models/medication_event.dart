@@ -31,6 +31,13 @@ class MedicationEvent extends ModelBase {
         this.medicationInfo = MedicationInfo.fromJson(json["med_info"]),
         this.medTaken = json["med_taken"] == 1,
         this.amountTaken = json["amount_taken"];
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'date_time': datetime.toString(),
+        'med_taken': medTaken == false ? 0 : 1,
+        'amount_taken': amountTaken,
+      };
 }
 
 /// MedicationEvent List Class used to decode a list of MedicationEvents

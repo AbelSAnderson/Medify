@@ -35,6 +35,42 @@ class CalendarCubit extends Cubit<CalendarState> {
     }
   }
 
+  takeMedication(MedicationEvent medicationEvent) async {
+    if (state is CalendarLoaded) {
+      _wait();
+      var previousState = state as CalendarLoaded;
+      emit(CalendarLoadInProgress());
+      var medEvents = previousState.medicationEvents;
+      //get date of the medication event and take out the time from it
+      var medDate = medicationEvent.datetime;
+      medDate = DateTime(medDate.year, medDate.month, medDate.day);
+      medicationEvent.medTaken = true;
+      medicationEvent.amountTaken = 1;
+      await medicationEventQueries.updateToApi(medicationEvent);
+      medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).medTaken = true;
+      medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).amountTaken = 1;
+      emit(CalendarLoaded(medEvents));
+    }
+  }
+
+  undoTakeMedication(MedicationEvent medicationEvent) async {
+    if (state is CalendarLoaded) {
+      _wait();
+      var previousState = state as CalendarLoaded;
+      emit(CalendarLoadInProgress());
+      var medEvents = previousState.medicationEvents;
+      //get date of the medication event and take out the time from it
+      var medDate = medicationEvent.datetime;
+      medDate = DateTime(medDate.year, medDate.month, medDate.day);
+      medicationEvent.medTaken = false;
+      medicationEvent.amountTaken = 0;
+      await medicationEventQueries.updateToApi(medicationEvent);
+      medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).medTaken = false;
+      medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).amountTaken = 0;
+      emit(CalendarLoaded(medEvents));
+    }
+  }
+
   _createMedicationEventsMap(List<MedicationEvent> eventsList) {
     Map<DateTime, List<MedicationEvent>> eventsMapped = {};
 

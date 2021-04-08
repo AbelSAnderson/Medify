@@ -18,6 +18,7 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   var _events = {};
   List _selectedEvents = [];
+  var _selectedDay;
   AnimationController _animationController;
   CalendarController _calendarController = CalendarController();
   final _today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -29,7 +30,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     // _selectedEvents = [];
     _calendarController = CalendarController();
-
+    _selectedDay = _today;
     // _animationController = AnimationController(
     //   vsync: this,
     //   duration: const Duration(milliseconds: 400),
@@ -46,6 +47,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   void _onDaySelected(DateTime day, List events, List holidays) {
+    _selectedDay = day;
     setState(() {
       _selectedEvents = events;
     });
@@ -101,6 +103,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   _buildTableCalendar(CalendarLoaded state) {
     _events = state.medicationEvents;
+    var date = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+    _selectedEvents = _events[date] ?? [];
 
     if (_calendarCreated) {
       _calendarController.setCalendarFormat(MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week);
@@ -113,7 +117,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       availableGestures: AvailableGestures.horizontalSwipe,
       startDay: DateTime.now().subtract(Duration(days: 30)),
       endDay: DateTime.now().add(Duration(days: 30)),
-      initialSelectedDay: _today,
+      initialSelectedDay: _selectedDay,
       initialCalendarFormat: MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week,
       calendarStyle: CalendarStyle(
         selectedColor: Theme.of(context).primaryColor,
@@ -197,7 +201,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                     Flexible(
                       flex: 2,
-                      child: !event.medTaken ? _takenIconButton() : _undoIconButton(),
+                      child: !event.medTaken ? _takenIconButton(event) : _undoIconButton(event),
                     ),
                   ],
                 ),
@@ -208,7 +212,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  Widget _takenIconButton() {
+  Widget _takenIconButton(MedicationEvent medicationEvent) {
     return PlatformIconButton(
       padding: EdgeInsets.all(0),
       icon: Icon(
@@ -216,11 +220,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
         color: Theme.of(context).primaryColor,
         size: 32.sf,
       ),
-      onPressed: () {},
+      onPressed: () {
+        BlocProvider.of<CalendarCubit>(context).takeMedication(medicationEvent);
+      },
     );
   }
 
-  Widget _undoIconButton() {
+  Widget _undoIconButton(MedicationEvent medicationEvent) {
     return PlatformIconButton(
       padding: EdgeInsets.all(0),
       icon: Icon(
@@ -228,7 +234,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
         color: Theme.of(context).accentColor,
         size: 32.sf,
       ),
-      onPressed: () {},
+      onPressed: () {
+        BlocProvider.of<CalendarCubit>(context).undoTakeMedication(medicationEvent);
+      },
     );
   }
 }
