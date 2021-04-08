@@ -15,8 +15,8 @@ class ClientQueries {
     return jsonData;
   }
 
-  Future<Map<String, dynamic>> denyRequest(int userId) async {
-    var jsonData = await ApiHandler.medifyAPI().getData("denyRequest/$userId", filterResponse: false);
+  Future<Map<String, dynamic>> removeClient(int userId) async {
+    var jsonData = await ApiHandler.medifyAPI().getDeleteData("removeClient/$userId", filterResponse: false);
     return jsonData;
   }
 }

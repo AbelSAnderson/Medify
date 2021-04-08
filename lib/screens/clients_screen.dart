@@ -75,7 +75,7 @@ class ClientsScreen extends StatelessWidget {
       ),
       contentPadding: EdgeInsets.symmetric(vertical: 8.sv, horizontal: 8.sh),
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ClientDetailsScreen(user)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ClientDetailsScreen(userConnection)));
       },
     );
   }
@@ -98,7 +98,7 @@ class ClientsScreen extends StatelessWidget {
               size: 30.sf,
             ),
             onPressed: () {
-              BlocProvider.of<ClientsCubit>(context).declineRequest(userConnection);
+              BlocProvider.of<ClientsCubit>(context).removeClient(userConnection);
             },
           ),
           PlatformIconButton(

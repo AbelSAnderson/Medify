@@ -7,18 +7,19 @@ import 'package:medify/cubit/client_details_cubit.dart';
 import 'package:medify/cubit/clients_cubit.dart';
 import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/database/models/user.dart';
+import 'package:medify/database/models/user_connection.dart';
 import 'package:medify/scale.dart';
 
 class ClientDetailsScreen extends StatelessWidget {
-  final User user;
+  final UserConnection userConnection;
 
-  ClientDetailsScreen(this.user);
+  ClientDetailsScreen(this.userConnection);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(user.name),
+        title: Text(userConnection.user.name),
         actions: [
           PlatformIconButton(
             padding: EdgeInsets.all(0),
@@ -27,7 +28,7 @@ class ClientDetailsScreen extends StatelessWidget {
               color: Colors.white,
             ),
             onPressed: () {
-              BlocProvider.of<ClientsCubit>(context).removeClient(user);
+              BlocProvider.of<ClientsCubit>(context).removeClient(userConnection);
               Navigator.of(context).pop();
             },
           ),

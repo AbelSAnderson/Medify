@@ -29,7 +29,7 @@ class Medication extends ModelBase {
   Medication.fromJson(Map<String, dynamic> json)
       : this.id = 0,
         this.brandName = json["openfda"]["brand_name"] == null ? "Not Available" : json["openfda"]["brand_name"][0].toString(),
-        this.usage = json["indications_and_usage"] == null ? "Not Available" : json["indications_and_usage"].toString(), // Could also use dosage_and_administration
+        this.usage = json["indications_and_usage"] == null ? "Not Available" : json["indications_and_usage"][0].toString(), // Could also use dosage_and_administration
         this.precaution = json["warnings"] == null ? "Not Available" : json["warnings"][0].toString(), // Could also use other_safety_information
         this.dosage = json["dosage_and_administration"] == null ? "Not Available" : json["dosage_and_administration"][0].toString(),
         this.ingredient = json["active_ingredient"] == null ? "Not Available" : json["active_ingredient"][0].toString(); // Could also use inactive_ingredient

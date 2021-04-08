@@ -13,8 +13,8 @@ class CaregiversQueries {
     return UserList.from(jsonData).users;
   }
 
-  Future<Response> deleteFromApi() async {
-    return await ApiHandler.medifyAPI().getDeleteData("");
+  Future<Map<String, dynamic>> deleteFromApi(int userId) async {
+    return await ApiHandler.medifyAPI().getDeleteData("removeCaregiver/$userId", filterResponse: false);
   }
 
   Future<Map<String, dynamic>> requestCaregiver(String email) async {

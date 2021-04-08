@@ -76,7 +76,7 @@ class ApiHandler {
   }
 
   /// Retrieve Data with a Delete Request
-  Future<dynamic> getDeleteData(String url) async {
+  Future<dynamic> getDeleteData(String url, {bool filterResponse = true}) async {
     var responseJson;
     try {
       final response = await http.delete(Uri.parse(this.url + url), headers: _getHeaders());
@@ -85,7 +85,7 @@ class ApiHandler {
       throw FetchDataException('No Internet connection');
     }
 
-    return responseJson;
+    return filterResponse ? responseJson[_dataName] : responseJson;
   }
 
   /// Decode the response into json, or throw an error if the response has an error status code

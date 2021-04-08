@@ -24,8 +24,22 @@ class CaregiversCubit extends Cubit<CaregiversState> {
     if (state is CaregiversLoaded) {
       var previousState = state as CaregiversLoaded;
       emit(CaregiversLoading());
-      var newCaregiversList = previousState.caregivers..removeWhere((element) => element.id == caregiver.id);
-      emit(CaregiversLoaded(newCaregiversList));
+      await Future.delayed(Duration(milliseconds: 300));
+      try {
+        var jsonResponse = await caregiversQueries.deleteFromApi(caregiver.id);
+        if (jsonResponse["status"] != null) {
+          if (jsonResponse["status"] == true) {
+            var newCaregiversList = previousState.caregivers..removeWhere((element) => element.id == caregiver.id);
+            emit(CaregiversLoaded(newCaregiversList));
+          } else {
+            emit(CaregiversError());
+          }
+        } else {
+          emit(CaregiversError());
+        }
+      } catch (e) {
+        emit(CaregiversError());
+      }
     }
   }
 }

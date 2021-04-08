@@ -53,18 +53,20 @@ class ClientsCubit extends Cubit<ClientsState> {
   }
 
   ///User declined the request, the client is removed from the requested users list
-  declineRequest(UserConnection userConnection) async {
+  removeClient(UserConnection userConnection) async {
     if (state is ClientsLoaded) {
+      var previousState = state as ClientsLoaded;
+      emit(ClientsLoadingInProgress());
       try {
-        var jsonResponse = await clientQueries.denyRequest(userConnection.user.id);
+        var jsonResponse = await clientQueries.removeClient(userConnection.user.id);
         if (jsonResponse["status"] != null) {
           if (jsonResponse["status"] == true) {
-            var previousState = state as ClientsLoaded;
-            emit(ClientsLoadingInProgress());
             var newUserConnections = previousState.clients..removeWhere((element) => element.user.id == userConnection.user.id);
             //sort user connections so requested are first
             newUserConnections = _sortUserConnections(newUserConnections);
             emit(ClientsLoaded(newUserConnections));
+          } else {
+            emit(ClientsError());
           }
         } else {
           emit(ClientsError());
@@ -76,15 +78,15 @@ class ClientsCubit extends Cubit<ClientsState> {
   }
 
   ///Removes a connected client from the list
-  removeClient(User user) async {
-    if (state is ClientsLoaded) {
-      var previousState = state as ClientsLoaded;
-      emit(ClientsLoadingInProgress());
-      var newUserConnections = previousState.clients..removeWhere((element) => element.user.id == user.id);
-      newUserConnections = _sortUserConnections(newUserConnections);
-      emit(ClientsLoaded(newUserConnections));
-    }
-  }
+  // removeClient(User user) async {
+  //   if (state is ClientsLoaded) {
+  //     var previousState = state as ClientsLoaded;
+  //     emit(ClientsLoadingInProgress());
+  //     var newUserConnections = previousState.clients..removeWhere((element) => element.user.id == user.id);
+  //     newUserConnections = _sortUserConnections(newUserConnections);
+  //     emit(ClientsLoaded(newUserConnections));
+  //   }
+  // }
 
   ///Sorts user connections so the requested clients are first in the list
   List<UserConnection> _sortUserConnections(List<UserConnection> userConnections) {
