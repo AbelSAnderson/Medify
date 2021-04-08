@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:medify/database/model_queries/caregivers_queries.dart';
 import 'package:medify/database/models/user.dart';
 import 'package:medify/database/models/user_connection.dart';
 import 'package:medify/dummy_data.dart' as DummyData;
@@ -7,41 +8,31 @@ import 'package:medify/dummy_data.dart' as DummyData;
 part 'add_caregiver_state.dart';
 
 class AddCaregiverCubit extends Cubit<AddCaregiverState> {
-  AddCaregiverCubit() : super(AddCaregiverInitial());
+  AddCaregiverCubit(this.caregiversQueries) : super(AddCaregiverState.initial());
 
-  searchForCaregiver(String input) async {
-    await Future<void>.delayed(Duration(milliseconds: 1));
-    emit(AddCaregiverLoading());
-    var userConnections = DummyData.getUserConnections();
-    var caregivers = DummyData.getConnectedUsers();
-    List<CaregiverResults> caregiverConnections = [];
-    for (int i = 0; i < caregivers.length; i++) {
-      var caregiverId = caregivers[i].id;
-      //check to see if the client already has a connection (requested/connected) with the caregiver
-      var userConnection = userConnections.firstWhere((element) => element.user.id == caregiverId, orElse: () {
-        return null;
-      });
-      //if not null then user has a connection
-      if (userConnection != null) {
-        //check the type of connection the client has with the caregiver
-        if (userConnection.status == Status.requested) {
-          caregiverConnections.add(CaregiverResults(caregivers[i], Status.requested));
-        } else if (userConnection.status == Status.connected) {
-          caregiverConnections.add(CaregiverResults(caregivers[i], Status.connected));
+  final CaregiversQueries caregiversQueries;
+
+  addCaregiver(String email) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      var jsonResponse = await caregiversQueries.requestCaregiver(email);
+      if (jsonResponse["status"] != null) {
+        if (jsonResponse["status"] == true) {
+          //request sent
+          print("Request Sent: ${jsonResponse["status"]}");
+          emit(state.copyWith(response: "Request sent successfully."));
+          return;
         }
       }
-      //if its null then user has no connection
-      else {
-        caregiverConnections.add(CaregiverResults(caregivers[i], null));
-      }
+      print(jsonResponse.toString());
+      emit(state.copyWith(response: "Could not send request."));
+    } catch (e) {
+      print(e.toString());
+      emit(state.copyWith(response: "Could not send request."));
     }
-    emit(AddCaregiverLoaded(caregiverConnections));
   }
-}
 
-class CaregiverResults {
-  User user;
-  Status status;
-
-  CaregiverResults(this.user, this.status);
+  resetState() {
+    emit(AddCaregiverState.initial());
+  }
 }

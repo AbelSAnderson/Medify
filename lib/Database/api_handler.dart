@@ -35,7 +35,7 @@ class ApiHandler {
   }
 
   /// Retrieve Data from with a post request
-  Future<dynamic> getData(String url) async {
+  Future<dynamic> getData(String url, {bool filterResponse = true}) async {
     var responseJson;
 
     try {
@@ -46,7 +46,7 @@ class ApiHandler {
       throw FetchDataException('No Internet connection');
     }
 
-    return responseJson[_dataName];
+    return filterResponse ? responseJson[_dataName] : responseJson;
   }
 
   /// Retrieve Data with a Get Request

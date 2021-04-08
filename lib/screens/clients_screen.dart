@@ -39,6 +39,23 @@ class ClientsScreen extends StatelessWidget {
               },
             );
           }
+          if (state is ClientsError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "An error has occured.",
+                    style: TextStyle(fontSize: 18.sf),
+                  ),
+                  TextButton(
+                    child: Text("Reload"),
+                    onPressed: () => BlocProvider.of<ClientsCubit>(context).loadClients(),
+                  ),
+                ],
+              ),
+            );
+          }
           return Container();
         },
       ),

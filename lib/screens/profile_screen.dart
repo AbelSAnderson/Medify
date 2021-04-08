@@ -152,7 +152,7 @@ class ProfileScreen extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context) => AddCaregiverAlertDialog(),
-                        );
+                        ).then((value) => BlocProvider.of<AddCaregiverCubit>(context).resetState());
                       },
                       material: (context, platform) => MaterialRaisedButtonData(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
@@ -231,90 +231,47 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class AddCaregiverAlertDialog extends StatelessWidget {
-  Widget _tileTrailingIcon(BuildContext context, Status status) {
-    if (status == Status.connected) {
-      return PlatformIconButton(
-        padding: EdgeInsets.all(0),
-        icon: Icon(
-          Icons.add_circle,
-          color: Theme.of(context).primaryColor,
-          size: 30.sf,
-        ),
-        onPressed: () {},
-      );
-    } else if (status == Status.requested) {
-      return PlatformIconButton(
-        padding: EdgeInsets.all(0),
-        icon: Icon(
-          Icons.check_circle,
-          color: Theme.of(context).accentColor,
-          size: 30.sf,
-        ),
-        onPressed: () {},
-      );
-    } else {
-      return PlatformIconButton(
-        padding: EdgeInsets.all(0),
-        icon: Icon(
-          Icons.cancel,
-          color: Colors.red,
-          size: 30.sf,
-        ),
-        onPressed: () {},
-      );
-    }
-  }
-
+  final emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       scrollable: true,
       insetPadding: EdgeInsets.symmetric(horizontal: 20.sh, vertical: 20.sv),
-      contentPadding: EdgeInsets.symmetric(horizontal: 10.sh, vertical: 10.sv),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.sh, vertical: 16.sv),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
+      title: Text(
+        "Add Caregiver",
+        style: TextStyle(fontSize: 22.sf, color: Colors.black),
+        textAlign: TextAlign.center,
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SearchBar(
-            onSearch: (inputText) {},
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 12.sv, horizontal: 8.sh),
+            child: _emailField(),
           ),
+          SizedBox(height: 12.sv),
           BlocBuilder<AddCaregiverCubit, AddCaregiverState>(
             builder: (context, state) {
-              if (state is AddCaregiverInitial) {
-                BlocProvider.of<AddCaregiverCubit>(context).searchForCaregiver("");
-              }
-              if (state is AddCaregiverLoading) {
+              if (state.isLoading) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator.adaptive(),
                 );
               }
-              if (state is AddCaregiverLoaded) {
-                print(state.caregivers.length);
-                return Container(
-                  width: double.maxFinite,
-                  height: MediaQuery.of(context).size.height * 0.45,
-                  child: ListView.builder(
-                    itemCount: state.caregivers.length,
-                    itemBuilder: (context, index) {
-                      var caregiver = state.caregivers[index];
-                      return ListTile(
-                        title: Text(
-                          caregiver.user.name,
-                          style: TextStyle(fontSize: 20.sf),
+
+              return Column(
+                children: [
+                  _sendRequestButton(context),
+                  state.response == ""
+                      ? Container()
+                      : Column(
+                          children: [
+                            SizedBox(height: 12.sv),
+                            Text(state.response),
+                          ],
                         ),
-                        // TODO: Ensure UI still looks good here - Abel
-                        // subtitle: Text(
-                        //   caregiver.user.lastName,
-                        //   style: TextStyle(fontSize: 16.sf),
-                        // ),
-                        trailing: _tileTrailingIcon(context, caregiver.status),
-                      );
-                    },
-                  ),
-                );
-              }
-              return SizedBox(
-                height: 30,
+                ],
               );
             },
           ),
@@ -331,6 +288,42 @@ class AddCaregiverAlertDialog extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _sendRequestButton(BuildContext context) {
+    return PlatformButton(
+      child: Text(
+        "Send Request",
+        style: TextStyle(fontSize: 14.sf, color: Colors.white),
+      ),
+      onPressed: () {
+        BlocProvider.of<AddCaregiverCubit>(context).addCaregiver(emailController.text);
+      },
+      material: (context, platform) => MaterialRaisedButtonData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+      ),
+      cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+      color: Theme.of(context).primaryColor,
+    );
+  }
+
+  Widget _emailField() {
+    return Container(
+      width: 300.sh,
+      child: TextFormField(
+        controller: emailController,
+        maxLength: 200,
+        style: TextStyle(fontSize: 16.sf),
+        decoration: InputDecoration(
+          counterText: "",
+          hintText: "Caregiver's email",
+          isDense: true,
+          border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(25.0))),
+          contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+        ),
+        keyboardType: TextInputType.emailAddress,
       ),
     );
   }

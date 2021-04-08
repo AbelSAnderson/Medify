@@ -16,7 +16,6 @@ class LoginCubit extends Cubit<LoginState> {
 
     try {
       var jsonResponse = await new UserQueries().login(email, password);
-
       if (jsonResponse['success'] != null) {
         // Update the APi token & retrieve the user from the response
         ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['success']['token']);
@@ -36,7 +35,7 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  registerUser(String name, String email, String password, String pharmacyPhoneNumber, String isCaregiver) async {
+  registerUser(String name, String email, String password, String pharmacyPhoneNumber, int isCaregiver) async {
     emit(LoginValidating());
 
     try {
@@ -45,7 +44,7 @@ class LoginCubit extends Cubit<LoginState> {
       if (jsonResponse['status']) {
         ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['data']['token']);
         var user = User.fromJson(jsonResponse['data']['user']);
-
+        userRepository.updateUser(user);
         // TODO: Save user appropriately in Hive db
 
         emit(LoginSucceeded());

@@ -88,8 +88,7 @@ class RegisterScreen extends StatelessWidget {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.name,
           validator: (value) {
@@ -122,13 +121,11 @@ class RegisterScreen extends StatelessWidget {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
-            final emailRegExp = RegExp(
-                r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
+            final emailRegExp = RegExp(r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
             if (!emailRegExp.hasMatch(value)) return "Invalid Email";
             return null;
           },
@@ -159,13 +156,11 @@ class RegisterScreen extends StatelessWidget {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
-            if (value.length < 8)
-              return "Passwords must be 8 or more characters in length";
+            if (value.length < 8) return "Passwords must be 8 or more characters in length";
             return null;
           },
         ),
@@ -195,8 +190,7 @@ class RegisterScreen extends StatelessWidget {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
@@ -228,13 +222,11 @@ class RegisterScreen extends StatelessWidget {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.phone,
           validator: (value) {
-            var phoneRegExp =
-                RegExp(r'^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$');
+            var phoneRegExp = RegExp(r'^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$');
             if (value == "") return null;
             if (!phoneRegExp.hasMatch(value)) return "Invalid Phone Number";
             return null;
@@ -251,8 +243,7 @@ class RegisterScreen extends StatelessWidget {
       } else if (state is LoginValidating) {
         return Center(child: CircularProgressIndicator());
       } else if (state is LoginFailed) {
-        return Column(
-            children: [_registerAsSection(context), Text(state.errorMessage)]);
+        return Column(children: [_registerAsSection(context), Text(state.errorMessage)]);
       } else if (state is LoginSucceeded) {
         WidgetsBinding.instance.addPostFrameCallback((_) => {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -291,19 +282,12 @@ class RegisterScreen extends StatelessWidget {
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
-                  BlocProvider.of<LoginCubit>(context).registerUser(
-                      nameController.text,
-                      emailController.text,
-                      passwordController.text,
-                      pharmacyNumberController.text,
-                      "0");
+                  BlocProvider.of<LoginCubit>(context).registerUser(nameController.text, emailController.text, passwordController.text, pharmacyNumberController.text, 0);
                 }
               },
-              cupertino: (context, platform) => CupertinoButtonData(
-                  padding: EdgeInsets.symmetric(horizontal: 10)),
+              cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
               material: (context, platform) => MaterialRaisedButtonData(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(4))),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
               ),
               color: Theme.of(context).primaryColor,
             ),
@@ -315,19 +299,12 @@ class RegisterScreen extends StatelessWidget {
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
-                  BlocProvider.of<LoginCubit>(context).registerUser(
-                      nameController.text,
-                      emailController.text,
-                      passwordController.text,
-                      pharmacyNumberController.text,
-                      "1");
+                  BlocProvider.of<LoginCubit>(context).registerUser(nameController.text, emailController.text, passwordController.text, pharmacyNumberController.text, 1);
                 }
               },
-              cupertino: (context, platform) => CupertinoButtonData(
-                  padding: EdgeInsets.symmetric(horizontal: 10)),
+              cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
               material: (context, platform) => MaterialRaisedButtonData(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(4))),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
               ),
               color: Theme.of(context).primaryColor,
             ),

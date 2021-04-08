@@ -16,4 +16,9 @@ class CaregiversQueries {
   Future<Response> deleteFromApi() async {
     return await ApiHandler.medifyAPI().getDeleteData("");
   }
+
+  Future<Map<String, dynamic>> requestCaregiver(String email) async {
+    var jsonData = await ApiHandler.medifyAPI().getPostData("requestCaregiver", {"email": email}, filterResponse: false);
+    return jsonData;
+  }
 }
