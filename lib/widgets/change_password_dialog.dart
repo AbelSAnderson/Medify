@@ -5,6 +5,8 @@ import 'package:medify/scale.dart';
 class ChangePasswordDialog extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
+  final passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -57,7 +59,7 @@ class ChangePasswordDialog extends StatelessWidget {
         SizedBox(height: 10.sv),
         TextFormField(
           style: TextStyle(fontSize: 16.sf),
-          initialValue: "",
+          controller: passwordController,
           obscureText: true,
           decoration: InputDecoration(
             isDense: true,
@@ -131,6 +133,7 @@ class ChangePasswordDialog extends StatelessWidget {
           ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
+            if (passwordController.text != value) return "Passwords must match";
             return null;
           },
         ),
