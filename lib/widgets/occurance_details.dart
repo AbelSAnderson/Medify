@@ -5,12 +5,45 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/constants.dart';
 import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/database/models/medication_info.dart';
+import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OccuranceDetails extends StatelessWidget {
   final MedicationInfo medication;
 
   OccuranceDetails(this.medication);
+
+  _launchCaller(BuildContext context, String phoneNum) async {
+    var url = "tel:$phoneNum";
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("No Phone App"),
+          content: Column(
+            children: [
+              Text("Unable to redirect. Your device does not have a phone app."),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: TextButton(
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(fontSize: 14.sf),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop('dialog');
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +66,7 @@ class OccuranceDetails extends StatelessWidget {
                 border: Border(bottom: BorderSide(color: Colors.grey, width: 2)),
               ),
             ),
-            medication.pillsRemaining != null
+            (medication.pillsRemaining != null && medication.pillsRemaining != -1)
                 ? Column(
                     children: [
                       SizedBox(height: 20.sv),
@@ -70,6 +103,7 @@ class OccuranceDetails extends StatelessWidget {
                   ),
                   onPressed: () {
                     //Show phone dialler
+                    _launchCaller(context, RepositoryProvider.of<UserRepository>(context).currentUser.pharmacyNumber);
                   },
                   cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
                   material: (context, platform) => MaterialRaisedButtonData(
