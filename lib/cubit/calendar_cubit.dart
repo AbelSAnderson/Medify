@@ -14,7 +14,6 @@ class CalendarCubit extends Cubit<CalendarState> {
 
   CalendarCubit(this.medicationEventQueries, this.medicationEventRepository) : super(CalendarInitial()) {
     medicationEventRepository.streamController.stream.listen((events) {
-      print("HELLOOOOOOOOOOOOOOOOO");
       emit(CalendarLoadInProgress());
       _wait();
       var medicationEventsMapped = _createMedicationEventsMap(events);

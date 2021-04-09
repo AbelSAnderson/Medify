@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:medify/cubit/add_caregiver_cubit.dart';
 import 'package:medify/cubit/caregivers_cubit.dart';
+import 'package:medify/cubit/change_password_cubit.dart';
 import 'package:medify/cubit/client_details_cubit.dart';
 import 'package:medify/cubit/clients_cubit.dart';
 import 'package:medify/cubit/login_cubit.dart';
@@ -87,7 +88,10 @@ void main() async {
           ),
           BlocProvider<LoginCubit>(
             create: (context) => LoginCubit(RepositoryProvider.of<UserRepository>(context)),
-          )
+          ),
+          BlocProvider(
+            create: (context) => ChangePasswordCubit(RepositoryProvider.of<UserRepository>(context)),
+          ),
         ],
         child: MyApp(),
       ),

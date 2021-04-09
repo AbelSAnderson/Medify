@@ -34,4 +34,8 @@ class UserQueries extends DatabaseQueryBase<User> {
     var jsonData = await ApiHandler.medifyAPI().getPostData("users", body, filterResponse: false);
     return jsonData;
   }
+
+  Future<void> changePassword(User user, String password) async {
+    await ApiHandler.medifyAPI().getPutData("users/${user.id}", {"email": user.email, "password": password});
+  }
 }

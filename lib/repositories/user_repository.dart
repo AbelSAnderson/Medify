@@ -24,4 +24,9 @@ class UserRepository {
     streamController.add(currentUser);
     return updatedUser;
   }
+
+  Future<void> changePassword(String newPassword) async {
+    await userQueries.changePassword(currentUser, newPassword);
+    password = newPassword;
+  }
 }

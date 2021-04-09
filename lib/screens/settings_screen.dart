@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/cubit/change_password_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/cubit/settings_cubit.dart';
 import 'package:medify/scale.dart';
@@ -157,7 +158,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         showDialog(
           context: context,
           builder: (context) => ChangePasswordDialog(),
-        );
+        ).then((value) => BlocProvider.of<ChangePasswordCubit>(context).resetState());
       },
     );
   }
