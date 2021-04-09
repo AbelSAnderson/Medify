@@ -25,19 +25,43 @@ class ClientsScreen extends StatelessWidget {
           }
           if (state is ClientsLoaded) {
             var userConnections = state.clients;
-            return ListView.builder(
-              itemCount: userConnections.length,
-              itemBuilder: (context, index) {
-                var userConnection = userConnections[index];
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.sv, horizontal: 8.sh),
-                  child: Container(
-                    decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
-                    child: userConnection.status == Status.requested ? _requestedUsersItem(context, userConnection) : _connectedUsersItem(context, userConnection),
-                  ),
-                );
-              },
-            );
+            if (userConnections.length > 0) {
+              return RefreshIndicator(
+                onRefresh: () => BlocProvider.of<ClientsCubit>(context).loadClients(),
+                child: ListView.builder(
+                  itemCount: userConnections.length,
+                  itemBuilder: (context, index) {
+                    var userConnection = userConnections[index];
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.sv, horizontal: 8.sh),
+                      child: Container(
+                        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
+                        child: userConnection.status == Status.requested ? _requestedUsersItem(context, userConnection) : _connectedUsersItem(context, userConnection),
+                      ),
+                    );
+                  },
+                ),
+              );
+            } else {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "You have no clients.",
+                      style: TextStyle(fontSize: 18.sf),
+                    ),
+                    TextButton(
+                      child: Text(
+                        "Reload",
+                        style: TextStyle(fontSize: 14.sf),
+                      ),
+                      onPressed: () => BlocProvider.of<ClientsCubit>(context).loadClients(),
+                    ),
+                  ],
+                ),
+              );
+            }
           }
           if (state is ClientsError) {
             return Center(
