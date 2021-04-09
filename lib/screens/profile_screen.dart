@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/add_caregiver_cubit.dart';
 import 'package:medify/cubit/caregivers_cubit.dart';
+import 'package:medify/cubit/edit_profile_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/cubit/profile_cubit.dart';
 import 'package:medify/database/models/user_connection.dart';
@@ -29,7 +30,7 @@ class ProfileScreen extends StatelessWidget {
             showDialog(
               context: context,
               builder: (context) => EditProfileDialog(),
-            );
+            ).then((value) => BlocProvider.of<EditProfileCubit>(context).reloadState());
           },
         ),
         actions: [

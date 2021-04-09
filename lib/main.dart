@@ -7,6 +7,7 @@ import 'package:medify/cubit/caregivers_cubit.dart';
 import 'package:medify/cubit/change_password_cubit.dart';
 import 'package:medify/cubit/client_details_cubit.dart';
 import 'package:medify/cubit/clients_cubit.dart';
+import 'package:medify/cubit/edit_profile_cubit.dart';
 import 'package:medify/cubit/login_cubit.dart';
 import 'package:medify/cubit/medication_form_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
@@ -56,14 +57,17 @@ void main() async {
           BlocProvider<NavBarCubit>(
             create: (context) => NavBarCubit(RepositoryProvider.of<UserRepository>(context)),
           ),
-          BlocProvider(
+          BlocProvider<SettingsCubit>(
             create: (context) => SettingsCubit(),
           ),
           BlocProvider<CalendarCubit>(
             create: (context) => CalendarCubit(MedicationEventQueries(), RepositoryProvider.of<MedicationEventRepository>(context)),
           ),
-          BlocProvider(
+          BlocProvider<ProfileCubit>(
             create: (context) => ProfileCubit(RepositoryProvider.of<UserRepository>(context)),
+          ),
+          BlocProvider<EditProfileCubit>(
+            create: (context) => EditProfileCubit(RepositoryProvider.of<UserRepository>(context)),
           ),
           BlocProvider<SearchCubit>(
             create: (context) => SearchCubit(),
@@ -89,7 +93,7 @@ void main() async {
           BlocProvider<LoginCubit>(
             create: (context) => LoginCubit(RepositoryProvider.of<UserRepository>(context)),
           ),
-          BlocProvider(
+          BlocProvider<ChangePasswordCubit>(
             create: (context) => ChangePasswordCubit(RepositoryProvider.of<UserRepository>(context)),
           ),
         ],
