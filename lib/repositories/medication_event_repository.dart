@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:medify/database/model_queries/medication_event_queries.dart';
 import 'package:medify/database/models/medication_event.dart';
+import 'package:medify/database/models/medication_info.dart';
 import 'package:medify/dummy_data.dart' as DummyData;
 
 class MedicationEventRepository {
@@ -20,6 +21,11 @@ class MedicationEventRepository {
   void addMedicationEvents(List<MedicationEvent> events) async {
     // var medicationEventsFromAPI = await medicationEventQueries.insertToAPI();
     medicationEvents.addAll(events);
+    streamController.add(medicationEvents);
+  }
+
+  void deleteMedicationEvents(MedicationInfo medicationInfo) async {
+    medicationEvents.removeWhere((element) => element.medicationInfo.id == medicationInfo.id);
     streamController.add(medicationEvents);
   }
 }

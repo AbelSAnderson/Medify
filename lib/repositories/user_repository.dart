@@ -8,6 +8,7 @@ import 'package:medify/database/model_queries/user_queries.dart';
 class UserRepository {
   final StreamController<User> streamController = StreamController();
   User currentUser;
+  String password;
   final UserQueries userQueries = UserQueries();
 
   Future<void> updateUser(User user) async {
