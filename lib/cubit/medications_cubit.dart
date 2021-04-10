@@ -5,6 +5,7 @@ import 'package:medify/database/models/medication.dart';
 import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/database/models/medication_info.dart';
 import 'package:medify/dummy_data.dart' as DummyData;
+import 'package:medify/repositories/medication_event_repository.dart';
 import 'package:medify/repositories/medication_info_repository.dart';
 import 'package:medify/repositories/user_repository.dart';
 
@@ -14,8 +15,9 @@ class MedicationsCubit extends Cubit<MedicationsState> {
   final MedicationInfoQueries medicationInfoQueries;
   final MedicationInfoRepository medicationInfoRepository;
   final UserRepository userRepository;
+  final MedicationEventRepository medicationEventRepository;
 
-  MedicationsCubit(this.medicationInfoQueries, this.medicationInfoRepository, this.userRepository) : super(MedicationsInitial()) {
+  MedicationsCubit(this.medicationInfoQueries, this.medicationInfoRepository, this.userRepository, this.medicationEventRepository) : super(MedicationsInitial()) {
     //whenever medication info list changes, update state with new data
     medicationInfoRepository.streamController.stream.listen((data) async {
       emit(MedicationsLoading());
@@ -42,6 +44,7 @@ class MedicationsCubit extends Cubit<MedicationsState> {
     emit(MedicationsLoading());
     try {
       await medicationInfoRepository.deleteMedicationInfo(medicationInfo);
+      medicationEventRepository.deleteMedicationEvents(medicationInfo);
       var medicationInfos = medicationInfoRepository.medicationInfos;
       emit(MedicationsLoaded(medicationInfos));
     } catch (e) {

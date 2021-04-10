@@ -21,7 +21,7 @@ class LoginCubit extends Cubit<LoginState> {
         ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['success']['token']);
         var user = User.fromJson(jsonResponse['success']['user']);
         userRepository.updateUser(user);
-
+        userRepository.password = password;
         emit(LoginSucceeded());
       } else if (jsonResponse['error'] != null) {
         emit(LoginFailed(jsonResponse['error']));

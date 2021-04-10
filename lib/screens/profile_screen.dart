@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/add_caregiver_cubit.dart';
 import 'package:medify/cubit/caregivers_cubit.dart';
+import 'package:medify/cubit/edit_profile_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/cubit/profile_cubit.dart';
 import 'package:medify/database/models/user_connection.dart';
@@ -29,7 +30,7 @@ class ProfileScreen extends StatelessWidget {
             showDialog(
               context: context,
               builder: (context) => EditProfileDialog(),
-            );
+            ).then((value) => BlocProvider.of<EditProfileCubit>(context).reloadState());
           },
         ),
         actions: [
@@ -44,16 +45,16 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: BlocBuilder<ProfileCubit, ProfileState>(
-          builder: (context, state) {
-            if (state is ProfileLoading) {
-              return Center(
-                child: CircularProgressIndicator.adaptive(),
-              );
-            }
-            if (state is ProfileLoaded) {
-              return Column(
+      body: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          if (state is ProfileLoading) {
+            return Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          }
+          if (state is ProfileLoaded) {
+            return SingleChildScrollView(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
@@ -133,7 +134,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Padding(
+                  Container(
                     padding: EdgeInsets.symmetric(horizontal: 16.sh, vertical: 16.sv),
                     child: Text(
                       "Caregivers",
@@ -162,16 +163,16 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-              );
-            }
-            if (state is ProfileError) {
-              return Center(
-                child: Text("Error"),
-              );
-            }
-            return Container();
-          },
-        ),
+              ),
+            );
+          }
+          if (state is ProfileError) {
+            return Center(
+              child: Text("Error"),
+            );
+          }
+          return Container();
+        },
       ),
     );
   }
@@ -183,46 +184,76 @@ class ProfileScreen extends StatelessWidget {
           BlocProvider.of<CaregiversCubit>(context).loadCaregivers();
         }
         if (state is CaregiversLoading) {
-          return Center(
-            child: CircularProgressIndicator(),
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.35,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
           );
         }
         if (state is CaregiversLoaded) {
-          return Container(
-            height: MediaQuery.of(context).size.height * 0.35,
-            child: ListView.builder(
-              itemCount: state.caregivers.length,
-              itemBuilder: (context, index) {
-                var caregiver = state.caregivers[index];
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.sh),
-                  child: Container(
-                    decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
-                    child: ListTile(
-                      title: Text(
-                        "${caregiver.name}",
-                        style: TextStyle(fontSize: 20.sf),
-                      ),
-                      trailing: PlatformIconButton(
-                        padding: EdgeInsets.all(0),
-                        icon: Icon(
-                          Icons.cancel,
-                          color: Colors.red,
-                          size: 35,
+          if (state.caregivers.length > 0) {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.35,
+              child: RefreshIndicator(
+                onRefresh: () => BlocProvider.of<CaregiversCubit>(context).loadCaregivers(),
+                child: ListView.builder(
+                  itemCount: state.caregivers.length,
+                  itemBuilder: (context, index) {
+                    var caregiver = state.caregivers[index];
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.sh),
+                      child: Container(
+                        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
+                        child: ListTile(
+                          title: Text(
+                            "${caregiver.name}",
+                            style: TextStyle(fontSize: 20.sf),
+                          ),
+                          trailing: PlatformIconButton(
+                            padding: EdgeInsets.all(0),
+                            icon: Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                              size: 35,
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => RemoveCaregiverDialog(caregiver),
+                              );
+                            },
+                          ),
                         ),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => RemoveCaregiverDialog(caregiver),
-                          );
-                        },
                       ),
+                    );
+                  },
+                ),
+              ),
+            );
+          } else {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.35,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "You have no caregivers.",
+                      style: TextStyle(fontSize: 18.sf),
                     ),
-                  ),
-                );
-              },
-            ),
-          );
+                    TextButton(
+                      child: Text(
+                        "Reload",
+                        style: TextStyle(fontSize: 14.sf),
+                      ),
+                      onPressed: () => BlocProvider.of<CaregiversCubit>(context).loadCaregivers(),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
         }
         return Container();
       },

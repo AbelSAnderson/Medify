@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/cubit/edit_profile_cubit.dart';
 import 'package:medify/cubit/profile_cubit.dart';
 import 'package:medify/scale.dart';
 
@@ -12,6 +13,7 @@ class EditProfileDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Text: " + nameController.text);
     return AlertDialog(
       scrollable: true,
       insetPadding: EdgeInsets.symmetric(horizontal: 20.sh, vertical: 20.sv),
@@ -50,7 +52,40 @@ class EditProfileDialog extends StatelessWidget {
                       SizedBox(height: 20.sv),
                       _pharmacyNumField(),
                       SizedBox(height: 20.sv),
-                      _submitButton(context),
+                      BlocBuilder<EditProfileCubit, EditProfileState>(
+                        builder: (context, state) {
+                          if (state is EditProfileLoading) {
+                            return Center(
+                              child: CircularProgressIndicator.adaptive(),
+                            );
+                          }
+                          if (state is EditProfileSucceeded) {
+                            return Column(
+                              children: [
+                                _submitButton(context),
+                                SizedBox(height: 12.5.sv),
+                                Text(
+                                  "Profile edited successfully.",
+                                  style: TextStyle(fontSize: 14.sf),
+                                ),
+                              ],
+                            );
+                          }
+                          if (state is EditProfileFailed) {
+                            return Column(
+                              children: [
+                                _submitButton(context),
+                                SizedBox(height: 12.5.sv),
+                                Text(
+                                  state.errorMsg,
+                                  style: TextStyle(fontSize: 14.sf, color: Colors.red),
+                                ),
+                              ],
+                            );
+                          }
+                          return _submitButton(context);
+                        },
+                      ),
                       _cancelButton(context),
                     ],
                   ),
@@ -180,8 +215,7 @@ class EditProfileDialog extends StatelessWidget {
             user.name = nameController.text;
             user.email = emailController.text;
             user.pharmacyNumber = phoneController.text;
-            BlocProvider.of<ProfileCubit>(context).editProfileDetails(user);
-            Navigator.of(context, rootNavigator: true).pop('dialog');
+            BlocProvider.of<EditProfileCubit>(context).editProfileDetails(user);
           }
         },
         style: ElevatedButton.styleFrom(

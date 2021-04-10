@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:medify/cubit/change_password_cubit.dart';
 import 'package:medify/scale.dart';
 
 class ChangePasswordDialog extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
-  final passwordController = TextEditingController();
+  final oldPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +39,40 @@ class ChangePasswordDialog extends StatelessWidget {
                 SizedBox(height: 20.sv),
                 _confirmPasswordField(),
                 SizedBox(height: 20.sv),
-                _submitButton(context),
+                BlocBuilder<ChangePasswordCubit, ChangePasswordState>(
+                  builder: (context, state) {
+                    if (state is ChangePasswordLoading) {
+                      return Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      );
+                    }
+                    if (state is ChangePasswordSucceeded) {
+                      return Column(
+                        children: [
+                          _submitButton(context),
+                          SizedBox(height: 12.5.sv),
+                          Text(
+                            "Password changed successfully.",
+                            style: TextStyle(fontSize: 14.sf),
+                          ),
+                        ],
+                      );
+                    }
+                    if (state is ChangePasswordFailed) {
+                      return Column(
+                        children: [
+                          _submitButton(context),
+                          SizedBox(height: 12.5.sv),
+                          Text(
+                            state.errorMsg,
+                            style: TextStyle(fontSize: 14.sf, color: Colors.red),
+                          ),
+                        ],
+                      );
+                    }
+                    return _submitButton(context);
+                  },
+                ),
                 _cancelButton(context),
               ],
             ),
@@ -59,7 +95,7 @@ class ChangePasswordDialog extends StatelessWidget {
         SizedBox(height: 10.sv),
         TextFormField(
           style: TextStyle(fontSize: 16.sf),
-          controller: passwordController,
+          controller: oldPasswordController,
           obscureText: true,
           decoration: InputDecoration(
             isDense: true,
@@ -86,8 +122,8 @@ class ChangePasswordDialog extends StatelessWidget {
         ),
         SizedBox(height: 10.sv),
         TextFormField(
+          controller: newPasswordController,
           style: TextStyle(fontSize: 16.sf),
-          initialValue: "",
           obscureText: true,
           decoration: InputDecoration(
             errorMaxLines: 2,
@@ -133,7 +169,7 @@ class ChangePasswordDialog extends StatelessWidget {
           ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
-            if (passwordController.text != value) return "Passwords must match";
+            if (newPasswordController.text != value) return "Passwords must match";
             return null;
           },
         ),
@@ -151,8 +187,7 @@ class ChangePasswordDialog extends StatelessWidget {
         ),
         onPressed: () {
           if (_formKey.currentState.validate()) {
-            //Replace this with password resetting logic
-            Navigator.of(context, rootNavigator: true).pop('dialog');
+            BlocProvider.of<ChangePasswordCubit>(context).changePassword(oldPasswordController.text, newPasswordController.text);
           }
         },
         cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),

@@ -6,22 +6,13 @@ import 'package:medify/repositories/user_repository.dart';
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit(this.userRepository) : super(ProfileLoading()) {
-    var currentUser = userRepository.currentUser;
-    emit(ProfileLoaded(currentUser));
+  ProfileCubit(this.userRepository) : super(ProfileInitial()) {
+    userRepository.streamController.stream.listen((event) {
+      emit(ProfileLoading());
+      var newUser = event;
+      emit(ProfileLoaded(newUser));
+    });
   }
 
   final UserRepository userRepository;
-
-  editProfileDetails(User user) async {
-    emit(ProfileLoading());
-    try {
-      var updatedUser = await userRepository.updateUserToApi(user);
-      print(updatedUser.toJson());
-      userRepository.updateUser(updatedUser);
-      emit(ProfileLoaded(updatedUser));
-    } catch (e) {
-      emit(ProfileError());
-    }
-  }
 }
