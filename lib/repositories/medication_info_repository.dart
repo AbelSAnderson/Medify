@@ -14,10 +14,11 @@ class MedicationInfoRepository {
     streamController.add(medicationInfos);
   }
 
-  Future<void> addMedicationInfo(MedicationInfo medicationInfo, int userId) async {
+  Future<MedicationInfo> addMedicationInfo(MedicationInfo medicationInfo, int userId) async {
     var medicationInfoFromAPI = await medicationInfoQueries.insertToApi(medicationInfo, userId);
     medicationInfos.add(medicationInfoFromAPI);
     streamController.add(medicationInfos);
+    return medicationInfoFromAPI;
   }
 
   Future<void> deleteMedicationInfo(MedicationInfo medicationInfo) async {

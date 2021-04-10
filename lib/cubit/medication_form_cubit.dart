@@ -2,6 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medify/database/models/medication_event.dart';
+import 'package:medify/Database/model_queries/medication_event_queries.dart';
 import 'package:medify/constants.dart';
 import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
@@ -18,7 +20,9 @@ import 'package:meta/meta.dart';
 part 'medication_form_state.dart';
 
 class MedicationFormCubit extends Cubit<MedicationFormState> {
-  MedicationFormCubit(this.medicationQueries, this.medicationInfoRepository, this.medicationEventRepository, this.userRepository) : super(MedicationFormState.initial());
+  MedicationFormCubit(this.medicationQueries, this.medicationInfoRepository, this.medicationEventRepository, this.userRepository) : super(MedicationFormState.initial()) {
+    this.medicationEventQueries = MedicationEventQueries();
+  }
 
   // MedicationInfoQueries medicationInfoQueries = MedicationInfoQueries();
 
@@ -26,6 +30,7 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
   final MedicationInfoRepository medicationInfoRepository;
   final MedicationEventRepository medicationEventRepository;
   final UserRepository userRepository;
+  MedicationEventQueries medicationEventQueries;
 
   changeMedication(Medication medication) {
     emit(state.copyWith(medication: medication));
@@ -79,10 +84,14 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
       var medicationFromJson = await medicationQueries.insertToApi(medication);
       medicationInfo.medication = medicationFromJson;
       var currentUser = userRepository.currentUser;
-      medicationInfoRepository.addMedicationInfo(medicationInfo, currentUser.id);
-      var medicationEvents = _generateMedicationEvents(medicationInfo);
-      medicationEventRepository.addMedicationEvents(await medicationEvents);
-    } catch (e) {}
+      var medicationInfoFromApi = await medicationInfoRepository.addMedicationInfo(medicationInfo, currentUser.id);
+      var medicationEvent = MedicationEvent(0, medicationInfoFromApi.takeAt, medicationInfoFromApi, false, 0);
+      var medicationEvents = await medicationEventQueries.insertToApi(medicationEvent);
+      // var medicationEvents = _generateMedicationEvents(medicationInfo);
+      medicationEventRepository.addMedicationEvents(medicationEvents);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   Future<List<MedicationEvent>> _generateMedicationEvents(MedicationInfo medicationInfo) async {

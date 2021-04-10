@@ -1,4 +1,5 @@
 import 'package:medify/database/models/medication_event.dart';
+import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/database/database_query_base.dart';
 
 import '../api_handler.dart';
@@ -17,6 +18,12 @@ class MedicationEventQueries extends DatabaseQueryBase<MedicationEvent> {
   Future<MedicationEvent> retrieveOneFromApi(int id) async {
     var jsonData = await ApiHandler.medifyAPI().getData("events/$id");
     return MedicationEvent.fromJson(jsonData);
+  }
+
+  Future<List<MedicationEvent>> insertToApi(MedicationEvent medicationEvent) async {
+    print("Medication Event: " + medicationEvent.toJson().toString());
+    var jsonData = await ApiHandler.medifyAPI().getPostData("events", medicationEvent.toJson());
+    return MedicationEventList.from(jsonData).medicationEvents;
   }
 
   Future<MedicationEvent> updateToApi(MedicationEvent medicationEvent) async {

@@ -33,8 +33,8 @@ class MedicationEvent extends ModelBase {
         this.amountTaken = json["amount_taken"];
 
   Map<String, dynamic> toJson() => {
-        'id': id,
         'date_time': datetime.toString(),
+        'med_info_id': medicationInfo.id,
         'med_taken': medTaken == false ? 0 : 1,
         'amount_taken': amountTaken,
       };
