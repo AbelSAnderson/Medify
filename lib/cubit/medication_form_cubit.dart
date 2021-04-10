@@ -3,14 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/database/models/medication_event.dart';
-import 'package:medify/Database/model_queries/medication_event_queries.dart';
 import 'package:medify/constants.dart';
-import 'package:medify/cubit/calendar_cubit.dart';
-import 'package:medify/cubit/medications_cubit.dart';
-import 'package:medify/database/model_queries/medication_info_queries.dart';
 import 'package:medify/database/model_queries/medication_queries.dart';
 import 'package:medify/database/models/medication.dart';
-import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/database/models/medication_info.dart';
 import 'package:medify/repositories/medication_event_repository.dart';
 import 'package:medify/repositories/medication_info_repository.dart';
@@ -20,17 +15,12 @@ import 'package:meta/meta.dart';
 part 'medication_form_state.dart';
 
 class MedicationFormCubit extends Cubit<MedicationFormState> {
-  MedicationFormCubit(this.medicationQueries, this.medicationInfoRepository, this.medicationEventRepository, this.userRepository) : super(MedicationFormState.initial()) {
-    this.medicationEventQueries = MedicationEventQueries();
-  }
-
-  // MedicationInfoQueries medicationInfoQueries = MedicationInfoQueries();
+  MedicationFormCubit(this.medicationQueries, this.medicationInfoRepository, this.medicationEventRepository, this.userRepository) : super(MedicationFormState.initial());
 
   final MedicationQueries medicationQueries;
   final MedicationInfoRepository medicationInfoRepository;
   final MedicationEventRepository medicationEventRepository;
   final UserRepository userRepository;
-  MedicationEventQueries medicationEventQueries;
 
   changeMedication(Medication medication) {
     emit(state.copyWith(medication: medication));
@@ -86,39 +76,37 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
       var currentUser = userRepository.currentUser;
       var medicationInfoFromApi = await medicationInfoRepository.addMedicationInfo(medicationInfo, currentUser.id);
       var medicationEvent = MedicationEvent(0, medicationInfoFromApi.takeAt, medicationInfoFromApi, false, 0);
-      var medicationEvents = await medicationEventQueries.insertToApi(medicationEvent);
-      // var medicationEvents = _generateMedicationEvents(medicationInfo);
-      medicationEventRepository.addMedicationEvents(medicationEvents);
+      medicationEventRepository.addMedicationEvents(medicationEvent);
     } catch (e) {
       print(e.toString());
     }
   }
 
-  Future<List<MedicationEvent>> _generateMedicationEvents(MedicationInfo medicationInfo) async {
-    var daysToLoad = _daysToLoad(medicationInfo.repeat);
-    List<MedicationEvent> medicationEvents = [];
-    for (int i = 0; i < daysToLoad; i++) {
-      var dateTime = i == 0 ? medicationInfo.takeAt : medicationEvents[i - 1].datetime.add(Duration(days: medicationInfo.repeat));
-      var medicationEvent = MedicationEvent(0, dateTime, medicationInfo, false, 0);
-      medicationEvents.add(medicationEvent);
-    }
-    return medicationEvents;
-  }
+  // Future<List<MedicationEvent>> _generateMedicationEvents(MedicationInfo medicationInfo) async {
+  //   var daysToLoad = _daysToLoad(medicationInfo.repeat);
+  //   List<MedicationEvent> medicationEvents = [];
+  //   for (int i = 0; i < daysToLoad; i++) {
+  //     var dateTime = i == 0 ? medicationInfo.takeAt : medicationEvents[i - 1].datetime.add(Duration(days: medicationInfo.repeat));
+  //     var medicationEvent = MedicationEvent(0, dateTime, medicationInfo, false, 0);
+  //     medicationEvents.add(medicationEvent);
+  //   }
+  //   return medicationEvents;
+  // }
 
-  int _daysToLoad(int value) {
-    switch (value) {
-      case 1:
-        return 90;
-      case 7:
-        return 13;
-      case 14:
-        return 7;
-      case 30:
-        return 3;
-      default:
-        return 90;
-    }
-  }
+  // int _daysToLoad(int value) {
+  //   switch (value) {
+  //     case 1:
+  //       return 90;
+  //     case 7:
+  //       return 13;
+  //     case 14:
+  //       return 7;
+  //     case 30:
+  //       return 3;
+  //     default:
+  //       return 90;
+  //   }
+  // }
 
   resetState() {
     emit(MedicationFormState.initial());

@@ -18,9 +18,9 @@ class MedicationEventRepository {
     return medicationEvents;
   }
 
-  void addMedicationEvents(List<MedicationEvent> events) async {
-    // var medicationEventsFromAPI = await medicationEventQueries.insertToAPI();
-    medicationEvents.addAll(events);
+  void addMedicationEvents(MedicationEvent medicationEvent) async {
+    var medicationEventsFromAPI = await medicationEventQueries.insertToApi(medicationEvent);
+    medicationEvents.addAll(medicationEventsFromAPI);
     streamController.add(medicationEvents);
   }
 

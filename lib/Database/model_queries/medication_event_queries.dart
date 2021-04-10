@@ -21,7 +21,6 @@ class MedicationEventQueries extends DatabaseQueryBase<MedicationEvent> {
   }
 
   Future<List<MedicationEvent>> insertToApi(MedicationEvent medicationEvent) async {
-    print("Medication Event: " + medicationEvent.toJson().toString());
     var jsonData = await ApiHandler.medifyAPI().getPostData("events", medicationEvent.toJson());
     return MedicationEventList.from(jsonData).medicationEvents;
   }
