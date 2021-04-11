@@ -242,9 +242,19 @@ class RegisterScreen extends StatelessWidget {
       if (state is LoginInitial) {
         return _registerAsSection(context);
       } else if (state is LoginValidating) {
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CircularProgressIndicator.adaptive());
       } else if (state is LoginFailed) {
-        return Column(children: [_registerAsSection(context), Text(state.errorMessage)]);
+        return Column(children: [
+          _registerAsSection(context),
+          SizedBox(height: 12.5.sv),
+          Text(
+            state.errorMessage,
+            style: TextStyle(
+              fontSize: 14.sf,
+              color: Colors.red,
+            ),
+          ),
+        ]);
       } else if (state is LoginSucceeded) {
         WidgetsBinding.instance.addPostFrameCallback((_) => {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -253,7 +263,7 @@ class RegisterScreen extends StatelessWidget {
                 ),
               ))
             });
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CircularProgressIndicator.adaptive());
       }
 
       return Container();

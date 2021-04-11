@@ -1,10 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:medify/database/model_queries/medication_info_queries.dart';
-import 'package:medify/database/models/medication.dart';
-import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/database/models/medication_info.dart';
-import 'package:medify/dummy_data.dart' as DummyData;
 import 'package:medify/repositories/medication_event_repository.dart';
 import 'package:medify/repositories/medication_info_repository.dart';
 import 'package:medify/repositories/user_repository.dart';

@@ -20,7 +20,7 @@ class ClientsScreen extends StatelessWidget {
           }
           if (state is ClientsLoadingInProgress) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator.adaptive(),
             );
           }
           if (state is ClientsLoaded) {

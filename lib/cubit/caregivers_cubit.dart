@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:medify/database/model_queries/caregivers_queries.dart';
 import 'package:medify/database/models/user.dart';
-import 'package:medify/dummy_data.dart' as DummyData;
 
 part 'caregivers_state.dart';
 

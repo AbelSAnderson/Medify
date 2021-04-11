@@ -7,7 +7,6 @@ import 'package:medify/screens/calendar_screen.dart';
 import 'package:medify/screens/profile_screen.dart';
 import 'package:medify/screens/search_medication_screen.dart';
 
-import '../scale.dart';
 import 'clients_screen.dart';
 
 class MyHomePage extends StatefulWidget {

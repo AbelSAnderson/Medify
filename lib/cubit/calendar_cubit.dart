@@ -4,7 +4,6 @@ import 'package:medify/database/model_queries/medication_event_queries.dart';
 import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/repositories/medication_event_repository.dart';
 import 'package:meta/meta.dart';
-import 'package:medify/dummy_data.dart' as DummyData;
 
 part 'calendar_state.dart';
 
@@ -41,16 +40,20 @@ class CalendarCubit extends Cubit<CalendarState> {
       _wait();
       var previousState = state as CalendarLoaded;
       emit(CalendarLoadInProgress());
-      var medEvents = previousState.medicationEvents;
-      //get date of the medication event and take out the time from it
-      var medDate = medicationEvent.datetime;
-      medDate = DateTime(medDate.year, medDate.month, medDate.day);
-      medicationEvent.medTaken = true;
-      medicationEvent.amountTaken = 1;
-      await medicationEventQueries.updateToApi(medicationEvent);
-      medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).medTaken = true;
-      medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).amountTaken = 1;
-      emit(CalendarLoaded(medEvents));
+      try {
+        var medEvents = previousState.medicationEvents;
+        //get date of the medication event and take out the time from it
+        var medDate = medicationEvent.datetime;
+        medDate = DateTime(medDate.year, medDate.month, medDate.day);
+        medicationEvent.medTaken = true;
+        medicationEvent.amountTaken = 1;
+        await medicationEventQueries.updateToApi(medicationEvent);
+        medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).medTaken = true;
+        medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).amountTaken = 1;
+        emit(CalendarLoaded(medEvents));
+      } catch (e) {
+        emit(CalendarFailure());
+      }
     }
   }
 
@@ -59,16 +62,20 @@ class CalendarCubit extends Cubit<CalendarState> {
       _wait();
       var previousState = state as CalendarLoaded;
       emit(CalendarLoadInProgress());
-      var medEvents = previousState.medicationEvents;
-      //get date of the medication event and take out the time from it
-      var medDate = medicationEvent.datetime;
-      medDate = DateTime(medDate.year, medDate.month, medDate.day);
-      medicationEvent.medTaken = false;
-      medicationEvent.amountTaken = 0;
-      await medicationEventQueries.updateToApi(medicationEvent);
-      medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).medTaken = false;
-      medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).amountTaken = 0;
-      emit(CalendarLoaded(medEvents));
+      try {
+        var medEvents = previousState.medicationEvents;
+        //get date of the medication event and take out the time from it
+        var medDate = medicationEvent.datetime;
+        medDate = DateTime(medDate.year, medDate.month, medDate.day);
+        medicationEvent.medTaken = false;
+        medicationEvent.amountTaken = 0;
+        await medicationEventQueries.updateToApi(medicationEvent);
+        medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).medTaken = false;
+        medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).amountTaken = 0;
+        emit(CalendarLoaded(medEvents));
+      } catch (e) {
+        emit(CalendarFailure());
+      }
     }
   }
 

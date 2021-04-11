@@ -1,10 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:medify/cubit/caregivers_cubit.dart';
 import 'package:medify/database/model_queries/client_queries.dart';
-import 'package:medify/database/models/user.dart';
 import 'package:medify/database/models/user_connection.dart';
-import 'package:medify/dummy_data.dart' as DummyData;
 
 part 'clients_state.dart';
 

@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:medify/cubit/caregivers_cubit.dart';
-import 'package:medify/database/models/user.dart';
 import 'package:medify/scale.dart';
 
-class RemoveCaregiverDialog extends StatelessWidget {
-  final User caregiver;
+class ConfirmationDialog extends StatelessWidget {
+  final String title;
+  final String message;
+  final String buttonTitle;
+  final Function confirmClicked;
+  final bool popScreen;
 
-  RemoveCaregiverDialog(this.caregiver);
+  ConfirmationDialog({
+    @required this.confirmClicked,
+    @required this.title,
+    @required this.message,
+    @required this.buttonTitle,
+    this.popScreen = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +27,7 @@ class RemoveCaregiverDialog extends StatelessWidget {
       title: Padding(
         padding: EdgeInsets.symmetric(vertical: 10.sv),
         child: Text(
-          "Remove Caregiver",
+          title,
           style: TextStyle(fontSize: 22.sf),
           textAlign: TextAlign.center,
         ),
@@ -32,7 +39,7 @@ class RemoveCaregiverDialog extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                "Are you sure you want to remove this caregiver?",
+                message,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16.sf),
               ),
@@ -50,14 +57,16 @@ class RemoveCaregiverDialog extends StatelessWidget {
     return Center(
       child: PlatformButton(
         child: Text(
-          "Remove",
+          buttonTitle,
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 14.sf, color: Colors.white),
         ),
         onPressed: () {
-          //Replace this with remove caregiver logic
-          BlocProvider.of<CaregiversCubit>(context).removeCaregiver(caregiver);
+          confirmClicked();
           Navigator.of(context, rootNavigator: true).pop('dialog');
+          if (popScreen) {
+            Navigator.of(context).pop();
+          }
         },
         cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
         material: (context, platform) => MaterialRaisedButtonData(
