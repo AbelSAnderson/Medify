@@ -129,6 +129,6 @@ class ApiHandler {
 
   /// Retrieve token from DB - needs to be changed
   retrieveToken() async {
-    _token = await "";
+    _token = "";
   }
 }

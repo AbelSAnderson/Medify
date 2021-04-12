@@ -85,8 +85,7 @@ class LoginScreen extends StatelessWidget {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
@@ -117,8 +116,7 @@ class LoginScreen extends StatelessWidget {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
@@ -152,10 +150,19 @@ class LoginScreen extends StatelessWidget {
       if (state is LoginInitial) {
         return _loginButton(context);
       } else if (state is LoginValidating) {
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CircularProgressIndicator.adaptive());
       } else if (state is LoginFailed) {
-        return Column(
-            children: [_loginButton(context), Text(state.errorMessage)]);
+        return Column(children: [
+          _loginButton(context),
+          SizedBox(height: 12.5.sv),
+          Text(
+            state.errorMessage,
+            style: TextStyle(
+              fontSize: 14.sf,
+              color: Colors.red,
+            ),
+          ),
+        ]);
       } else if (state is LoginSucceeded) {
         WidgetsBinding.instance.addPostFrameCallback((_) => {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -164,7 +171,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ))
             });
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CircularProgressIndicator.adaptive());
       }
       return Container();
     });
@@ -180,8 +187,7 @@ class LoginScreen extends StatelessWidget {
         ),
         onPressed: () {
           if (_formKey.currentState.validate()) {
-            BlocProvider.of<LoginCubit>(context)
-                .loginUser(emailController.text, passwordController.text);
+            BlocProvider.of<LoginCubit>(context).loginUser(emailController.text, passwordController.text);
 
             // Navigator.of(context).pushReplacement(MaterialPageRoute(
             //   builder: (context) => MyHomePage(
@@ -192,11 +198,9 @@ class LoginScreen extends StatelessWidget {
         },
         color: Theme.of(context).primaryColor,
         material: (context, platform) => MaterialRaisedButtonData(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4))),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
         ),
-        cupertino: (context, platform) =>
-            CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+        cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
       ),
     );
   }

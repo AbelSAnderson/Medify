@@ -7,6 +7,7 @@ import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/database/models/medication_info.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
+import 'package:medify/widgets/confirmation_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OccuranceDetails extends StatelessWidget {
@@ -89,7 +90,7 @@ class OccuranceDetails extends StatelessWidget {
             ),
             SizedBox(height: 20.sv),
             Text(
-              "Start Date: ${formatDate(medication.takeAt, [h, ":", nn, " ", am])}",
+              "Time: ${formatDate(medication.takeAt, [h, ":", nn, " ", am])}",
               style: TextStyle(fontSize: 16.sf),
             ),
             SizedBox(height: 20.sv),
@@ -117,9 +118,16 @@ class OccuranceDetails extends StatelessWidget {
                     style: TextStyle(fontSize: 14.sf, color: Colors.white),
                   ),
                   onPressed: () {
-                    //Call bloc to remove medication
-                    BlocProvider.of<MedicationsCubit>(context).deleteMedication(medication);
-                    Navigator.of(context).pop();
+                    showDialog(
+                      context: context,
+                      builder: (context) => ConfirmationDialog(
+                        confirmClicked: () => BlocProvider.of<MedicationsCubit>(context).deleteMedication(medication),
+                        title: "Remove Medication",
+                        message: "Are you sure you want to remove this medication?",
+                        buttonTitle: "Remove",
+                        popScreen: true,
+                      ),
+                    );
                   },
                   cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
                   material: (context, platform) => MaterialRaisedButtonData(

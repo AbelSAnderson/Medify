@@ -4,9 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/constants.dart';
 import 'package:medify/cubit/calendar_cubit.dart';
-import 'package:medify/database/models/medication.dart';
 import 'package:medify/database/models/medication_event.dart';
-import 'package:medify/database/models/medication_info.dart';
+import 'package:medify/widgets/confirmation_dialog.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:medify/scale.dart';
 
@@ -19,7 +18,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
   var _events = {};
   List _selectedEvents = [];
   var _selectedDay;
-  AnimationController _animationController;
   CalendarController _calendarController = CalendarController();
   final _today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   var _calendarCreated = false;
@@ -27,21 +25,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   void initState() {
     super.initState();
-
-    // _selectedEvents = [];
     _calendarController = CalendarController();
     _selectedDay = _today;
-    // _animationController = AnimationController(
-    //   vsync: this,
-    //   duration: const Duration(milliseconds: 400),
-    // );
-
-    // _animationController.forward();
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
     _calendarController.dispose();
     super.dispose();
   }
@@ -67,7 +56,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             BlocProvider.of<CalendarCubit>(context).getAllMedicationEvents();
           }
           if (state is CalendarLoadInProgress) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator.adaptive());
           }
           if (state is CalendarLoaded) {
             return Column(
@@ -108,7 +97,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     if (_calendarCreated) {
       _calendarController.setCalendarFormat(MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week);
-      // _calendarController.setSelectedDay(_today);
     }
     return TableCalendar(
       calendarController: _calendarController,
@@ -229,13 +217,29 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget _undoIconButton(MedicationEvent medicationEvent) {
     return PlatformIconButton(
       padding: EdgeInsets.all(0),
-      icon: Icon(
-        Icons.replay_circle_filled,
-        color: Theme.of(context).accentColor,
-        size: 32.sf,
+      // icon: Icon(
+      //   Icons.replay_circle_filled,
+      //   color: Theme.of(context).accentColor,
+      //   size: 32.sf,
+      // ),
+      icon: Text(
+        "Undo",
+        style: TextStyle(
+          fontSize: 14.sf,
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).accentColor,
+        ),
       ),
       onPressed: () {
-        BlocProvider.of<CalendarCubit>(context).undoTakeMedication(medicationEvent);
+        showDialog(
+          context: context,
+          builder: (context) => ConfirmationDialog(
+            confirmClicked: () => BlocProvider.of<CalendarCubit>(context).undoTakeMedication(medicationEvent),
+            title: "Undo Take Medication",
+            message: "Are you want to undo taking the medication?",
+            buttonTitle: "Undo",
+          ),
+        );
       },
     );
   }

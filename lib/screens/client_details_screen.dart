@@ -6,9 +6,9 @@ import 'package:medify/constants.dart';
 import 'package:medify/cubit/client_details_cubit.dart';
 import 'package:medify/cubit/clients_cubit.dart';
 import 'package:medify/database/models/medication_event.dart';
-import 'package:medify/database/models/user.dart';
 import 'package:medify/database/models/user_connection.dart';
 import 'package:medify/scale.dart';
+import 'package:medify/widgets/confirmation_dialog.dart';
 
 class ClientDetailsScreen extends StatelessWidget {
   final UserConnection userConnection;
@@ -28,8 +28,16 @@ class ClientDetailsScreen extends StatelessWidget {
               color: Colors.white,
             ),
             onPressed: () {
-              BlocProvider.of<ClientsCubit>(context).removeClient(userConnection);
-              Navigator.of(context).pop();
+              showDialog(
+                context: context,
+                builder: (context) => ConfirmationDialog(
+                  confirmClicked: () => BlocProvider.of<ClientsCubit>(context).removeClient(userConnection),
+                  title: "Remove Client",
+                  message: "Are you sure you want to remove this client?",
+                  buttonTitle: "Remove",
+                  popScreen: true,
+                ),
+              );
             },
           ),
         ],
@@ -41,7 +49,7 @@ class ClientDetailsScreen extends StatelessWidget {
           }
           if (state is ClientDetailsLoading) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator.adaptive(),
             );
           }
           if (state is ClientDetailsLoaded) {

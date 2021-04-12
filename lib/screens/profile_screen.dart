@@ -6,14 +6,12 @@ import 'package:medify/cubit/caregivers_cubit.dart';
 import 'package:medify/cubit/edit_profile_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/cubit/profile_cubit.dart';
-import 'package:medify/database/models/user_connection.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/screens/medications_screen.dart';
 import 'package:medify/screens/settings_screen.dart';
 import 'package:medify/widgets/edit_profile_dialog.dart';
-import 'package:medify/widgets/remove_caregiver_dialog.dart';
-import 'package:medify/widgets/search_bar.dart';
 import 'package:medify/scale.dart';
+import 'package:medify/widgets/confirmation_dialog.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -77,7 +75,7 @@ class ProfileScreen extends StatelessWidget {
                             }
                             if (state is MedicationsLoading) {
                               return Center(
-                                child: CircularProgressIndicator(),
+                                child: CircularProgressIndicator.adaptive(),
                               );
                             }
                             if (state is MedicationsLoaded) {
@@ -187,7 +185,7 @@ class ProfileScreen extends StatelessWidget {
           return Container(
             height: MediaQuery.of(context).size.height * 0.35,
             child: Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator.adaptive(),
             ),
           );
         }
@@ -220,7 +218,12 @@ class ProfileScreen extends StatelessWidget {
                             onPressed: () {
                               showDialog(
                                 context: context,
-                                builder: (context) => RemoveCaregiverDialog(caregiver),
+                                builder: (context) => ConfirmationDialog(
+                                  confirmClicked: () => BlocProvider.of<CaregiversCubit>(context).removeCaregiver(caregiver),
+                                  title: "Remove Caregiver",
+                                  message: "Are you sure you want to remove this caregiver?",
+                                  buttonTitle: "Remove",
+                                ),
                               );
                             },
                           ),

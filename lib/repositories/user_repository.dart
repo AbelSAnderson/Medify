@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:http/http.dart';
 import 'package:medify/database/models/user.dart';
-import 'package:medify/database/api_handler.dart';
 import 'package:medify/database/model_queries/user_queries.dart';
 
 class UserRepository {

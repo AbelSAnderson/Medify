@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:medify/database/model_queries/medication_event_queries.dart';
 import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/database/models/medication_info.dart';
-import 'package:medify/dummy_data.dart' as DummyData;
 
 class MedicationEventRepository {
   final StreamController<List<MedicationEvent>> streamController = StreamController();

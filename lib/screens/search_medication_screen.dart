@@ -24,7 +24,7 @@ class _SearchMedicationScreenState extends State<SearchMedicationScreen> {
         if (state is SearchArrived) {
           item = Center(child: Text(""));
         } else if (state is SearchSearching) {
-          item = Center(child: CircularProgressIndicator());
+          item = Center(child: CircularProgressIndicator.adaptive());
         } else if (state is SearchComplete) {
           item = MedicationResultsList(state.medications);
         } else if (state is SearchError) {

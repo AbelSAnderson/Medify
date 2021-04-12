@@ -1,7 +1,4 @@
 import 'package:hive/hive.dart';
-import 'package:http/http.dart';
-import 'package:medify/database/api_handler.dart';
-import 'package:medify/database/model_base.dart';
 
 /// Base Class for the Database Queries
 abstract class DatabaseQueryBase<T> {
