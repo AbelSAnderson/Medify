@@ -47,6 +47,7 @@ class _SearchMedicationScreenState extends State<SearchMedicationScreen> {
           children: [
             SearchBar(
               onSearch: (inputText) => BlocProvider.of<SearchCubit>(context).searchFor(inputText),
+              hintText: "Search for a medication",
             ),
             item
           ],
