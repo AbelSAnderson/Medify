@@ -7,7 +7,12 @@ import 'package:medify/screens/login_screen.dart';
 
 import 'home_screen.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
+  @override
+  _RegisterScreenState createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final nameController = TextEditingController();
@@ -15,6 +20,9 @@ class RegisterScreen extends StatelessWidget {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final pharmacyNumberController = TextEditingController();
+
+  var showPassword = false;
+  var showConfirmPassword = false;
 
   @override
   Widget build(BuildContext context) {
@@ -149,8 +157,16 @@ class RegisterScreen extends StatelessWidget {
           maxLength: 200,
           style: TextStyle(fontSize: 16.sf),
           controller: passwordController,
-          obscureText: true,
+          obscureText: !showPassword,
           decoration: InputDecoration(
+            suffixIcon: IconButton(
+              icon: !showPassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+              onPressed: () {
+                setState(() {
+                  showPassword = !showPassword;
+                });
+              },
+            ),
             counterText: "",
             isDense: true,
             border: OutlineInputBorder(
@@ -183,8 +199,16 @@ class RegisterScreen extends StatelessWidget {
           maxLength: 200,
           style: TextStyle(fontSize: 16.sf),
           controller: confirmPasswordController,
-          obscureText: true,
+          obscureText: !showConfirmPassword,
           decoration: InputDecoration(
+            suffixIcon: IconButton(
+              icon: !showConfirmPassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+              onPressed: () {
+                setState(() {
+                  showConfirmPassword = !showConfirmPassword;
+                });
+              },
+            ),
             counterText: "",
             isDense: true,
             border: OutlineInputBorder(
