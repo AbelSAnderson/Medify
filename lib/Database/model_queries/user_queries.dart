@@ -38,4 +38,8 @@ class UserQueries extends DatabaseQueryBase<User> {
   Future<void> changePassword(User user, String password) async {
     await ApiHandler.medifyAPI().getPutData("users/${user.id}", {"email": user.email, "password": password});
   }
+
+  Future<Map<String, dynamic>> resetPassword(String email) async {
+    return await ApiHandler.medifyAPI().getPostData("resetPassword", {'email': email}, filterResponse: false);
+  }
 }
