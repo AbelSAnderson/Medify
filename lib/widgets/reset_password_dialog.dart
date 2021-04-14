@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:medify/cubit/reset_password_cubit.dart';
 import 'package:medify/scale.dart';
 
 class ResetPasswordDialog extends StatelessWidget {
+
+  final emailController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -26,7 +31,7 @@ class ResetPasswordDialog extends StatelessWidget {
             children: [
               _emailField(),
               SizedBox(height: 20.sv),
-              _submitButton(context),
+              _submitButtonProvider(context),
               _cancelButton(context),
             ],
           ),
@@ -48,7 +53,7 @@ class ResetPasswordDialog extends StatelessWidget {
         SizedBox(height: 10.sv),
         TextFormField(
           style: TextStyle(fontSize: 16.sf),
-          initialValue: "",
+          controller: emailController,
           decoration: InputDecoration(
             isDense: true,
             border: OutlineInputBorder(
@@ -62,6 +67,31 @@ class ResetPasswordDialog extends StatelessWidget {
     );
   }
 
+  Widget _submitButtonProvider(BuildContext context) {
+    return BlocBuilder<ResetPasswordCubit, ResetPasswordState>(builder: (context, state) {
+      if (state is ResetInitial) {
+        return _submitButton(context);
+      } else if (state is ResetValidating) {
+        return Center(child: CircularProgressIndicator.adaptive());
+      } else if (state is ResetFailed) {
+        return Column(children: [
+          _submitButton(context),
+          SizedBox(height: 12.5.sv),
+          Text(
+            state.errorMessage,
+            style: TextStyle(
+              fontSize: 14.sf,
+              color: Colors.red,
+            ),
+          ),
+        ]);
+      } else if (state is ResetSucceeded) {
+        return Center(child: Text("Reset successful. Please check your email for new password."));
+      }
+      return Container();
+    });
+  }
+
   Widget _submitButton(BuildContext context) {
     return Center(
       child: PlatformButton(
@@ -71,8 +101,7 @@ class ResetPasswordDialog extends StatelessWidget {
           style: TextStyle(fontSize: 14.sf, color: Colors.white),
         ),
         onPressed: () {
-          //Replace this with password resetting logic
-          Navigator.of(context, rootNavigator: true).pop('dialog');
+          BlocProvider.of<ResetPasswordCubit>(context).resetPassword(emailController.text);
         },
         cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
         material: (context, platform) => MaterialRaisedButtonData(
@@ -93,6 +122,7 @@ class ResetPasswordDialog extends StatelessWidget {
         ),
         onPressed: () {
           Navigator.of(context, rootNavigator: true).pop('dialog');
+          BlocProvider.of<ResetPasswordCubit>(context).resetState();
         },
       ),
     );

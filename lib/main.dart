@@ -12,6 +12,7 @@ import 'package:medify/cubit/login_cubit.dart';
 import 'package:medify/cubit/medication_form_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/cubit/profile_cubit.dart';
+import 'package:medify/cubit/reset_password_cubit.dart';
 import 'package:medify/cubit/search_cubit.dart';
 import 'package:medify/cubit/settings_cubit.dart';
 import 'package:medify/database/database_handler.dart';
@@ -95,6 +96,9 @@ void main() async {
           ),
           BlocProvider<ChangePasswordCubit>(
             create: (context) => ChangePasswordCubit(RepositoryProvider.of<UserRepository>(context)),
+          ),
+          BlocProvider<ResetPasswordCubit>(
+            create: (context) => ResetPasswordCubit(),
           ),
         ],
         child: MyApp(),
