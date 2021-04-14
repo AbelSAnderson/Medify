@@ -17,6 +17,7 @@ class ClientDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<ClientDetailsCubit>(context).refreshState();
     return Scaffold(
       appBar: AppBar(
         title: Text(userConnection.user.name),
@@ -45,7 +46,7 @@ class ClientDetailsScreen extends StatelessWidget {
       body: BlocBuilder<ClientDetailsCubit, ClientDetailsState>(
         builder: (context, state) {
           if (state is ClientDetailsInitial) {
-            BlocProvider.of<ClientDetailsCubit>(context).loadClientMedications();
+            BlocProvider.of<ClientDetailsCubit>(context).loadClientMedications(userConnection.user.id);
           }
           if (state is ClientDetailsLoading) {
             return Center(

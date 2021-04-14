@@ -86,7 +86,7 @@ void main() async {
             create: (context) => ClientsCubit(ClientQueries()),
           ),
           BlocProvider<ClientDetailsCubit>(
-            create: (context) => ClientDetailsCubit(),
+            create: (context) => ClientDetailsCubit(MedicationEventQueries()),
           ),
           BlocProvider<MedicationFormCubit>(
             create: (context) => MedicationFormCubit(MedicationQueries(), RepositoryProvider.of<MedicationInfoRepository>(context), RepositoryProvider.of<MedicationEventRepository>(context), RepositoryProvider.of<UserRepository>(context)),

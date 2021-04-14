@@ -102,7 +102,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       calendarController: _calendarController,
       events: _events,
       startingDayOfWeek: StartingDayOfWeek.sunday,
-      availableGestures: AvailableGestures.horizontalSwipe,
+      availableGestures: AvailableGestures.none,
       startDay: DateTime.now().subtract(Duration(days: 30)),
       endDay: DateTime.now().add(Duration(days: 30)),
       initialSelectedDay: _selectedDay,

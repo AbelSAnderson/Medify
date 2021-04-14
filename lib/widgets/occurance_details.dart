@@ -23,23 +23,31 @@ class OccuranceDetails extends StatelessWidget {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
+          scrollable: true,
+          insetPadding: EdgeInsets.symmetric(horizontal: 20.sh, vertical: 20.sv),
+          contentPadding: EdgeInsets.symmetric(horizontal: 20.sh, vertical: 12.5.sv),
+          titlePadding: EdgeInsets.only(left: 20.sh, right: 20.sh, top: 20.sv),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
           title: Text("No Phone App"),
-          content: Column(
-            children: [
-              Text("Unable to redirect. Your device does not have a phone app."),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: TextButton(
-                  child: Text(
-                    "Cancel",
-                    style: TextStyle(fontSize: 14.sf),
+          content: Container(
+            width: 300.sh,
+            child: Column(
+              children: [
+                Text("Unable to redirect. Your device does not have a phone app."),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: TextButton(
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(fontSize: 14.sf),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                    },
                   ),
-                  onPressed: () {
-                    Navigator.of(context, rootNavigator: true).pop('dialog');
-                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );

@@ -10,12 +10,18 @@ import 'package:medify/widgets/reset_password_dialog.dart';
 
 import 'home_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  // Controllers for the form fields
   final emailController = new TextEditingController();
   final passwordController = new TextEditingController();
+
+  var showPassword = false;
 
   @override
   Widget build(BuildContext context) {
@@ -110,8 +116,16 @@ class LoginScreen extends StatelessWidget {
         TextFormField(
           style: TextStyle(fontSize: 16.sf),
           controller: passwordController,
-          obscureText: true,
+          obscureText: !showPassword,
           decoration: InputDecoration(
+            suffixIcon: IconButton(
+              icon: !showPassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+              onPressed: () {
+                setState(() {
+                  showPassword = !showPassword;
+                });
+              },
+            ),
             isDense: true,
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),

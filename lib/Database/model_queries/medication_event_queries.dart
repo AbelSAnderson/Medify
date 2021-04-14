@@ -28,4 +28,9 @@ class MedicationEventQueries extends DatabaseQueryBase<MedicationEvent> {
     var jsonData = await ApiHandler.medifyAPI().getPutData("events/${medicationEvent.id}", medicationEvent.toJson());
     return MedicationEvent.fromJson(jsonData);
   }
+
+  Future<List<MedicationEvent>> retrieveAllFromApiForUser(int userId) async {
+    var jsonData = await ApiHandler.medifyAPI().getData("events?user=$userId");
+    return MedicationEventList.from(jsonData).medicationEvents;
+  }
 }

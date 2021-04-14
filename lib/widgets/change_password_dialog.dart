@@ -4,11 +4,20 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/change_password_cubit.dart';
 import 'package:medify/scale.dart';
 
-class ChangePasswordDialog extends StatelessWidget {
+class ChangePasswordDialog extends StatefulWidget {
+  @override
+  _ChangePasswordDialogState createState() => _ChangePasswordDialogState();
+}
+
+class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
   final _formKey = GlobalKey<FormState>();
 
   final oldPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
+
+  var showOldPassword = false;
+  var showNewPassword = false;
+  var showConfirmPassword = false;
 
   @override
   Widget build(BuildContext context) {
@@ -96,8 +105,16 @@ class ChangePasswordDialog extends StatelessWidget {
         TextFormField(
           style: TextStyle(fontSize: 16.sf),
           controller: oldPasswordController,
-          obscureText: true,
+          obscureText: !showOldPassword,
           decoration: InputDecoration(
+            suffixIcon: IconButton(
+              icon: !showOldPassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+              onPressed: () {
+                setState(() {
+                  showOldPassword = !showOldPassword;
+                });
+              },
+            ),
             isDense: true,
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
@@ -124,8 +141,16 @@ class ChangePasswordDialog extends StatelessWidget {
         TextFormField(
           controller: newPasswordController,
           style: TextStyle(fontSize: 16.sf),
-          obscureText: true,
+          obscureText: !showNewPassword,
           decoration: InputDecoration(
+            suffixIcon: IconButton(
+              icon: !showNewPassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+              onPressed: () {
+                setState(() {
+                  showNewPassword = !showNewPassword;
+                });
+              },
+            ),
             errorMaxLines: 2,
             isDense: true,
             border: OutlineInputBorder(
@@ -158,8 +183,16 @@ class ChangePasswordDialog extends StatelessWidget {
           maxLength: 200,
           style: TextStyle(fontSize: 16.sf),
           initialValue: "",
-          obscureText: true,
+          obscureText: !showConfirmPassword,
           decoration: InputDecoration(
+            suffixIcon: IconButton(
+              icon: !showConfirmPassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+              onPressed: () {
+                setState(() {
+                  showConfirmPassword = !showConfirmPassword;
+                });
+              },
+            ),
             counterText: "",
             isDense: true,
             border: OutlineInputBorder(
