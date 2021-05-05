@@ -104,7 +104,7 @@ class ClientsScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BlocProvider.value(
+            builder: (newContext) => BlocProvider.value(
               value: BlocProvider.of<ClientsCubit>(context),
               child: BlocProvider<ClientDetailsCubit>(
                 create: (context) => ClientDetailsCubit(MedicationEventQueries()),

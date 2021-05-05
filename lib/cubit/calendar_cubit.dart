@@ -101,4 +101,10 @@ class CalendarCubit extends Cubit<CalendarState> {
   _wait() async {
     await Future.delayed(Duration(milliseconds: 1));
   }
+
+  @override
+  Future<void> close() {
+    medicationEventRepository.streamController.close();
+    return super.close();
+  }
 }

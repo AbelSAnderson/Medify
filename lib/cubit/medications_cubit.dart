@@ -52,4 +52,10 @@ class MedicationsCubit extends Cubit<MedicationsState> {
   _wait() async {
     await Future.delayed(Duration(milliseconds: 1));
   }
+
+  @override
+  Future<void> close() {
+    medicationEventRepository.streamController.close();
+    return super.close();
+  }
 }

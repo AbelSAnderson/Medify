@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:medify/cubit/change_password_cubit.dart';
+import 'package:medify/cubit/login_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/cubit/settings_cubit.dart';
+import 'package:medify/repositories/medication_event_repository.dart';
+import 'package:medify/repositories/medication_info_repository.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/widgets/change_password_dialog.dart';
+import 'package:medify/widgets/confirmation_dialog.dart';
+
+import 'home_screen.dart';
+import 'login_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -30,6 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _fontSizeSection(),
               _caregiverModeSection(),
               _changePasswordSection(),
+              _logoutSection(),
             ],
           ),
         ),
@@ -161,6 +170,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
           builder: (context) => BlocProvider<ChangePasswordCubit>(
             create: (context) => ChangePasswordCubit(RepositoryProvider.of<UserRepository>(context)),
             child: ChangePasswordDialog(),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _logoutSection() {
+    return InkWell(
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.sv),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Logout",
+                  style: TextStyle(fontSize: 18.sf),
+                ),
+                Icon(
+                  Icons.keyboard_arrow_right,
+                  size: 24.sf,
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            thickness: 2,
+            height: 0,
+          ),
+        ],
+      ),
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => ConfirmationDialog(
+            confirmClicked: () => {
+              //Phoenix (Flutter package) allows you to rebuild the entire widget tree (refreshes app)
+              Phoenix.rebirth(context)
+            },
+            title: "Logout",
+            message: "Are you sure you want to logout?",
+            buttonTitle: "Logout",
           ),
         );
       },

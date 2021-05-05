@@ -2,12 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:medify/cubit/login_cubit.dart';
 import 'package:medify/cubit/settings_cubit.dart';
 import 'package:medify/database/database_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medify/repositories/medication_event_repository.dart';
-import 'package:medify/repositories/medication_info_repository.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/login_screen.dart';
@@ -23,13 +22,15 @@ void main() async {
   HttpOverrides.global = new MyHttpOverrides();
 
   runApp(
-    MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider(
-          create: (context) => UserRepository(),
-        ),
-      ],
-      child: MyApp(),
+    Phoenix(
+      child: MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider(
+            create: (context) => UserRepository(),
+          ),
+        ],
+        child: MyApp(),
+      ),
     ),
   );
 }

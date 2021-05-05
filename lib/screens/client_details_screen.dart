@@ -31,12 +31,15 @@ class ClientDetailsScreen extends StatelessWidget {
             onPressed: () {
               showDialog(
                 context: context,
-                builder: (context) => ConfirmationDialog(
-                  confirmClicked: () => BlocProvider.of<ClientsCubit>(context).removeClient(userConnection),
-                  title: "Remove Client",
-                  message: "Are you sure you want to remove this client?",
-                  buttonTitle: "Remove",
-                  popScreen: true,
+                builder: (newContext) => BlocProvider.value(
+                  value: BlocProvider.of<ClientsCubit>(context),
+                  child: ConfirmationDialog(
+                    confirmClicked: () => BlocProvider.of<ClientsCubit>(context).removeClient(userConnection),
+                    title: "Remove Client",
+                    message: "Are you sure you want to remove this client?",
+                    buttonTitle: "Remove",
+                    popScreen: true,
+                  ),
                 ),
               );
             },

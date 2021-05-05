@@ -243,11 +243,14 @@ class ProfileScreen extends StatelessWidget {
                             onPressed: () {
                               showDialog(
                                 context: context,
-                                builder: (context) => ConfirmationDialog(
-                                  confirmClicked: () => BlocProvider.of<CaregiversCubit>(context).removeCaregiver(caregiver),
-                                  title: "Remove Caregiver",
-                                  message: "Are you sure you want to remove this caregiver?",
-                                  buttonTitle: "Remove",
+                                builder: (newContext) => BlocProvider.value(
+                                  value: BlocProvider.of<CaregiversCubit>(context),
+                                  child: ConfirmationDialog(
+                                    confirmClicked: () => BlocProvider.of<CaregiversCubit>(context).removeCaregiver(caregiver),
+                                    title: "Remove Caregiver",
+                                    message: "Are you sure you want to remove this caregiver?",
+                                    buttonTitle: "Remove",
+                                  ),
                                 ),
                               );
                             },
