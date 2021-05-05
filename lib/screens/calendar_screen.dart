@@ -233,11 +233,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
       onPressed: () {
         showDialog(
           context: context,
-          builder: (context) => ConfirmationDialog(
-            confirmClicked: () => BlocProvider.of<CalendarCubit>(context).undoTakeMedication(medicationEvent),
-            title: "Undo Take Medication",
-            message: "Are you want to undo taking the medication?",
-            buttonTitle: "Undo",
+          builder: (newContext) => BlocProvider.value(
+            value: BlocProvider.of<CalendarCubit>(context),
+            child: ConfirmationDialog(
+              confirmClicked: () => BlocProvider.of<CalendarCubit>(context).undoTakeMedication(medicationEvent),
+              title: "Undo Take Medication",
+              message: "Are you want to undo taking the medication?",
+              buttonTitle: "Undo",
+            ),
           ),
         );
       },

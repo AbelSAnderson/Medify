@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/login_cubit.dart';
+import 'package:medify/cubit/nav_bar_cubit.dart';
+import 'package:medify/repositories/medication_event_repository.dart';
+import 'package:medify/repositories/medication_info_repository.dart';
+import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/login_screen.dart';
 
@@ -281,11 +285,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ]);
       } else if (state is LoginSucceeded) {
         WidgetsBinding.instance.addPostFrameCallback((_) => {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => MyHomePage(
-                  title: 'Medify',
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => MultiRepositoryProvider(
+                    providers: [
+                      RepositoryProvider(
+                        create: (context) => MedicationEventRepository(),
+                      ),
+                      RepositoryProvider(
+                        create: (context) => MedicationInfoRepository(),
+                      ),
+                    ],
+                    child: BlocProvider<NavBarCubit>(
+                      create: (context) => NavBarCubit(RepositoryProvider.of<UserRepository>(context)),
+                      child: MyHomePage(
+                        title: 'Medify',
+                      ),
+                    ),
+                  ),
                 ),
-              ))
+              )
             });
         return Center(child: CircularProgressIndicator.adaptive());
       }
@@ -297,15 +316,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget _registerAsSection(BuildContext context) {
     return Column(
       children: [
-        // Text(
-        //   "Who do you want to register as?",
-        //   style: TextStyle(fontSize: 14.sf),
-        // ),
-        // Text(
-        //   "(You can change this later)",
-        //   style: TextStyle(fontSize: 14.sf),
-        // ),
-        // SizedBox(height: 12.5.sv),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -316,7 +326,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 style: TextStyle(fontSize: 12.sf, color: Colors.white),
               ),
               onPressed: () {
-                BlocProvider.of<LoginCubit>(context).resetState();
                 if (_formKey.currentState.validate()) {
                   BlocProvider.of<LoginCubit>(context).registerUser(nameController.text, emailController.text, passwordController.text, pharmacyNumberController.text, 0);
                 }
@@ -334,7 +343,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 style: TextStyle(fontSize: 12.sf, color: Colors.white),
               ),
               onPressed: () {
-                BlocProvider.of<LoginCubit>(context).resetState();
                 if (_formKey.currentState.validate()) {
                   BlocProvider.of<LoginCubit>(context).registerUser(nameController.text, emailController.text, passwordController.text, pharmacyNumberController.text, 1);
                 }
@@ -366,9 +374,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             style: TextStyle(fontSize: 14.sf),
           ),
           onPressed: () {
-            BlocProvider.of<LoginCubit>(context).resetState();
             Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => LoginScreen(),
+              builder: (context) => BlocProvider<LoginCubit>(
+                create: (context) => LoginCubit(RepositoryProvider.of<UserRepository>(context)),
+                child: LoginScreen(),
+              ),
             ));
           },
         ),

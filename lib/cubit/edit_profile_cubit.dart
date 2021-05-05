@@ -20,8 +20,4 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       emit(EditProfileFailed("Email already used."));
     }
   }
-
-  reloadState() {
-    emit(EditProfileInitial());
-  }
 }

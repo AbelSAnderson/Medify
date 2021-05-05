@@ -28,8 +28,4 @@ class AddCaregiverCubit extends Cubit<AddCaregiverState> {
       emit(state.copyWith(response: "Could not send request."));
     }
   }
-
-  resetState() {
-    emit(AddCaregiverState.initial());
-  }
 }

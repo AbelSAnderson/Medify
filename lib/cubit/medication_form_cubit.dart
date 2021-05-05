@@ -81,34 +81,4 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
       print(e.toString());
     }
   }
-
-  // Future<List<MedicationEvent>> _generateMedicationEvents(MedicationInfo medicationInfo) async {
-  //   var daysToLoad = _daysToLoad(medicationInfo.repeat);
-  //   List<MedicationEvent> medicationEvents = [];
-  //   for (int i = 0; i < daysToLoad; i++) {
-  //     var dateTime = i == 0 ? medicationInfo.takeAt : medicationEvents[i - 1].datetime.add(Duration(days: medicationInfo.repeat));
-  //     var medicationEvent = MedicationEvent(0, dateTime, medicationInfo, false, 0);
-  //     medicationEvents.add(medicationEvent);
-  //   }
-  //   return medicationEvents;
-  // }
-
-  // int _daysToLoad(int value) {
-  //   switch (value) {
-  //     case 1:
-  //       return 90;
-  //     case 7:
-  //       return 13;
-  //     case 14:
-  //       return 7;
-  //     case 30:
-  //       return 3;
-  //     default:
-  //       return 90;
-  //   }
-  // }
-
-  resetState() {
-    emit(MedicationFormState.initial());
-  }
 }

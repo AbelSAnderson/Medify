@@ -23,8 +23,4 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
       emit(ChangePasswordFailed("Connection timeout."));
     }
   }
-
-  resetState() {
-    emit(ChangePasswordInitial());
-  }
 }

@@ -128,12 +128,15 @@ class OccuranceDetails extends StatelessWidget {
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (context) => ConfirmationDialog(
-                        confirmClicked: () => BlocProvider.of<MedicationsCubit>(context).deleteMedication(medication),
-                        title: "Remove Medication",
-                        message: "Are you sure you want to remove this medication?",
-                        buttonTitle: "Remove",
-                        popScreen: true,
+                      builder: (newContext) => BlocProvider.value(
+                        value: BlocProvider.of<MedicationsCubit>(context),
+                        child: ConfirmationDialog(
+                          confirmClicked: () => BlocProvider.of<MedicationsCubit>(context).deleteMedication(medication),
+                          title: "Remove Medication",
+                          message: "Are you sure you want to remove this medication?",
+                          buttonTitle: "Remove",
+                          popScreen: true,
+                        ),
                       ),
                     );
                   },

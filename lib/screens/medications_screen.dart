@@ -54,7 +54,15 @@ class MedicationsScreen extends StatelessWidget {
                 height: 35.sv,
               ),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationOccurrenceDetailsScreen(med)));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (newContext) => BlocProvider.value(
+                      value: BlocProvider.of<MedicationsCubit>(context),
+                      child: MedicationOccurrenceDetailsScreen(med),
+                    ),
+                  ),
+                );
               },
             ),
           ),
