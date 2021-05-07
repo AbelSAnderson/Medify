@@ -50,7 +50,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
           "Home",
         ),
       ),
-      body: BlocBuilder<CalendarCubit, CalendarState>(
+      body: BlocConsumer<CalendarCubit, CalendarState>(
+        listener: (context, state) {
+          if (state is CalendarLoaded) {
+            if (state.medsComplete == true) {
+              ScaffoldMessenger.of(context).showSnackBar(_showSnackBar());
+            }
+          }
+        },
         builder: (context, state) {
           if (state is CalendarInitial) {
             BlocProvider.of<CalendarCubit>(context).getAllMedicationEvents();
@@ -200,6 +207,29 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
+  _showSnackBar() {
+    return SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Image(
+            image: AssetImage("assets/images/elephant.png"),
+            width: 32.sh,
+            height: 32.sv,
+          ),
+          Text(
+            "Congratulations!",
+            style: TextStyle(fontSize: 20.sf, color: Colors.black),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.symmetric(horizontal: 60.sh, vertical: 25.sv),
+    );
+  }
+
   Widget _takenIconButton(MedicationEvent medicationEvent) {
     return PlatformIconButton(
       padding: EdgeInsets.all(0),
@@ -208,8 +238,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
         color: Theme.of(context).primaryColor,
         size: 32.sf,
       ),
-      onPressed: () {
-        BlocProvider.of<CalendarCubit>(context).takeMedication(medicationEvent);
+      onPressed: () async {
+        await BlocProvider.of<CalendarCubit>(context).takeMedication(medicationEvent);
+        BlocProvider.of<CalendarCubit>(context).checkMedsCompleteForDay(this._selectedEvents);
       },
     );
   }
@@ -217,11 +248,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget _undoIconButton(MedicationEvent medicationEvent) {
     return PlatformIconButton(
       padding: EdgeInsets.all(0),
-      // icon: Icon(
-      //   Icons.replay_circle_filled,
-      //   color: Theme.of(context).accentColor,
-      //   size: 32.sf,
-      // ),
       icon: Text(
         "Undo",
         style: TextStyle(

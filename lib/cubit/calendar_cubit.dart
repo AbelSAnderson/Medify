@@ -35,7 +35,7 @@ class CalendarCubit extends Cubit<CalendarState> {
     }
   }
 
-  takeMedication(MedicationEvent medicationEvent) async {
+  Future<void> takeMedication(MedicationEvent medicationEvent) async {
     if (state is CalendarLoaded) {
       _wait();
       var previousState = state as CalendarLoaded;
@@ -76,6 +76,16 @@ class CalendarCubit extends Cubit<CalendarState> {
       } catch (e) {
         emit(CalendarFailure());
       }
+    }
+  }
+
+  checkMedsCompleteForDay(List<MedicationEvent> medEvents) {
+    var medsNotTaken = medEvents.where((element) => element.medTaken == false);
+
+    var medEventsMapped = (state as CalendarLoaded).medicationEvents;
+
+    if (medsNotTaken.isEmpty) {
+      emit(CalendarLoaded(medEventsMapped, true));
     }
   }
 

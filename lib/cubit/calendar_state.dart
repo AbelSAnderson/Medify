@@ -17,11 +17,12 @@ class CalendarLoadInProgress extends CalendarState {
 
 class CalendarLoaded extends CalendarState {
   final Map<DateTime, List<MedicationEvent>> medicationEvents;
+  final bool medsComplete;
 
-  const CalendarLoaded([this.medicationEvents = const {}]);
+  const CalendarLoaded([this.medicationEvents = const {}, this.medsComplete = false]);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [medicationEvents, medsComplete];
 }
 
 class CalendarFailure extends CalendarState {
