@@ -16,15 +16,12 @@ class AddCaregiverCubit extends Cubit<AddCaregiverState> {
       if (jsonResponse["status"] != null) {
         if (jsonResponse["status"] == true) {
           //request sent
-          print("Request Sent: ${jsonResponse["status"]}");
           emit(state.copyWith(response: "Request sent successfully."));
           return;
         }
       }
-      print(jsonResponse.toString());
       emit(state.copyWith(response: "Could not send request."));
     } catch (e) {
-      print(e.toString());
       emit(state.copyWith(response: "Could not send request."));
     }
   }

@@ -74,6 +74,7 @@ class ProfileScreen extends StatelessWidget {
                     child: Text(
                       RepositoryProvider.of<UserRepository>(context).currentUser.name,
                       style: TextStyle(fontSize: 32.sf),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   Padding(

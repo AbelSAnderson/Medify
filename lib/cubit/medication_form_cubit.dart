@@ -66,7 +66,6 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
   }
 
   submitForm(BuildContext context) async {
-    print(state.toString());
     DateTime dateTime = DateTime(state.startDate.year, state.startDate.month, state.startDate.day, state.time.hour, state.time.minute);
     Medication medication = state.medication;
     MedicationInfo medicationInfo = MedicationInfo(0, state.medType, state.pillAmount, dateTime, getRepeatsInt(state.interval), medication);
@@ -77,8 +76,6 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
       var medicationInfoFromApi = await medicationInfoRepository.addMedicationInfo(medicationInfo, currentUser.id);
       var medicationEvent = MedicationEvent(0, medicationInfoFromApi.takeAt, medicationInfoFromApi, false, 0);
       medicationEventRepository.addMedicationEvents(medicationEvent);
-    } catch (e) {
-      print(e.toString());
-    }
+    } catch (e) {}
   }
 }

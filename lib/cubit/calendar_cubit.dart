@@ -30,7 +30,6 @@ class CalendarCubit extends Cubit<CalendarState> {
       await Future.delayed(Duration(seconds: 1));
       emit(CalendarLoaded(medEventsMapped));
     } catch (e) {
-      print(e.toString());
       emit(CalendarFailure());
     }
   }

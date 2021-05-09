@@ -6,7 +6,6 @@ class ClientQueries {
 
   Future<List<UserConnection>> retrieveAllFromApi() async {
     var jsonData = await ApiHandler.medifyAPI().getData("clients");
-    print(jsonData);
     return UserConnectionList.from(jsonData).userConnections;
   }
 

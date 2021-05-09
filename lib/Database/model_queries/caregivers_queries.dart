@@ -6,7 +6,6 @@ class CaregiversQueries {
 
   Future<List<User>> retrieveAllFromApi() async {
     var jsonData = await ApiHandler.medifyAPI().getData("caregivers");
-    print(jsonData);
     return UserList.from(jsonData).users;
   }
 

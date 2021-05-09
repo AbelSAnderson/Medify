@@ -40,7 +40,6 @@ class ApiHandler {
 
     try {
       final response = await http.get(Uri.parse(this.url + url), headers: _getHeaders());
-      print(response.toString());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
