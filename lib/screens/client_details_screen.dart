@@ -17,11 +17,14 @@ class ClientDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<ClientDetailsCubit>(context).refreshState();
     return Scaffold(
       appBar: AppBar(
         title: Text(userConnection.user.name),
         actions: [
+          FilterMedicationsDropDown(),
+          SizedBox(
+            width: 14.sh,
+          ),
           PlatformIconButton(
             padding: EdgeInsets.all(0),
             icon: Icon(
@@ -49,7 +52,7 @@ class ClientDetailsScreen extends StatelessWidget {
       body: BlocBuilder<ClientDetailsCubit, ClientDetailsState>(
         builder: (context, state) {
           if (state is ClientDetailsInitial) {
-            BlocProvider.of<ClientDetailsCubit>(context).loadClientMedications(userConnection.user.id);
+            _loadMeds(context);
           }
           if (state is ClientDetailsLoading) {
             return Center(
@@ -71,6 +74,11 @@ class ClientDetailsScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  _loadMeds(BuildContext context) async {
+    await BlocProvider.of<ClientDetailsCubit>(context).loadClientMedications(userConnection.user.id);
+    BlocProvider.of<ClientDetailsCubit>(context).filterMedications("Today");
   }
 }
 
@@ -111,6 +119,55 @@ class ShowMedicationsList extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class FilterMedicationsDropDown extends StatefulWidget {
+  @override
+  _FilterMedicationsDropDownState createState() => _FilterMedicationsDropDownState();
+}
+
+class _FilterMedicationsDropDownState extends State<FilterMedicationsDropDown> {
+  String dropDownValue = "Today";
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      child: DropdownButton(
+        iconEnabledColor: Colors.white,
+        style: TextStyle(color: Colors.black),
+        underline: Container(),
+        value: dropDownValue,
+        selectedItemBuilder: (context) {
+          return <String>["Today", "1 week", "2 week", "1 month"].map((String value) {
+            return Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(right: 10),
+              child: Text(
+                dropDownValue,
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            );
+          }).toList();
+        },
+        items: <String>["Today", "1 week", "2 week", "1 month"].map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(
+              value,
+              style: TextStyle(fontSize: 14.sf),
+            ),
+          );
+        }).toList(),
+        onChanged: (value) {
+          setState(() {
+            dropDownValue = value;
+            BlocProvider.of<ClientDetailsCubit>(context).filterMedications(value);
+          });
+        },
+      ),
     );
   }
 }

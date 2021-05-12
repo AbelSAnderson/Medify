@@ -102,10 +102,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
     var date = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
     _selectedEvents = _events[date] ?? [];
 
-    if (_calendarCreated) {
-      _calendarController.setCalendarFormat(MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week);
-    }
+    // if (_calendarCreated) {
+    //   _calendarController.setCalendarFormat(MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week);
+    // }
     return TableCalendar(
+      key: UniqueKey(),
       calendarController: _calendarController,
       events: _events,
       startingDayOfWeek: StartingDayOfWeek.sunday,
