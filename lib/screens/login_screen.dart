@@ -201,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: BlocProvider<NavBarCubit>(
                       create: (context) => NavBarCubit(RepositoryProvider.of<UserRepository>(context)),
                       child: MyHomePage(
-                        title: 'Medify',
+                        title: 'RX-Medify',
                       ),
                     ),
                   ),

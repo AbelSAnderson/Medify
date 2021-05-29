@@ -11,6 +11,7 @@ import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/widgets/change_password_dialog.dart';
 import 'package:medify/widgets/confirmation_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'home_screen.dart';
 import 'login_screen.dart';
@@ -22,6 +23,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   var _sliderValue = 1.5;
+  var _termsURL = "https://www.websitepolicies.com/policies/view/4TSzq882";
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _fontSizeSection(),
               _caregiverModeSection(),
               _changePasswordSection(),
+              _termsAndConditionsSection(),
               _logoutSection(),
             ],
           ),
@@ -174,6 +177,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       },
     );
+  }
+
+  Widget _termsAndConditionsSection() {
+    return InkWell(
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.sv),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Terms & Conditions",
+                  style: TextStyle(fontSize: 18.sf),
+                ),
+                Icon(
+                  Icons.keyboard_arrow_right,
+                  size: 24.sf,
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            thickness: 2,
+            height: 0,
+          ),
+        ],
+      ),
+      onTap: () {
+        _launchTermsURL();
+      },
+    );
+  }
+
+  void _launchTermsURL() async {
+    var canLaunchUrl = await canLaunch(_termsURL);
+    if (canLaunchUrl) {
+      await launch(_termsURL);
+    }
   }
 
   Widget _logoutSection() {

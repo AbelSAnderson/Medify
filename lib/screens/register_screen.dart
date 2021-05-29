@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -8,6 +9,7 @@ import 'package:medify/repositories/medication_info_repository.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/login_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'home_screen.dart';
 
@@ -28,6 +30,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var showPassword = false;
   var showConfirmPassword = false;
 
+  var _termsURL = "https://www.websitepolicies.com/policies/view/4TSzq882";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 15.sv),
                   child: Text(
-                    "Medify",
+                    "RX-Medify",
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.w900,
@@ -64,6 +68,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         SizedBox(height: 12.5.sv),
                         _pharmacyNumField(),
                         SizedBox(height: 12.5.sv),
+                        _termsAndConditionsSection(context),
+                        SizedBox(height: 6.5.sv),
                         _registerAsSectionProvider(context),
                         SizedBox(height: 12.5.sv),
                         _loginButtonSection(context),
@@ -263,6 +269,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ],
     );
+  }
+
+  Widget _termsAndConditionsSection(BuildContext context) {
+    return Container(
+      child: RichText(
+        text: TextSpan(
+          text: "By signing up, you agree to the ",
+          style: TextStyle(color: Colors.black, fontSize: 14.0.sf),
+          children: [
+            TextSpan(
+              text: "Terms & Conditions",
+              style: TextStyle(color: Colors.blue, fontSize: 14.0.sf),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  _launchTermsURL();
+                },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _launchTermsURL() async {
+    var canLaunchUrl = await canLaunch(_termsURL);
+    if (canLaunchUrl) {
+      await launch(_termsURL);
+    }
   }
 
   Widget _registerAsSectionProvider(BuildContext context) {

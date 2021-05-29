@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
           ),
         );
       },
-      title: 'Medify',
+      title: 'RX-Medify',
       theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: MaterialColor(0xFF3458a6, colors),
