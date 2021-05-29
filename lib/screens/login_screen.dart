@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 30.sv),
                   child: Text(
-                    "Medify",
+                    "RX-Medify",
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.w900,

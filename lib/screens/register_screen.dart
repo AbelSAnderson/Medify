@@ -333,7 +333,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: BlocProvider<NavBarCubit>(
                       create: (context) => NavBarCubit(RepositoryProvider.of<UserRepository>(context)),
                       child: MyHomePage(
-                        title: 'Medify',
+                        title: 'RX-Medify',
                       ),
                     ),
                   ),
