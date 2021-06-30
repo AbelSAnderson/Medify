@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:medify/database/api_handler.dart';
 import 'package:medify/database/model_queries/user_queries.dart';
 import 'package:medify/database/models/user.dart';
@@ -11,8 +12,8 @@ class LoginCubit extends Cubit<LoginState> {
   final UserRepository userRepository;
   LoginCubit(this.userRepository) : super(LoginInitial());
 
-  loginUser(String email, String password) async {
-    emit(LoginValidating());
+  loginUser(String email, String password, bool attemptingInitialLogin) async {
+    if (!attemptingInitialLogin) emit(LoginValidating());
 
     try {
       var jsonResponse = await new UserQueries().login(email, password);
@@ -22,6 +23,11 @@ class LoginCubit extends Cubit<LoginState> {
         var user = User.fromJson(jsonResponse['success']['user']);
         userRepository.updateUser(user);
         userRepository.password = password;
+        try {
+          _saveLoginInfo(email, password);
+        } catch (e) {
+          print(e.toString());
+        }
         emit(LoginSucceeded());
       } else if (jsonResponse['error'] != null) {
         emit(LoginFailed(jsonResponse['error']));
@@ -31,6 +37,19 @@ class LoginCubit extends Cubit<LoginState> {
     } catch (exception) {
       emit(LoginFailed("Incorrect Email or Password"));
       return;
+    }
+  }
+
+  Future<void> checkIfLoggedIn() async {
+    var secureStorage = FlutterSecureStorage();
+    var isLoggedIn = await secureStorage.read(key: "isLoggedIn");
+
+    if (isLoggedIn == "true") {
+      var email = await secureStorage.read(key: "email");
+      var password = await secureStorage.read(key: "password");
+      loginUser(email, password, true);
+    } else {
+      emit(LoginInitial(attemptingInitialLogin: false));
     }
   }
 
@@ -54,6 +73,17 @@ class LoginCubit extends Cubit<LoginState> {
     } catch (exception) {
       emit(LoginFailed("Email is already taken"));
       return;
+    }
+  }
+
+  Future<void> _saveLoginInfo(String email, String password) async {
+    var secureStorage = FlutterSecureStorage();
+    var isLoggedIn = await secureStorage.read(key: "isLoggedIn");
+
+    if (isLoggedIn != "true") {
+      secureStorage.write(key: "isLoggedIn", value: "true");
+      secureStorage.write(key: "email", value: email);
+      secureStorage.write(key: "password", value: password);
     }
   }
 }
