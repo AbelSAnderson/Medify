@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:medify/cubit/login_cubit.dart';
 import 'package:medify/cubit/remember_me_cubit.dart';
 import 'package:medify/cubit/settings_cubit.dart';
@@ -24,15 +23,13 @@ void main() async {
   HttpOverrides.global = new MyHttpOverrides();
 
   runApp(
-    Phoenix(
-      child: MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider(
-            create: (context) => UserRepository(),
-          ),
-        ],
-        child: MyApp(),
-      ),
+    MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(
+          create: (context) => UserRepository(),
+        ),
+      ],
+      child: MyApp(),
     ),
   );
 }

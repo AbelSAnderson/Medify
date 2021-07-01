@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:medify/cubit/change_password_cubit.dart';
 import 'package:medify/cubit/login_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
