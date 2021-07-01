@@ -8,17 +8,13 @@ abstract class LoginState extends Equatable {
 }
 
 class LoginInitial extends LoginState {
-  final bool attemptingInitialLogin;
-
-  LoginInitial({this.attemptingInitialLogin = true});
+  LoginInitial();
 
   @override
-  List<Object> get props => [attemptingInitialLogin];
+  List<Object> get props => [];
 }
 
 class LoginValidating extends LoginState {
-  LoginValidating();
-
   @override
   List<Object> get props => [];
 }

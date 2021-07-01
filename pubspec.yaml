@@ -83,6 +83,7 @@ flutter:
     - assets/images/sun_selected.png
     - assets/images/tear_selected.png
     - assets/images/elephant.png
+    - assets/launcher_icons/RXMedifyLogo.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

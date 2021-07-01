@@ -31,57 +31,47 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
-        if (state is LoginInitial) {
-          if (state.attemptingInitialLogin == true) {
-            BlocProvider.of<LoginCubit>(context).checkIfLoggedIn();
-            return Container();
-          }
-        }
-        return SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 30.sv),
-                    child: Text(
-                      "RX-Medify",
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 42.sf,
-                        fontStyle: FontStyle.italic,
-                      ),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: 30.sv),
+                  child: Text(
+                    "RX-Medify",
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 42.sf,
+                      fontStyle: FontStyle.italic,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 50.sh),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _emailField(),
-                          SizedBox(height: 20.sv),
-                          _passwordField(),
-                          _resetPasswordButton(context),
-                          SizedBox(height: 20.sv),
-                          _loginButtonProvider(context),
-                          SizedBox(
-                            height: 20.sv,
-                          ),
-                          _signUpButtonSection(context),
-                        ],
-                      ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 50.sh),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _emailField(),
+                        SizedBox(height: 20.sv),
+                        _passwordField(),
+                        _resetPasswordButton(context),
+                        SizedBox(height: 20.sv),
+                        _loginButtonProvider(context),
+                        SizedBox(height: 20.sv),
+                        _signUpButtonSection(context),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        );
-      }),
+        ),
+      ),
     );
   }
 
@@ -176,11 +166,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _loginButtonProvider(BuildContext context) {
-    return BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
+    return BlocConsumer<LoginCubit, LoginState>(listener: (context, state) {
+      if (state is LoginSucceeded) {
+        _navigateToHome();
+      }
+    }, builder: (context, state) {
       if (state is LoginInitial) {
         return _loginButton(context);
       } else if (state is LoginValidating) {
-        print("hey");
         return Center(child: CircularProgressIndicator.adaptive());
       } else if (state is LoginFailed) {
         return Column(children: [
@@ -194,33 +187,33 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ]);
-      } else if (state is LoginSucceeded) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => MultiRepositoryProvider(
-                    providers: [
-                      RepositoryProvider(
-                        create: (context) => MedicationEventRepository(),
-                      ),
-                      RepositoryProvider(
-                        create: (context) => MedicationInfoRepository(),
-                      ),
-                    ],
-                    child: BlocProvider<NavBarCubit>(
-                      create: (context) => NavBarCubit(RepositoryProvider.of<UserRepository>(context)),
-                      child: MyHomePage(
-                        title: 'RX-Medify',
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            });
-        return Center(child: CircularProgressIndicator.adaptive());
       }
       return Container();
     });
+  }
+
+  _navigateToHome() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => MultiRepositoryProvider(
+          providers: [
+            RepositoryProvider(
+              create: (context) => MedicationEventRepository(),
+            ),
+            RepositoryProvider(
+              create: (context) => MedicationInfoRepository(),
+            ),
+          ],
+          child: BlocProvider<NavBarCubit>(
+            create: (context) => NavBarCubit(RepositoryProvider.of<UserRepository>(context)),
+            child: MyHomePage(
+              title: 'RX-Medify',
+            ),
+          ),
+        ),
+      ),
+      (Route<dynamic> route) => false,
+    );
   }
 
   Widget _loginButton(BuildContext context) {
@@ -233,7 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         onPressed: () {
           if (_formKey.currentState.validate()) {
-            BlocProvider.of<LoginCubit>(context).loginUser(emailController.text, passwordController.text, false);
+            BlocProvider.of<LoginCubit>(context).loginUser(emailController.text, passwordController.text);
           }
         },
         color: Theme.of(context).primaryColor,

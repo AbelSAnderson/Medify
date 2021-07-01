@@ -248,9 +248,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         showDialog(
           context: context,
           builder: (context) => ConfirmationDialog(
-            confirmClicked: () => {
+            confirmClicked: () async {
               //Phoenix (Flutter package) allows you to rebuild the entire widget tree (refreshes app)
-              Phoenix.rebirth(context)
+              await BlocProvider.of<SettingsCubit>(context).logout();
+              _navigateToLogin();
             },
             title: "Logout",
             message: "Are you sure you want to logout?",
@@ -258,6 +259,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         );
       },
+    );
+  }
+
+  _navigateToLogin() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => BlocProvider<LoginCubit>(
+          create: (context) => LoginCubit(RepositoryProvider.of<UserRepository>(context)),
+          child: LoginScreen(),
+        ),
+      ),
+      (Route<dynamic> route) => false,
     );
   }
 }

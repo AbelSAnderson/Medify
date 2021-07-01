@@ -12,8 +12,8 @@ class LoginCubit extends Cubit<LoginState> {
   final UserRepository userRepository;
   LoginCubit(this.userRepository) : super(LoginInitial());
 
-  loginUser(String email, String password, bool attemptingInitialLogin) async {
-    if (!attemptingInitialLogin) emit(LoginValidating());
+  loginUser(String email, String password) async {
+    emit(LoginValidating());
 
     try {
       var jsonResponse = await new UserQueries().login(email, password);
@@ -37,19 +37,6 @@ class LoginCubit extends Cubit<LoginState> {
     } catch (exception) {
       emit(LoginFailed("Incorrect Email or Password"));
       return;
-    }
-  }
-
-  Future<void> checkIfLoggedIn() async {
-    var secureStorage = FlutterSecureStorage();
-    var isLoggedIn = await secureStorage.read(key: "isLoggedIn");
-
-    if (isLoggedIn == "true") {
-      var email = await secureStorage.read(key: "email");
-      var password = await secureStorage.read(key: "password");
-      loginUser(email, password, true);
-    } else {
-      emit(LoginInitial(attemptingInitialLogin: false));
     }
   }
 

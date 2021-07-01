@@ -4,12 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:medify/cubit/login_cubit.dart';
+import 'package:medify/cubit/remember_me_cubit.dart';
 import 'package:medify/cubit/settings_cubit.dart';
 import 'package:medify/database/database_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/login_screen.dart';
+import 'package:medify/screens/splash_screen.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
 void main() async {
@@ -51,6 +53,7 @@ class MyApp extends StatelessWidget {
       800: Color.fromRGBO(52, 88, 166, 0.9),
       900: Color.fromRGBO(52, 88, 166, 1),
     };
+    precacheImage(AssetImage("assets/launcher_icons/RXMedifyLogo.png"), context);
     return MaterialApp(
       builder: (context, child) {
         //Setup scaling for mobile (this is independent from the ResponsiveWrapper Scaling for Tablets)
@@ -89,9 +92,9 @@ class MyApp extends StatelessWidget {
         accentColor: Color.fromRGBO(175, 0, 233, 1),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: BlocProvider<LoginCubit>(
-        create: (context) => LoginCubit(RepositoryProvider.of<UserRepository>(context)),
-        child: LoginScreen(),
+      home: BlocProvider<RememberMeCubit>(
+        create: (context) => RememberMeCubit(RepositoryProvider.of<UserRepository>(context)),
+        child: SplashScreen(),
       ),
     );
   }
