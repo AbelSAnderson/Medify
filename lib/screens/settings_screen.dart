@@ -249,7 +249,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           context: context,
           builder: (context) => ConfirmationDialog(
             confirmClicked: () async {
-              //Phoenix (Flutter package) allows you to rebuild the entire widget tree (refreshes app)
               await BlocProvider.of<SettingsCubit>(context).logout();
               _navigateToLogin();
             },
