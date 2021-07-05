@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:medify/database/model_queries/user_queries.dart';
 import 'package:medify/database/api_handler.dart';
 import 'package:medify/database/model_queries/user_queries.dart';
 import 'package:medify/database/models/user.dart';
@@ -20,6 +23,7 @@ class LoginCubit extends Cubit<LoginState> {
       if (jsonResponse['success'] != null) {
         // Update the APi token & retrieve the user from the response
         ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['success']['token']);
+        print("Bearer " + jsonResponse['success']['token']);
         var user = User.fromJson(jsonResponse['success']['user']);
         userRepository.updateUser(user);
         userRepository.password = password;
@@ -44,12 +48,15 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginValidating());
 
     try {
+      pharmacyPhoneNumber = pharmacyPhoneNumber != "" ? pharmacyPhoneNumber : null;
       var jsonResponse = await new UserQueries().register(name, email, password, pharmacyPhoneNumber, isCaregiver);
 
       if (jsonResponse['status']) {
-        ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['data']['token']);
+        await ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['data']['token']);
         var user = User.fromJson(jsonResponse['data']['user']);
         userRepository.updateUser(user);
+        _saveLoginInfo(email, password);
+        UserQueries().verifyRequest(email);
 
         emit(LoginSucceeded());
       } else {
@@ -59,6 +66,7 @@ class LoginCubit extends Cubit<LoginState> {
       }
     } catch (exception) {
       emit(LoginFailed("Email is already taken"));
+      print(exception.toString());
       return;
     }
   }
@@ -72,5 +80,11 @@ class LoginCubit extends Cubit<LoginState> {
       secureStorage.write(key: "email", value: email);
       secureStorage.write(key: "password", value: password);
     }
+  }
+
+  @override
+  Future<void> close() {
+    userRepository.streamController.close();
+    return super.close();
   }
 }

@@ -1,4 +1,4 @@
-import 'package:medify/database/api_handler.dart';
+import 'package:medify/Database/api_handler.dart';
 import 'package:medify/database/models/user.dart';
 import 'package:medify/database/database_query_base.dart';
 
@@ -30,7 +30,7 @@ class UserQueries extends DatabaseQueryBase<User> {
 
   Future<Map<String, dynamic>> register(String name, String email, String password, String pharmacyPhone, int isCaregiver) async {
     var body = {'name': name, 'email': email, 'password': password, 'pharmacy_number': pharmacyPhone, 'is_caregiver': isCaregiver};
-
+    print(body);
     var jsonData = await ApiHandler.medifyAPI().getPostData("users", body, filterResponse: false);
     return jsonData;
   }
@@ -41,5 +41,9 @@ class UserQueries extends DatabaseQueryBase<User> {
 
   Future<Map<String, dynamic>> resetPassword(String email) async {
     return await ApiHandler.medifyAPI().getPostData("resetPassword", {'email': email}, filterResponse: false);
+  }
+
+  Future<void> verifyRequest(String email) async {
+    return await ApiHandler.medifyAPI().getPostData("user/verify", {'email': email}, filterResponse: false);
   }
 }

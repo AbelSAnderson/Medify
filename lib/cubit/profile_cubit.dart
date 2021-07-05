@@ -25,6 +25,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   @override
   Future<void> close() {
     userRepository.streamController.close();
+    print("hey");
     return super.close();
   }
 }
