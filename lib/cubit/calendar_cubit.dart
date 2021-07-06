@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:medify/database/model_queries/medication_event_queries.dart';
@@ -10,9 +12,10 @@ part 'calendar_state.dart';
 class CalendarCubit extends Cubit<CalendarState> {
   final MedicationEventQueries medicationEventQueries;
   final MedicationEventRepository medicationEventRepository;
+  StreamSubscription _streamSubscription;
 
   CalendarCubit(this.medicationEventQueries, this.medicationEventRepository) : super(CalendarInitial()) {
-    medicationEventRepository.streamController.stream.listen((events) {
+    _streamSubscription = medicationEventRepository.streamController.stream.listen((events) {
       emit(CalendarLoadInProgress());
       _wait();
       var medicationEventsMapped = _createMedicationEventsMap(events);
@@ -113,7 +116,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 
   @override
   Future<void> close() {
-    medicationEventRepository.streamController.close();
+    _streamSubscription.cancel();
     return super.close();
   }
 }

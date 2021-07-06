@@ -4,10 +4,14 @@ import 'package:medify/database/models/user.dart';
 import 'package:medify/database/model_queries/user_queries.dart';
 
 class UserRepository {
-  final StreamController<User> streamController = StreamController();
+  final StreamController<User> streamController = StreamController<User>.broadcast();
   User currentUser;
   String password;
   final UserQueries userQueries = UserQueries();
+
+  UserRepository() {
+    streamController.stream.asBroadcastStream(onCancel: (stream) => stream.cancel());
+  }
 
   Future<void> updateUser(User user) async {
     currentUser = user;

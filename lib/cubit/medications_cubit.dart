@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:medify/database/model_queries/medication_info_queries.dart';
@@ -13,10 +15,11 @@ class MedicationsCubit extends Cubit<MedicationsState> {
   final MedicationInfoRepository medicationInfoRepository;
   final UserRepository userRepository;
   final MedicationEventRepository medicationEventRepository;
+  StreamSubscription _streamSubscription;
 
   MedicationsCubit(this.medicationInfoQueries, this.medicationInfoRepository, this.userRepository, this.medicationEventRepository) : super(MedicationsInitial()) {
     //whenever medication info list changes, update state with new data
-    medicationInfoRepository.streamController.stream.listen((data) async {
+    _streamSubscription = medicationInfoRepository.streamController.stream.listen((data) {
       emit(MedicationsLoading());
       _wait();
       emit(MedicationsLoaded(data));
@@ -55,7 +58,7 @@ class MedicationsCubit extends Cubit<MedicationsState> {
 
   @override
   Future<void> close() {
-    medicationEventRepository.streamController.close();
+    _streamSubscription.cancel();
     return super.close();
   }
 }

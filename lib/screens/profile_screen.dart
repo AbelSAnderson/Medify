@@ -59,6 +59,10 @@ class ProfileScreen extends StatelessWidget {
       ),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
+          if (state is ProfileInitial) {
+            var user = RepositoryProvider.of<UserRepository>(context).currentUser;
+            BlocProvider.of<ProfileCubit>(context).loadProfile(user);
+          }
           if (state is ProfileLoading) {
             return Center(
               child: CircularProgressIndicator.adaptive(),

@@ -23,7 +23,6 @@ class LoginCubit extends Cubit<LoginState> {
       if (jsonResponse['success'] != null) {
         // Update the APi token & retrieve the user from the response
         ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['success']['token']);
-        print("Bearer " + jsonResponse['success']['token']);
         var user = User.fromJson(jsonResponse['success']['user']);
         userRepository.updateUser(user);
         userRepository.password = password;
@@ -55,7 +54,11 @@ class LoginCubit extends Cubit<LoginState> {
         await ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['data']['token']);
         var user = User.fromJson(jsonResponse['data']['user']);
         userRepository.updateUser(user);
-        _saveLoginInfo(email, password);
+        try {
+          _saveLoginInfo(email, password);
+        } catch (e) {
+          print(e.toString());
+        }
         UserQueries().verifyRequest(email);
 
         emit(LoginSucceeded());
@@ -84,7 +87,6 @@ class LoginCubit extends Cubit<LoginState> {
 
   @override
   Future<void> close() {
-    userRepository.streamController.close();
     return super.close();
   }
 }
