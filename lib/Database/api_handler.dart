@@ -65,6 +65,8 @@ class ApiHandler {
   Future<dynamic> getPutData(String url, Map<String, dynamic> body, {bool filterResponse = true}) async {
     var responseJson;
     try {
+      print(_getHeaders().toString());
+      print(_token);
       final response = await http.put(Uri.parse(this.url + url), headers: _getHeaders(), body: jsonEncode(body));
       responseJson = _returnResponse(response);
     } on SocketException {

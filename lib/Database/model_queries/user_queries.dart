@@ -1,4 +1,4 @@
-import 'package:medify/Database/api_handler.dart';
+import 'package:medify/database/api_handler.dart';
 import 'package:medify/database/models/user.dart';
 import 'package:medify/database/database_query_base.dart';
 
@@ -35,6 +35,8 @@ class UserQueries extends DatabaseQueryBase<User> {
   }
 
   Future<void> changePassword(User user, String password) async {
+    print("Email: " + user.email);
+    print("Password: " + password);
     await ApiHandler.medifyAPI().getPutData("users/${user.id}", {"email": user.email, "password": password});
   }
 
