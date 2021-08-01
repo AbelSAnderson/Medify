@@ -99,7 +99,7 @@ class ShowMedicationsList extends StatelessWidget {
               style: TextStyle(fontSize: 18.sf),
             ),
             subtitle: Text(
-              formatDate(med.datetime, ["MM", " ", "d", ", ", "yyyy", " at ", "h", ":", "mm", "am"]),
+              formatDate(med.datetime, ["MM", " ", "d", ", ", "yyyy", " at ", "h", ":", "nn", "am"]),
               style: TextStyle(fontSize: 14.sf),
             ),
             leading: Image(
