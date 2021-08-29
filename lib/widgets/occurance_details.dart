@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/constants.dart';
 import 'package:medify/cubit/medications_cubit.dart';
-import 'package:medify/database/models/medication_info.dart';
+import 'package:medify/database1/models/medication_info.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/widgets/confirmation_dialog.dart';
@@ -105,43 +105,54 @@ class OccuranceDetails extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                PlatformButton(
-                  child: Text(
-                    "Contact Pharmacy",
-                    style: TextStyle(fontSize: 14.sf, color: Colors.white),
+                Flexible(
+                  flex: 2,
+                  child: PlatformButton(
+                    child: Text(
+                      "Contact Pharmacy",
+                      style: TextStyle(fontSize: 14.sf, color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                    onPressed: () {
+                      //Show phone dialler
+                      _launchCaller(context, RepositoryProvider.of<UserRepository>(context).currentUser.pharmacyNumber);
+                    },
+                    cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+                    material: (context, platform) => MaterialRaisedButtonData(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                    ),
+                    color: Theme.of(context).primaryColor,
                   ),
-                  onPressed: () {
-                    //Show phone dialler
-                    _launchCaller(context, RepositoryProvider.of<UserRepository>(context).currentUser.pharmacyNumber);
-                  },
-                  cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
-                  material: (context, platform) => MaterialRaisedButtonData(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-                  ),
-                  color: Theme.of(context).primaryColor,
                 ),
-                PlatformButton(
-                  child: Text(
-                    "Remove Medication",
-                    style: TextStyle(fontSize: 14.sf, color: Colors.white),
+                Flexible(
+                  flex: 2,
+                  child: PlatformButton(
+                    child: Text(
+                      "Remove Medication",
+                      style: TextStyle(fontSize: 14.sf, color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (newContext) => BlocProvider.value(
+                          value: BlocProvider.of<MedicationsCubit>(context),
+                          child: ConfirmationDialog(
+                            confirmClicked: () => BlocProvider.of<MedicationsCubit>(context).deleteMedication(medication),
+                            title: "Remove Medication",
+                            message: "Are you sure you want to remove this medication?",
+                            buttonTitle: "Remove",
+                            popScreen: true,
+                          ),
+                        ),
+                      );
+                    },
+                    cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+                    material: (context, platform) => MaterialRaisedButtonData(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                    ),
+                    color: Colors.red,
                   ),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => ConfirmationDialog(
-                        confirmClicked: () => BlocProvider.of<MedicationsCubit>(context).deleteMedication(medication),
-                        title: "Remove Medication",
-                        message: "Are you sure you want to remove this medication?",
-                        buttonTitle: "Remove",
-                        popScreen: true,
-                      ),
-                    );
-                  },
-                  cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
-                  material: (context, platform) => MaterialRaisedButtonData(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-                  ),
-                  color: Colors.red,
                 ),
               ],
             ),

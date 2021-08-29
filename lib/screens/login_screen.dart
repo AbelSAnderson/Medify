@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/login_cubit.dart';
+import 'package:medify/cubit/nav_bar_cubit.dart';
+import 'package:medify/cubit/reset_password_cubit.dart';
+import 'package:medify/repositories/medication_event_repository.dart';
+import 'package:medify/repositories/medication_info_repository.dart';
+import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/register_screen.dart';
 import 'package:medify/widgets/reset_password_dialog.dart';
@@ -34,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 30.sv),
                   child: Text(
-                    "Medify",
+                    "RX-Medify",
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.w900,
@@ -56,9 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         _resetPasswordButton(context),
                         SizedBox(height: 20.sv),
                         _loginButtonProvider(context),
-                        SizedBox(
-                          height: 20.sv,
-                        ),
+                        SizedBox(height: 20.sv),
                         _signUpButtonSection(context),
                       ],
                     ),
@@ -152,7 +155,10 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: () {
           showDialog(
             context: context,
-            builder: (context) => ResetPasswordDialog(),
+            builder: (context) => BlocProvider<ResetPasswordCubit>(
+              create: (context) => ResetPasswordCubit(),
+              child: ResetPasswordDialog(),
+            ),
           );
         },
       ),
@@ -160,7 +166,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _loginButtonProvider(BuildContext context) {
-    return BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
+    return BlocConsumer<LoginCubit, LoginState>(listener: (context, state) {
+      if (state is LoginSucceeded) {
+        _navigateToHome();
+      }
+    }, builder: (context, state) {
       if (state is LoginInitial) {
         return _loginButton(context);
       } else if (state is LoginValidating) {
@@ -177,18 +187,33 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ]);
-      } else if (state is LoginSucceeded) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => MyHomePage(
-                  title: 'Medify',
-                ),
-              ))
-            });
-        return Center(child: CircularProgressIndicator.adaptive());
       }
       return Container();
     });
+  }
+
+  _navigateToHome() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => MultiRepositoryProvider(
+          providers: [
+            RepositoryProvider(
+              create: (context) => MedicationEventRepository(),
+            ),
+            RepositoryProvider(
+              create: (context) => MedicationInfoRepository(),
+            ),
+          ],
+          child: BlocProvider<NavBarCubit>(
+            create: (context) => NavBarCubit(RepositoryProvider.of<UserRepository>(context)),
+            child: MyHomePage(
+              title: 'RX-Medify',
+            ),
+          ),
+        ),
+      ),
+      (Route<dynamic> route) => false,
+    );
   }
 
   Widget _loginButton(BuildContext context) {
@@ -202,12 +227,6 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: () {
           if (_formKey.currentState.validate()) {
             BlocProvider.of<LoginCubit>(context).loginUser(emailController.text, passwordController.text);
-
-            // Navigator.of(context).pushReplacement(MaterialPageRoute(
-            //   builder: (context) => MyHomePage(
-            //     title: 'Medify',
-            //   ),
-            // ));
           }
         },
         color: Theme.of(context).primaryColor,
@@ -234,9 +253,11 @@ class _LoginScreenState extends State<LoginScreen> {
             style: TextStyle(fontSize: 14.sf),
           ),
           onPressed: () {
-            BlocProvider.of<LoginCubit>(context).resetState();
             Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => RegisterScreen(),
+              builder: (context) => BlocProvider<LoginCubit>(
+                create: (context) => LoginCubit(RepositoryProvider.of<UserRepository>(context)),
+                child: RegisterScreen(),
+              ),
             ));
           },
         ),

@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:medify/database/model_queries/caregivers_queries.dart';
-import 'package:medify/database/models/user.dart';
+import 'package:medify/database1/model_queries/caregivers_queries.dart';
+import 'package:medify/database1/models/user.dart';
 
 part 'caregivers_state.dart';
 

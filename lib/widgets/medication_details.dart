@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:medify/database/models/medication.dart';
+import 'package:medify/database1/models/medication.dart';
 import 'package:medify/scale.dart';
 
 class MedicationDetails extends StatefulWidget {
@@ -57,9 +57,12 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Purpose",
-                      style: TextStyle(fontSize: 22.sf),
+                    Flexible(
+                      flex: 4,
+                      child: Text(
+                        "Purpose",
+                        style: TextStyle(fontSize: 22.sf),
+                      ),
                     ),
                     PlatformIconButton(
                       padding: EdgeInsets.all(0),
@@ -94,9 +97,12 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Warnings",
-                      style: TextStyle(fontSize: 22.sf),
+                    Flexible(
+                      flex: 4,
+                      child: Text(
+                        "Warnings",
+                        style: TextStyle(fontSize: 22.sf),
+                      ),
                     ),
                     PlatformIconButton(
                       padding: EdgeInsets.all(0),
@@ -131,9 +137,12 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Dosage & Administration",
-                      style: TextStyle(fontSize: 22.sf),
+                    Flexible(
+                      flex: 4,
+                      child: Text(
+                        "Dosage & Administration",
+                        style: TextStyle(fontSize: 22.sf),
+                      ),
                     ),
                     PlatformIconButton(
                       padding: EdgeInsets.all(0),
@@ -168,9 +177,12 @@ class _MedicationDetailsState extends State<MedicationDetails> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Active Ingredients",
-                      style: TextStyle(fontSize: 22.sf),
+                    Flexible(
+                      flex: 4,
+                      child: Text(
+                        "Active Ingredients",
+                        style: TextStyle(fontSize: 22.sf),
+                      ),
                     ),
                     PlatformIconButton(
                       padding: EdgeInsets.all(0),

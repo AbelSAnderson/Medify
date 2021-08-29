@@ -1,9 +1,15 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/login_cubit.dart';
+import 'package:medify/cubit/nav_bar_cubit.dart';
+import 'package:medify/repositories/medication_event_repository.dart';
+import 'package:medify/repositories/medication_info_repository.dart';
+import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/login_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'home_screen.dart';
 
@@ -24,6 +30,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var showPassword = false;
   var showConfirmPassword = false;
 
+  var _termsURL = "https://www.websitepolicies.com/policies/view/4TSzq882";
+  var _privacyURL = "https://www.websitepolicies.com/policies/view/yamgMFnO";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +44,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 15.sv),
                   child: Text(
-                    "Medify",
+                    "RX-Medify",
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.w900,
@@ -60,6 +69,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         SizedBox(height: 12.5.sv),
                         _pharmacyNumField(),
                         SizedBox(height: 12.5.sv),
+                        _termsAndConditionsSection(context),
+                        SizedBox(height: 6.5.sv),
                         _registerAsSectionProvider(context),
                         SizedBox(height: 12.5.sv),
                         _loginButtonSection(context),
@@ -261,6 +272,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  Widget _termsAndConditionsSection(BuildContext context) {
+    return Container(
+      child: RichText(
+        text: TextSpan(
+          text: "By signing up, you agree to the ",
+          style: TextStyle(color: Colors.black, fontSize: 14.0.sf),
+          children: [
+            TextSpan(
+              text: "Terms & Conditions",
+              style: TextStyle(color: Colors.blue, fontSize: 14.0.sf),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  _launchURL(_termsURL);
+                },
+            ),
+            TextSpan(
+              text: " and ",
+              style: TextStyle(color: Colors.black, fontSize: 14.0.sf),
+            ),
+            TextSpan(
+              text: "Privacy Policy",
+              style: TextStyle(color: Colors.blue, fontSize: 14.0.sf),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  _launchURL(_privacyURL);
+                },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _launchURL(String url) async {
+    var canLaunchUrl = await canLaunch(url);
+    if (canLaunchUrl) {
+      await launch(url);
+    }
+  }
+
   Widget _registerAsSectionProvider(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
       if (state is LoginInitial) {
@@ -281,11 +332,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ]);
       } else if (state is LoginSucceeded) {
         WidgetsBinding.instance.addPostFrameCallback((_) => {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => MyHomePage(
-                  title: 'Medify',
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => MultiRepositoryProvider(
+                    providers: [
+                      RepositoryProvider(
+                        create: (context) => MedicationEventRepository(),
+                      ),
+                      RepositoryProvider(
+                        create: (context) => MedicationInfoRepository(),
+                      ),
+                    ],
+                    child: BlocProvider<NavBarCubit>(
+                      create: (context) => NavBarCubit(RepositoryProvider.of<UserRepository>(context)),
+                      child: MyHomePage(
+                        title: 'RX-Medify',
+                      ),
+                    ),
+                  ),
                 ),
-              ))
+              )
             });
         return Center(child: CircularProgressIndicator.adaptive());
       }
@@ -297,15 +363,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget _registerAsSection(BuildContext context) {
     return Column(
       children: [
-        // Text(
-        //   "Who do you want to register as?",
-        //   style: TextStyle(fontSize: 14.sf),
-        // ),
-        // Text(
-        //   "(You can change this later)",
-        //   style: TextStyle(fontSize: 14.sf),
-        // ),
-        // SizedBox(height: 12.5.sv),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -316,7 +373,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 style: TextStyle(fontSize: 12.sf, color: Colors.white),
               ),
               onPressed: () {
-                BlocProvider.of<LoginCubit>(context).resetState();
                 if (_formKey.currentState.validate()) {
                   BlocProvider.of<LoginCubit>(context).registerUser(nameController.text, emailController.text, passwordController.text, pharmacyNumberController.text, 0);
                 }
@@ -334,7 +390,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 style: TextStyle(fontSize: 12.sf, color: Colors.white),
               ),
               onPressed: () {
-                BlocProvider.of<LoginCubit>(context).resetState();
                 if (_formKey.currentState.validate()) {
                   BlocProvider.of<LoginCubit>(context).registerUser(nameController.text, emailController.text, passwordController.text, pharmacyNumberController.text, 1);
                 }
@@ -366,9 +421,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             style: TextStyle(fontSize: 14.sf),
           ),
           onPressed: () {
-            BlocProvider.of<LoginCubit>(context).resetState();
             Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => LoginScreen(),
+              builder: (context) => BlocProvider<LoginCubit>(
+                create: (context) => LoginCubit(RepositoryProvider.of<UserRepository>(context)),
+                child: LoginScreen(),
+              ),
             ));
           },
         ),

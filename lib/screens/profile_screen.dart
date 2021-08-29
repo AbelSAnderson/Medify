@@ -5,7 +5,10 @@ import 'package:medify/cubit/add_caregiver_cubit.dart';
 import 'package:medify/cubit/caregivers_cubit.dart';
 import 'package:medify/cubit/edit_profile_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
+import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/cubit/profile_cubit.dart';
+import 'package:medify/cubit/settings_cubit.dart';
+import 'package:medify/database1/model_queries/caregivers_queries.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/screens/medications_screen.dart';
 import 'package:medify/screens/settings_screen.dart';
@@ -27,8 +30,16 @@ class ProfileScreen extends StatelessWidget {
           onPressed: () {
             showDialog(
               context: context,
-              builder: (context) => EditProfileDialog(),
-            ).then((value) => BlocProvider.of<EditProfileCubit>(context).reloadState());
+              builder: (newContext) => BlocProvider.value(
+                value: BlocProvider.of<ProfileCubit>(context),
+                child: BlocProvider<EditProfileCubit>(
+                  create: (context) => EditProfileCubit(
+                    RepositoryProvider.of<UserRepository>(context),
+                  ),
+                  child: EditProfileDialog(),
+                ),
+              ),
+            );
           },
         ),
         actions: [
@@ -37,7 +48,10 @@ class ProfileScreen extends StatelessWidget {
             icon: Icon(Icons.settings, color: Colors.white),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => SettingsScreen(),
+                builder: (newContext) => BlocProvider.value(
+                  value: BlocProvider.of<NavBarCubit>(context),
+                  child: SettingsScreen(),
+                ),
               ));
             },
           ),
@@ -45,6 +59,10 @@ class ProfileScreen extends StatelessWidget {
       ),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
+          if (state is ProfileInitial) {
+            var user = RepositoryProvider.of<UserRepository>(context).currentUser;
+            BlocProvider.of<ProfileCubit>(context).loadProfile(user);
+          }
           if (state is ProfileLoading) {
             return Center(
               child: CircularProgressIndicator.adaptive(),
@@ -60,6 +78,7 @@ class ProfileScreen extends StatelessWidget {
                     child: Text(
                       RepositoryProvider.of<UserRepository>(context).currentUser.name,
                       style: TextStyle(fontSize: 32.sf),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   Padding(
@@ -98,7 +117,15 @@ class ProfileScreen extends StatelessWidget {
                                           textAlign: TextAlign.center,
                                         ),
                                         onPressed: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationsScreen(state.medications)));
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (newContext) => BlocProvider.value(
+                                                value: BlocProvider.of<MedicationsCubit>(context),
+                                                child: MedicationsScreen(state.medications),
+                                              ),
+                                            ),
+                                          );
                                         },
                                         material: (context, platform) => MaterialRaisedButtonData(
                                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
@@ -150,8 +177,11 @@ class ProfileScreen extends StatelessWidget {
                       onPressed: () {
                         showDialog(
                           context: context,
-                          builder: (context) => AddCaregiverAlertDialog(),
-                        ).then((value) => BlocProvider.of<AddCaregiverCubit>(context).resetState());
+                          builder: (context) => BlocProvider<AddCaregiverCubit>(
+                            create: (context) => AddCaregiverCubit(CaregiversQueries()),
+                            child: AddCaregiverAlertDialog(),
+                          ),
+                        );
                       },
                       material: (context, platform) => MaterialRaisedButtonData(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
@@ -218,11 +248,14 @@ class ProfileScreen extends StatelessWidget {
                             onPressed: () {
                               showDialog(
                                 context: context,
-                                builder: (context) => ConfirmationDialog(
-                                  confirmClicked: () => BlocProvider.of<CaregiversCubit>(context).removeCaregiver(caregiver),
-                                  title: "Remove Caregiver",
-                                  message: "Are you sure you want to remove this caregiver?",
-                                  buttonTitle: "Remove",
+                                builder: (newContext) => BlocProvider.value(
+                                  value: BlocProvider.of<CaregiversCubit>(context),
+                                  child: ConfirmationDialog(
+                                    confirmClicked: () => BlocProvider.of<CaregiversCubit>(context).removeCaregiver(caregiver),
+                                    title: "Remove Caregiver",
+                                    message: "Are you sure you want to remove this caregiver?",
+                                    buttonTitle: "Remove",
+                                  ),
                                 ),
                               );
                             },

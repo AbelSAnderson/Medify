@@ -5,8 +5,8 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/constants.dart';
 import 'package:medify/cubit/client_details_cubit.dart';
 import 'package:medify/cubit/clients_cubit.dart';
-import 'package:medify/database/models/medication_event.dart';
-import 'package:medify/database/models/user_connection.dart';
+import 'package:medify/database1/models/medication_event.dart';
+import 'package:medify/database1/models/user_connection.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/widgets/confirmation_dialog.dart';
 
@@ -17,11 +17,14 @@ class ClientDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<ClientDetailsCubit>(context).refreshState();
     return Scaffold(
       appBar: AppBar(
         title: Text(userConnection.user.name),
         actions: [
+          FilterMedicationsDropDown(),
+          SizedBox(
+            width: 14.sh,
+          ),
           PlatformIconButton(
             padding: EdgeInsets.all(0),
             icon: Icon(
@@ -31,12 +34,15 @@ class ClientDetailsScreen extends StatelessWidget {
             onPressed: () {
               showDialog(
                 context: context,
-                builder: (context) => ConfirmationDialog(
-                  confirmClicked: () => BlocProvider.of<ClientsCubit>(context).removeClient(userConnection),
-                  title: "Remove Client",
-                  message: "Are you sure you want to remove this client?",
-                  buttonTitle: "Remove",
-                  popScreen: true,
+                builder: (newContext) => BlocProvider.value(
+                  value: BlocProvider.of<ClientsCubit>(context),
+                  child: ConfirmationDialog(
+                    confirmClicked: () => BlocProvider.of<ClientsCubit>(context).removeClient(userConnection),
+                    title: "Remove Client",
+                    message: "Are you sure you want to remove this client?",
+                    buttonTitle: "Remove",
+                    popScreen: true,
+                  ),
                 ),
               );
             },
@@ -46,7 +52,7 @@ class ClientDetailsScreen extends StatelessWidget {
       body: BlocBuilder<ClientDetailsCubit, ClientDetailsState>(
         builder: (context, state) {
           if (state is ClientDetailsInitial) {
-            BlocProvider.of<ClientDetailsCubit>(context).loadClientMedications(userConnection.user.id);
+            _loadMeds(context);
           }
           if (state is ClientDetailsLoading) {
             return Center(
@@ -69,6 +75,11 @@ class ClientDetailsScreen extends StatelessWidget {
       ),
     );
   }
+
+  _loadMeds(BuildContext context) async {
+    await BlocProvider.of<ClientDetailsCubit>(context).loadClientMedications(userConnection.user.id);
+    BlocProvider.of<ClientDetailsCubit>(context).filterMedications("Today");
+  }
 }
 
 class ShowMedicationsList extends StatelessWidget {
@@ -88,7 +99,7 @@ class ShowMedicationsList extends StatelessWidget {
               style: TextStyle(fontSize: 18.sf),
             ),
             subtitle: Text(
-              formatDate(med.datetime, ["MM", " ", "d", ", ", "yyyy", " at ", "h", ":", "mm", "am"]),
+              formatDate(med.datetime, ["MM", " ", "d", ", ", "yyyy", " at ", "h", ":", "nn", "am"]),
               style: TextStyle(fontSize: 14.sf),
             ),
             leading: Image(
@@ -108,6 +119,55 @@ class ShowMedicationsList extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class FilterMedicationsDropDown extends StatefulWidget {
+  @override
+  _FilterMedicationsDropDownState createState() => _FilterMedicationsDropDownState();
+}
+
+class _FilterMedicationsDropDownState extends State<FilterMedicationsDropDown> {
+  String dropDownValue = "Today";
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      child: DropdownButton(
+        iconEnabledColor: Colors.white,
+        style: TextStyle(color: Colors.black),
+        underline: Container(),
+        value: dropDownValue,
+        selectedItemBuilder: (context) {
+          return <String>["Today", "1 week", "2 week", "1 month"].map((String value) {
+            return Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(right: 10),
+              child: Text(
+                dropDownValue,
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            );
+          }).toList();
+        },
+        items: <String>["Today", "1 week", "2 week", "1 month"].map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(
+              value,
+              style: TextStyle(fontSize: 14.sf),
+            ),
+          );
+        }).toList(),
+        onChanged: (value) {
+          setState(() {
+            dropDownValue = value;
+            BlocProvider.of<ClientDetailsCubit>(context).filterMedications(value);
+          });
+        },
+      ),
     );
   }
 }

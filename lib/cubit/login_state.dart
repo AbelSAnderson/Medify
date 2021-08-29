@@ -8,6 +8,8 @@ abstract class LoginState extends Equatable {
 }
 
 class LoginInitial extends LoginState {
+  LoginInitial();
+
   @override
   List<Object> get props => [];
 }
@@ -23,7 +25,6 @@ class LoginSucceeded extends LoginState {
 }
 
 class LoginFailed extends LoginState {
-
   final String errorMessage;
 
   LoginFailed(this.errorMessage);

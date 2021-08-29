@@ -28,7 +28,7 @@ class ApiHandler {
   }
 
   ApiHandler._medifyApi() {
-    url = "https://aanderson.scweb.ca/Medify-API/api/";
+    url = "https://rxmedify.com/medify_api/api/v1/";
     _dataName = "data";
     _useToken = true;
     retrieveToken();
@@ -40,7 +40,6 @@ class ApiHandler {
 
     try {
       final response = await http.get(Uri.parse(this.url + url), headers: _getHeaders());
-      print(response.toString());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -66,6 +65,8 @@ class ApiHandler {
   Future<dynamic> getPutData(String url, Map<String, dynamic> body, {bool filterResponse = true}) async {
     var responseJson;
     try {
+      print(_getHeaders().toString());
+      print(_token);
       final response = await http.put(Uri.parse(this.url + url), headers: _getHeaders(), body: jsonEncode(body));
       responseJson = _returnResponse(response);
     } on SocketException {

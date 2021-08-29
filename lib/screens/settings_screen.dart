@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/cubit/change_password_cubit.dart';
+import 'package:medify/cubit/login_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/cubit/settings_cubit.dart';
+import 'package:medify/repositories/medication_event_repository.dart';
+import 'package:medify/repositories/medication_info_repository.dart';
+import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/widgets/change_password_dialog.dart';
+import 'package:medify/widgets/confirmation_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'home_screen.dart';
+import 'login_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -13,6 +22,8 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   var _sliderValue = 1.5;
+  var _termsURL = "https://www.websitepolicies.com/policies/view/4TSzq882";
+  var _privacyURL = "https://www.websitepolicies.com/policies/view/yamgMFnO";
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +40,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _fontSizeSection(),
               _caregiverModeSection(),
               _changePasswordSection(),
+              _termsAndConditionsSection(),
+              _privacyPolicySection(),
+              _logoutSection(),
             ],
           ),
         ),
@@ -157,9 +171,138 @@ class _SettingsScreenState extends State<SettingsScreen> {
       onTap: () {
         showDialog(
           context: context,
-          builder: (context) => ChangePasswordDialog(),
-        ).then((value) => BlocProvider.of<ChangePasswordCubit>(context).resetState());
+          builder: (context) => BlocProvider<ChangePasswordCubit>(
+            create: (context) => ChangePasswordCubit(RepositoryProvider.of<UserRepository>(context)),
+            child: ChangePasswordDialog(),
+          ),
+        );
       },
+    );
+  }
+
+  Widget _termsAndConditionsSection() {
+    return InkWell(
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.sv),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Terms & Conditions",
+                  style: TextStyle(fontSize: 18.sf),
+                ),
+                Icon(
+                  Icons.keyboard_arrow_right,
+                  size: 24.sf,
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            thickness: 2,
+            height: 0,
+          ),
+        ],
+      ),
+      onTap: () {
+        _launchURL(_termsURL);
+      },
+    );
+  }
+
+  Widget _privacyPolicySection() {
+    return InkWell(
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.sv),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Privacy Policy",
+                  style: TextStyle(fontSize: 18.sf),
+                ),
+                Icon(
+                  Icons.keyboard_arrow_right,
+                  size: 24.sf,
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            thickness: 2,
+            height: 0,
+          ),
+        ],
+      ),
+      onTap: () {
+        _launchURL(_privacyURL);
+      },
+    );
+  }
+
+  void _launchURL(String url) async {
+    var canLaunchUrl = await canLaunch(url);
+    if (canLaunchUrl) {
+      await launch(url);
+    }
+  }
+
+  Widget _logoutSection() {
+    return InkWell(
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.sv),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Logout",
+                  style: TextStyle(fontSize: 18.sf),
+                ),
+                Icon(
+                  Icons.keyboard_arrow_right,
+                  size: 24.sf,
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            thickness: 2,
+            height: 0,
+          ),
+        ],
+      ),
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => ConfirmationDialog(
+            confirmClicked: () async {
+              await BlocProvider.of<SettingsCubit>(context).logout();
+              _navigateToLogin();
+            },
+            title: "Logout",
+            message: "Are you sure you want to logout?",
+            buttonTitle: "Logout",
+          ),
+        );
+      },
+    );
+  }
+
+  _navigateToLogin() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => BlocProvider<LoginCubit>(
+          create: (context) => LoginCubit(RepositoryProvider.of<UserRepository>(context)),
+          child: LoginScreen(),
+        ),
+      ),
+      (Route<dynamic> route) => false,
     );
   }
 }

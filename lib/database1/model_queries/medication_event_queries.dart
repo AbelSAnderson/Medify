@@ -1,5 +1,5 @@
-import 'package:medify/database/models/medication_event.dart';
-import 'package:medify/database/database_query_base.dart';
+import 'package:medify/database1/models/medication_event.dart';
+import 'package:medify/database1/database_query_base.dart';
 
 import '../api_handler.dart';
 

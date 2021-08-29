@@ -13,7 +13,6 @@ class EditProfileDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Text: " + nameController.text);
     return AlertDialog(
       scrollable: true,
       insetPadding: EdgeInsets.symmetric(horizontal: 20.sh, vertical: 20.sv),
