@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
     };
     precacheImage(AssetImage("assets/launcher_icons/RXMedifyLogo.png"), context);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       builder: (context, child) {
         //Setup scaling for mobile (this is independent from the ResponsiveWrapper Scaling for Tablets)
         Scale.setup(context, Size(411.43, 683.43));

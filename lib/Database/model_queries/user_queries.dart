@@ -1,4 +1,4 @@
-import 'package:medify/Database/api_handler.dart';
+import 'package:medify/database/api_handler.dart';
 import 'package:medify/database/models/user.dart';
 import 'package:medify/database/database_query_base.dart';
 

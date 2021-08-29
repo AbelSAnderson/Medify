@@ -28,7 +28,7 @@ class ApiHandler {
   }
 
   ApiHandler._medifyApi() {
-    url = "https://aanderson.scweb.ca/Medify_API/api/v1/";
+    url = "https://rxmedify.com/medify_api/api/v1/";
     _dataName = "data";
     _useToken = true;
     retrieveToken();
