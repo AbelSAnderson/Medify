@@ -1,12 +1,11 @@
-import 'package:medify/database/api_handler.dart';
-import 'package:medify/database/models/user.dart';
+import 'package:medify/database1/api_handler.dart';
+import 'package:medify/database1/models/user.dart';
 
 class CaregiversQueries {
   CaregiversQueries();
 
   Future<List<User>> retrieveAllFromApi() async {
     var jsonData = await ApiHandler.medifyAPI().getData("caregivers");
-    print(jsonData);
     return UserList.from(jsonData).users;
   }
 

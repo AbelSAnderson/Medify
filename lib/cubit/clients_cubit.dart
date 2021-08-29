@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:medify/database/model_queries/client_queries.dart';
-import 'package:medify/database/models/user_connection.dart';
+import 'package:medify/database1/model_queries/client_queries.dart';
+import 'package:medify/database1/models/user_connection.dart';
 
 part 'clients_state.dart';
 

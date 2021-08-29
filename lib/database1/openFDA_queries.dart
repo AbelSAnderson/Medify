@@ -2,7 +2,6 @@ import 'models/medication.dart';
 import 'api_handler.dart';
 
 class OpenFDAQueries {
-
   /// Retrieve multiple medications
   Future<List<Medication>> retrieveMedications(String apiParameters) async {
     return MedicationList.from(await ApiHandler.openFDA().getData("?$apiParameters")).medications;

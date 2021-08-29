@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/medication_form_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
-import 'package:medify/database/models/medication.dart';
+import 'package:medify/database1/models/medication.dart';
 import 'package:medify/widgets/medicine_type.dart';
 import 'package:date_format/date_format.dart';
 import 'medicine_type.dart';
@@ -96,8 +96,6 @@ class MedicationForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //reset the state everytime this screen opens
-    BlocProvider.of<MedicationFormCubit>(context).resetState();
     //set medication to the medication that is being added
     BlocProvider.of<MedicationFormCubit>(context).changeMedication(medication);
     //initial value for pill amount textfield
@@ -113,19 +111,13 @@ class MedicationForm extends StatelessWidget {
                 runSpacing: 10.sv,
                 children: [
                   _nameField(state.medication.brandName),
-                  // SizedBox(height: 20),
                   _repeatsField(context, state.interval),
-                  // SizedBox(height: 20),
                   _startDateField(context, state.startDate),
-                  // SizedBox(height: 20),
                   _timeField(context, state.time),
-                  // SizedBox(height: 20),
                   _pillAmountField(context, state),
-                  // SizedBox(height: 20),
                   MedicineType(onMedIndexChanged: (index) {
                     BlocProvider.of<MedicationFormCubit>(context).changeMedicationType(index);
                   }),
-                  // SizedBox(height: 20),
                   _submitButton(context),
                 ],
               ),

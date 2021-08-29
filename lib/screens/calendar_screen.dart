@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/constants.dart';
 import 'package:medify/cubit/calendar_cubit.dart';
-import 'package:medify/database/models/medication_event.dart';
+import 'package:medify/database1/models/medication_event.dart';
 import 'package:medify/widgets/confirmation_dialog.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:medify/scale.dart';
@@ -50,7 +50,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
           "Home",
         ),
       ),
-      body: BlocBuilder<CalendarCubit, CalendarState>(
+      body: BlocConsumer<CalendarCubit, CalendarState>(
+        listener: (context, state) {
+          if (state is CalendarLoaded) {
+            if (state.medsComplete == true) {
+              ScaffoldMessenger.of(context).showSnackBar(_showSnackBar());
+            }
+          }
+        },
         builder: (context, state) {
           if (state is CalendarInitial) {
             BlocProvider.of<CalendarCubit>(context).getAllMedicationEvents();
@@ -95,10 +102,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
     var date = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
     _selectedEvents = _events[date] ?? [];
 
-    if (_calendarCreated) {
-      _calendarController.setCalendarFormat(MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week);
-    }
+    // if (_calendarCreated) {
+    //   _calendarController.setCalendarFormat(MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week);
+    // }
     return TableCalendar(
+      key: UniqueKey(),
       calendarController: _calendarController,
       events: _events,
       startingDayOfWeek: StartingDayOfWeek.sunday,
@@ -200,6 +208,29 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
+  _showSnackBar() {
+    return SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Image(
+            image: AssetImage("assets/images/elephant.png"),
+            width: 32.sh,
+            height: 32.sv,
+          ),
+          Text(
+            "Congratulations!",
+            style: TextStyle(fontSize: 20.sf, color: Colors.black),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.symmetric(horizontal: 60.sh, vertical: 25.sv),
+    );
+  }
+
   Widget _takenIconButton(MedicationEvent medicationEvent) {
     return PlatformIconButton(
       padding: EdgeInsets.all(0),
@@ -208,8 +239,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
         color: Theme.of(context).primaryColor,
         size: 32.sf,
       ),
-      onPressed: () {
-        BlocProvider.of<CalendarCubit>(context).takeMedication(medicationEvent);
+      onPressed: () async {
+        await BlocProvider.of<CalendarCubit>(context).takeMedication(medicationEvent);
+        BlocProvider.of<CalendarCubit>(context).checkMedsCompleteForDay(this._selectedEvents);
       },
     );
   }
@@ -217,11 +249,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget _undoIconButton(MedicationEvent medicationEvent) {
     return PlatformIconButton(
       padding: EdgeInsets.all(0),
-      // icon: Icon(
-      //   Icons.replay_circle_filled,
-      //   color: Theme.of(context).accentColor,
-      //   size: 32.sf,
-      // ),
       icon: Text(
         "Undo",
         style: TextStyle(
@@ -233,11 +260,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
       onPressed: () {
         showDialog(
           context: context,
-          builder: (context) => ConfirmationDialog(
-            confirmClicked: () => BlocProvider.of<CalendarCubit>(context).undoTakeMedication(medicationEvent),
-            title: "Undo Take Medication",
-            message: "Are you want to undo taking the medication?",
-            buttonTitle: "Undo",
+          builder: (newContext) => BlocProvider.value(
+            value: BlocProvider.of<CalendarCubit>(context),
+            child: ConfirmationDialog(
+              confirmClicked: () => BlocProvider.of<CalendarCubit>(context).undoTakeMedication(medicationEvent),
+              title: "Undo Take Medication",
+              message: "Are you want to undo taking the medication?",
+              buttonTitle: "Undo",
+            ),
           ),
         );
       },

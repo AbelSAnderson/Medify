@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/constants.dart';
 import 'package:medify/cubit/medications_cubit.dart';
-import 'package:medify/database/models/medication_info.dart';
+import 'package:medify/database1/models/medication_info.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/medication_occurence_details_screen.dart';
 
@@ -54,7 +54,15 @@ class MedicationsScreen extends StatelessWidget {
                 height: 35.sv,
               ),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationOccurrenceDetailsScreen(med)));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (newContext) => BlocProvider.value(
+                      value: BlocProvider.of<MedicationsCubit>(context),
+                      child: MedicationOccurrenceDetailsScreen(med),
+                    ),
+                  ),
+                );
               },
             ),
           ),

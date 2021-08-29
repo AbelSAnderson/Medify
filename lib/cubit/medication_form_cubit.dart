@@ -2,11 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medify/database/models/medication_event.dart';
+import 'package:medify/database1/models/medication_event.dart';
 import 'package:medify/constants.dart';
-import 'package:medify/database/model_queries/medication_queries.dart';
-import 'package:medify/database/models/medication.dart';
-import 'package:medify/database/models/medication_info.dart';
+import 'package:medify/database1/model_queries/medication_queries.dart';
+import 'package:medify/database1/models/medication.dart';
+import 'package:medify/database1/models/medication_info.dart';
 import 'package:medify/repositories/medication_event_repository.dart';
 import 'package:medify/repositories/medication_info_repository.dart';
 import 'package:medify/repositories/user_repository.dart';
@@ -66,7 +66,6 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
   }
 
   submitForm(BuildContext context) async {
-    print(state.toString());
     DateTime dateTime = DateTime(state.startDate.year, state.startDate.month, state.startDate.day, state.time.hour, state.time.minute);
     Medication medication = state.medication;
     MedicationInfo medicationInfo = MedicationInfo(0, state.medType, state.pillAmount, dateTime, getRepeatsInt(state.interval), medication);
@@ -77,38 +76,6 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
       var medicationInfoFromApi = await medicationInfoRepository.addMedicationInfo(medicationInfo, currentUser.id);
       var medicationEvent = MedicationEvent(0, medicationInfoFromApi.takeAt, medicationInfoFromApi, false, 0);
       medicationEventRepository.addMedicationEvents(medicationEvent);
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  // Future<List<MedicationEvent>> _generateMedicationEvents(MedicationInfo medicationInfo) async {
-  //   var daysToLoad = _daysToLoad(medicationInfo.repeat);
-  //   List<MedicationEvent> medicationEvents = [];
-  //   for (int i = 0; i < daysToLoad; i++) {
-  //     var dateTime = i == 0 ? medicationInfo.takeAt : medicationEvents[i - 1].datetime.add(Duration(days: medicationInfo.repeat));
-  //     var medicationEvent = MedicationEvent(0, dateTime, medicationInfo, false, 0);
-  //     medicationEvents.add(medicationEvent);
-  //   }
-  //   return medicationEvents;
-  // }
-
-  // int _daysToLoad(int value) {
-  //   switch (value) {
-  //     case 1:
-  //       return 90;
-  //     case 7:
-  //       return 13;
-  //     case 14:
-  //       return 7;
-  //     case 30:
-  //       return 3;
-  //     default:
-  //       return 90;
-  //   }
-  // }
-
-  resetState() {
-    emit(MedicationFormState.initial());
+    } catch (e) {}
   }
 }

@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:medify/database/model_queries/medication_event_queries.dart';
-import 'package:medify/database/models/medication_event.dart';
+import 'package:medify/database1/model_queries/medication_event_queries.dart';
+import 'package:medify/database1/models/medication_event.dart';
 import 'package:medify/repositories/medication_event_repository.dart';
 import 'package:meta/meta.dart';
 
@@ -10,9 +12,10 @@ part 'calendar_state.dart';
 class CalendarCubit extends Cubit<CalendarState> {
   final MedicationEventQueries medicationEventQueries;
   final MedicationEventRepository medicationEventRepository;
+  StreamSubscription _streamSubscription;
 
   CalendarCubit(this.medicationEventQueries, this.medicationEventRepository) : super(CalendarInitial()) {
-    medicationEventRepository.streamController.stream.listen((events) {
+    _streamSubscription = medicationEventRepository.streamController.stream.listen((events) {
       emit(CalendarLoadInProgress());
       _wait();
       var medicationEventsMapped = _createMedicationEventsMap(events);
@@ -30,12 +33,11 @@ class CalendarCubit extends Cubit<CalendarState> {
       await Future.delayed(Duration(seconds: 1));
       emit(CalendarLoaded(medEventsMapped));
     } catch (e) {
-      print(e.toString());
       emit(CalendarFailure());
     }
   }
 
-  takeMedication(MedicationEvent medicationEvent) async {
+  Future<void> takeMedication(MedicationEvent medicationEvent) async {
     if (state is CalendarLoaded) {
       _wait();
       var previousState = state as CalendarLoaded;
@@ -79,6 +81,16 @@ class CalendarCubit extends Cubit<CalendarState> {
     }
   }
 
+  checkMedsCompleteForDay(List<MedicationEvent> medEvents) {
+    var medsNotTaken = medEvents.where((element) => element.medTaken == false);
+
+    var medEventsMapped = (state as CalendarLoaded).medicationEvents;
+
+    if (medsNotTaken.isEmpty) {
+      emit(CalendarLoaded(medEventsMapped, true));
+    }
+  }
+
   _createMedicationEventsMap(List<MedicationEvent> eventsList) {
     Map<DateTime, List<MedicationEvent>> eventsMapped = {};
 
@@ -100,5 +112,11 @@ class CalendarCubit extends Cubit<CalendarState> {
 
   _wait() async {
     await Future.delayed(Duration(milliseconds: 1));
+  }
+
+  @override
+  Future<void> close() {
+    _streamSubscription.cancel();
+    return super.close();
   }
 }

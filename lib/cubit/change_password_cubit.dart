@@ -20,11 +20,8 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
         emit(ChangePasswordFailed("The password you entered is incorrect."));
       }
     } catch (e) {
+      print(e.toString());
       emit(ChangePasswordFailed("Connection timeout."));
     }
-  }
-
-  resetState() {
-    emit(ChangePasswordInitial());
   }
 }

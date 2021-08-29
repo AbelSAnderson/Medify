@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medify/database/models/medication_info.dart';
+import 'package:medify/database1/models/medication_info.dart';
 import 'package:medify/widgets/medication_details.dart';
 import 'package:medify/widgets/occurance_details.dart';
 

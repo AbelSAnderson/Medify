@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:medify/database/api_handler.dart';
-import 'package:medify/database/model_queries/user_queries.dart';
-import 'package:medify/database/models/user.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:medify/database1/model_queries/user_queries.dart';
+import 'package:medify/database1/api_handler.dart';
+import 'package:medify/database1/model_queries/user_queries.dart';
+import 'package:medify/database1/models/user.dart';
 import 'package:medify/repositories/user_repository.dart';
 
 part 'login_state.dart';
@@ -22,6 +26,11 @@ class LoginCubit extends Cubit<LoginState> {
         var user = User.fromJson(jsonResponse['success']['user']);
         userRepository.updateUser(user);
         userRepository.password = password;
+        try {
+          _saveLoginInfo(email, password);
+        } catch (e) {
+          print(e.toString());
+        }
         emit(LoginSucceeded());
       } else if (jsonResponse['error'] != null) {
         emit(LoginFailed(jsonResponse['error']));
@@ -38,12 +47,19 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginValidating());
 
     try {
+      pharmacyPhoneNumber = pharmacyPhoneNumber != "" ? pharmacyPhoneNumber : null;
       var jsonResponse = await new UserQueries().register(name, email, password, pharmacyPhoneNumber, isCaregiver);
 
       if (jsonResponse['status']) {
-        ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['data']['token']);
+        await ApiHandler.medifyAPI().setToken("Bearer " + jsonResponse['data']['token']);
         var user = User.fromJson(jsonResponse['data']['user']);
         userRepository.updateUser(user);
+        try {
+          _saveLoginInfo(email, password);
+        } catch (e) {
+          print(e.toString());
+        }
+        // UserQueries().verifyRequest(email);
 
         emit(LoginSucceeded());
       } else {
@@ -53,11 +69,24 @@ class LoginCubit extends Cubit<LoginState> {
       }
     } catch (exception) {
       emit(LoginFailed("Email is already taken"));
+      print(exception.toString());
       return;
     }
   }
 
-  resetState() {
-    emit(LoginInitial());
+  Future<void> _saveLoginInfo(String email, String password) async {
+    var secureStorage = FlutterSecureStorage();
+    var isLoggedIn = await secureStorage.read(key: "isLoggedIn");
+
+    if (isLoggedIn != "true") {
+      secureStorage.write(key: "isLoggedIn", value: "true");
+      secureStorage.write(key: "email", value: email);
+      secureStorage.write(key: "password", value: password);
+    }
+  }
+
+  @override
+  Future<void> close() {
+    return super.close();
   }
 }

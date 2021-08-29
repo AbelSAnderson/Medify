@@ -18,8 +18,8 @@ class MedicineTypeState extends State<MedicineType> {
     return GestureDetector(
       child: Image(
         image: AssetImage(_selectedImage == medIndex ? imageSelectedUrl : imageUrl),
-        height: 35.sv,
-        width: 35.sh,
+        height: 45.sv,
+        width: 45.sh,
       ),
       onTap: () {
         setState(() {
@@ -34,22 +34,18 @@ class MedicineTypeState extends State<MedicineType> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 4.sv),
-          child: Text(
-            "Medicine Type",
-            style: TextStyle(fontSize: 26.sf),
+          padding: EdgeInsets.symmetric(horizontal: 10.sh, vertical: 16.sv),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _medTypeImage(0, heartUrl, heartSelectedUrl),
+              _medTypeImage(1, dotsUrl, dotsSelectedUrl),
+              _medTypeImage(2, sunUrl, sunSelectedUrl),
+              _medTypeImage(3, tearUrl, tearSelectedUrl),
+              _medTypeImage(4, moonUrl, moonSelectedUrl),
+              _medTypeImage(5, shieldUrl, shieldSelectedUrl),
+            ],
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _medTypeImage(0, heartUrl, heartSelectedUrl),
-            _medTypeImage(1, dotsUrl, dotsSelectedUrl),
-            _medTypeImage(2, sunUrl, sunSelectedUrl),
-            _medTypeImage(3, tearUrl, tearSelectedUrl),
-            _medTypeImage(4, moonUrl, moonSelectedUrl),
-            _medTypeImage(5, shieldUrl, shieldSelectedUrl),
-          ],
         ),
       ],
     );

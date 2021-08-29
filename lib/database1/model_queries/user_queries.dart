@@ -1,6 +1,6 @@
-import 'package:medify/database/api_handler.dart';
-import 'package:medify/database/models/user.dart';
-import 'package:medify/database/database_query_base.dart';
+import 'package:medify/database1/api_handler.dart';
+import 'package:medify/database1/models/user.dart';
+import 'package:medify/database1/database_query_base.dart';
 
 /// Class to Handle User Queries
 class UserQueries extends DatabaseQueryBase<User> {
@@ -30,16 +30,21 @@ class UserQueries extends DatabaseQueryBase<User> {
 
   Future<Map<String, dynamic>> register(String name, String email, String password, String pharmacyPhone, int isCaregiver) async {
     var body = {'name': name, 'email': email, 'password': password, 'pharmacy_number': pharmacyPhone, 'is_caregiver': isCaregiver};
-
     var jsonData = await ApiHandler.medifyAPI().getPostData("users", body, filterResponse: false);
     return jsonData;
   }
 
   Future<void> changePassword(User user, String password) async {
+    print("Email: " + user.email);
+    print("Password: " + password);
     await ApiHandler.medifyAPI().getPutData("users/${user.id}", {"email": user.email, "password": password});
   }
 
   Future<Map<String, dynamic>> resetPassword(String email) async {
     return await ApiHandler.medifyAPI().getPostData("resetPassword", {'email': email}, filterResponse: false);
+  }
+
+  Future<void> verifyRequest(String email) async {
+    return await ApiHandler.medifyAPI().getPostData("user/verify", {'email': email}, filterResponse: false);
   }
 }
