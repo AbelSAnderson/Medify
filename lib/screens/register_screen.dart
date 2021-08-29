@@ -31,6 +31,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var showConfirmPassword = false;
 
   var _termsURL = "https://www.websitepolicies.com/policies/view/4TSzq882";
+  var _privacyURL = "https://www.websitepolicies.com/policies/view/yamgMFnO";
 
   @override
   Widget build(BuildContext context) {
@@ -283,7 +284,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
               style: TextStyle(color: Colors.blue, fontSize: 14.0.sf),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  _launchTermsURL();
+                  _launchURL(_termsURL);
+                },
+            ),
+            TextSpan(
+              text: " and ",
+              style: TextStyle(color: Colors.black, fontSize: 14.0.sf),
+            ),
+            TextSpan(
+              text: "Privacy Policy",
+              style: TextStyle(color: Colors.blue, fontSize: 14.0.sf),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  _launchURL(_privacyURL);
                 },
             ),
           ],
@@ -292,10 +305,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  void _launchTermsURL() async {
-    var canLaunchUrl = await canLaunch(_termsURL);
+  void _launchURL(String url) async {
+    var canLaunchUrl = await canLaunch(url);
     if (canLaunchUrl) {
-      await launch(_termsURL);
+      await launch(url);
     }
   }
 

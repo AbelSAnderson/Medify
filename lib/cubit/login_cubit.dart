@@ -59,7 +59,7 @@ class LoginCubit extends Cubit<LoginState> {
         } catch (e) {
           print(e.toString());
         }
-        UserQueries().verifyRequest(email);
+        // UserQueries().verifyRequest(email);
 
         emit(LoginSucceeded());
       } else {
