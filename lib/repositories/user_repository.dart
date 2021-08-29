@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:medify/database/models/user.dart';
-import 'package:medify/database/model_queries/user_queries.dart';
+import 'package:medify/database1/models/user.dart';
+import 'package:medify/database1/model_queries/user_queries.dart';
 
 class UserRepository {
   final StreamController<User> streamController = StreamController<User>.broadcast();

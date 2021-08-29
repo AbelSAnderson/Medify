@@ -8,7 +8,7 @@ import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/cubit/profile_cubit.dart';
 import 'package:medify/cubit/settings_cubit.dart';
-import 'package:medify/database/model_queries/caregivers_queries.dart';
+import 'package:medify/database1/model_queries/caregivers_queries.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/screens/medications_screen.dart';
 import 'package:medify/screens/settings_screen.dart';

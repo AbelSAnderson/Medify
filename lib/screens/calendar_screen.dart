@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/constants.dart';
 import 'package:medify/cubit/calendar_cubit.dart';
-import 'package:medify/database/models/medication_event.dart';
+import 'package:medify/database1/models/medication_event.dart';
 import 'package:medify/widgets/confirmation_dialog.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:medify/scale.dart';

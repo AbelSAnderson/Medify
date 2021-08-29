@@ -5,8 +5,8 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/constants.dart';
 import 'package:medify/cubit/client_details_cubit.dart';
 import 'package:medify/cubit/clients_cubit.dart';
-import 'package:medify/database/models/medication_event.dart';
-import 'package:medify/database/models/user_connection.dart';
+import 'package:medify/database1/models/medication_event.dart';
+import 'package:medify/database1/models/user_connection.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/widgets/confirmation_dialog.dart';
 

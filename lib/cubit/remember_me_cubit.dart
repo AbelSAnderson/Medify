@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:medify/database/api_handler.dart';
-import 'package:medify/database/model_queries/user_queries.dart';
-import 'package:medify/database/models/user.dart';
+import 'package:medify/database1/api_handler.dart';
+import 'package:medify/database1/model_queries/user_queries.dart';
+import 'package:medify/database1/models/user.dart';
 import 'package:medify/repositories/user_repository.dart';
 
 part 'remember_me_state.dart';

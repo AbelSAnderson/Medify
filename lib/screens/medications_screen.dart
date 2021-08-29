@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/constants.dart';
 import 'package:medify/cubit/medications_cubit.dart';
-import 'package:medify/database/models/medication_info.dart';
+import 'package:medify/database1/models/medication_info.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/medication_occurence_details_screen.dart';
 

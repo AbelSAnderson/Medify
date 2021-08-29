@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medify/database/models/medication.dart';
+import 'package:medify/database1/models/medication.dart';
 import 'package:medify/widgets/medication_form.dart';
 
 class AddMedicationScreen extends StatelessWidget {

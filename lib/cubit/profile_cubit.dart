@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:medify/database/models/user.dart';
+import 'package:medify/database1/models/user.dart';
 import 'package:medify/repositories/user_repository.dart';
 
 part 'profile_state.dart';

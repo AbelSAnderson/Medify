@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:medify/database/models/medication.dart';
+import 'package:medify/database1/models/medication.dart';
 import 'package:medify/scale.dart';
 
 class MedicationDetails extends StatefulWidget {

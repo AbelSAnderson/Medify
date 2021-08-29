@@ -1,5 +1,5 @@
-import 'package:medify/database/api_handler.dart';
-import 'package:medify/database/models/user_connection.dart';
+import 'package:medify/database1/api_handler.dart';
+import 'package:medify/database1/models/user_connection.dart';
 
 class ClientQueries {
   ClientQueries();
