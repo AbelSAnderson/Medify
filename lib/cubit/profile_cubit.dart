@@ -5,9 +5,10 @@ import 'package:equatable/equatable.dart';
 import 'package:medify/database1/models/user.dart';
 import 'package:medify/repositories/user_repository.dart';
 
-part 'profile_state.dart';
-
 class ProfileCubit extends Cubit<ProfileState> {
+  final UserRepository userRepository;
+  late StreamSubscription _streamSubscription;
+
   ProfileCubit(this.userRepository) : super(ProfileInitial()) {
     _streamSubscription = userRepository.streamController.stream.listen((user) {
       emit(ProfileLoading());
@@ -15,9 +16,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileLoaded(newUser));
     });
   }
-
-  StreamSubscription _streamSubscription;
-  final UserRepository userRepository;
 
   loadProfile(User user) async {
     emit(ProfileLoading());
@@ -31,4 +29,35 @@ class ProfileCubit extends Cubit<ProfileState> {
     _streamSubscription.cancel();
     return super.close();
   }
+}
+
+abstract class ProfileState extends Equatable {
+  const ProfileState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ProfileInitial extends ProfileState {
+  @override
+  List<Object> get props => [];
+}
+
+class ProfileLoading extends ProfileState {
+  @override
+  List<Object> get props => [];
+}
+
+class ProfileLoaded extends ProfileState {
+  final User user;
+
+  ProfileLoaded(this.user);
+
+  @override
+  List<Object> get props => [user];
+}
+
+class ProfileError extends ProfileState {
+  @override
+  List<Object> get props => [];
 }

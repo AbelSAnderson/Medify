@@ -1,16 +1,12 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:medify/database1/api_handler.dart';
-import 'package:medify/cubit/login_cubit.dart';
 import 'package:medify/cubit/remember_me_cubit.dart';
 import 'package:medify/cubit/settings_cubit.dart';
 import 'package:medify/database1/database_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
-import 'package:medify/screens/login_screen.dart';
 import 'package:medify/screens/splash_screen.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
@@ -55,12 +51,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
-        //Setup scaling for mobile (this is independent from the ResponsiveWrapper Scaling for Tablets)
-        Scale.setup(context, Size(411.43, 683.43));
+        // Setup scaling for mobile (this is independent from the ResponsiveWrapper Scaling for Tablets)
+        Scale().setup(context, Size(411.43, 683.43));
         List<ResponsiveBreakpoint> breakpoints = [];
-        //Don't have any breakpoints for mobile (we only want to use responsive wrapper for tablets)
-        //This fixes the breakpoints hitting on mobile for landscape orientation causing it to scale and looks huge
-        if (!Scale.isMobile) {
+
+        // Don't have any breakpoints for mobile (we only want to use responsive wrapper for tablets)
+        // This fixes the breakpoints hitting on mobile for landscape orientation causing it to scale and looks huge
+        if (!Scale().isMobile) {
           breakpoints.addAll([
             ResponsiveBreakpoint.resize(400, name: MOBILE),
             ResponsiveBreakpoint.autoScale(600, name: TABLET, scaleFactor: 1),
@@ -88,7 +85,8 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.light,
         primarySwatch: MaterialColor(0xFF3458a6, colors),
         //primaryColor: Color.fromRGBO(1, 105, 255, 1),
-        accentColor: Color.fromRGBO(175, 0, 233, 1),
+        // TODO-FIX
+        // accentColor: Color.fromRGBO(175, 0, 233, 1),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: BlocProvider<RememberMeCubit>(
@@ -102,7 +100,7 @@ class MyApp extends StatelessWidget {
 /// Http override class for allowing Http requests
 class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context) {
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
   }
 }

@@ -25,7 +25,8 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
       scrollable: true,
       insetPadding: EdgeInsets.symmetric(horizontal: 20.sh, vertical: 20.sv),
       contentPadding: EdgeInsets.symmetric(horizontal: 10.sh, vertical: 10.sv),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25))),
       title: Padding(
         padding: EdgeInsets.symmetric(vertical: 10.sv),
         child: Text(
@@ -74,7 +75,8 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                           SizedBox(height: 12.5.sv),
                           Text(
                             state.errorMsg,
-                            style: TextStyle(fontSize: 14.sf, color: Colors.red),
+                            style:
+                                TextStyle(fontSize: 14.sf, color: Colors.red),
                           ),
                         ],
                       );
@@ -108,7 +110,9 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
           obscureText: !showOldPassword,
           decoration: InputDecoration(
             suffixIcon: IconButton(
-              icon: !showOldPassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+              icon: !showOldPassword
+                  ? Icon(Icons.visibility)
+                  : Icon(Icons.visibility_off),
               onPressed: () {
                 setState(() {
                   showOldPassword = !showOldPassword;
@@ -119,7 +123,8 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.visiblePassword,
         ),
@@ -144,7 +149,9 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
           obscureText: !showNewPassword,
           decoration: InputDecoration(
             suffixIcon: IconButton(
-              icon: !showNewPassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+              icon: !showNewPassword
+                  ? Icon(Icons.visibility)
+                  : Icon(Icons.visibility_off),
               onPressed: () {
                 setState(() {
                   showNewPassword = !showNewPassword;
@@ -156,11 +163,13 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
-            if (value.length < 8) return "Passwords must be 8 or more characters in length";
+            if (value != null && value.length < 8)
+              return "Passwords must be 8 or more characters in length";
             return null;
           },
         ),
@@ -186,7 +195,9 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
           obscureText: !showConfirmPassword,
           decoration: InputDecoration(
             suffixIcon: IconButton(
-              icon: !showConfirmPassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+              icon: !showConfirmPassword
+                  ? Icon(Icons.visibility)
+                  : Icon(Icons.visibility_off),
               onPressed: () {
                 setState(() {
                   showConfirmPassword = !showConfirmPassword;
@@ -198,11 +209,13 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
-            if (newPasswordController.text != value) return "Passwords must match";
+            if (newPasswordController.text != value)
+              return "Passwords must match";
             return null;
           },
         ),
@@ -212,20 +225,28 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
 
   Widget _submitButton(BuildContext context) {
     return Center(
-      child: PlatformButton(
+      child: PlatformElevatedButton(
         child: Text(
           "Change Password",
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 14.sf, color: Colors.white),
         ),
         onPressed: () {
-          if (_formKey.currentState.validate()) {
-            BlocProvider.of<ChangePasswordCubit>(context).changePassword(oldPasswordController.text, newPasswordController.text);
+          if (_formKey.currentState!.validate()) {
+            BlocProvider.of<ChangePasswordCubit>(context).changePassword(
+                oldPasswordController.text, newPasswordController.text);
           }
         },
-        cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
-        material: (context, platform) => MaterialRaisedButtonData(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+        cupertino: (context, platform) => CupertinoElevatedButtonData(
+            padding: EdgeInsets.symmetric(horizontal: 10)),
+        material: (context, platform) => MaterialElevatedButtonData(
+          style: ButtonStyle(
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+              ),
+            ),
+          ),
         ),
         color: Theme.of(context).primaryColor,
       ),

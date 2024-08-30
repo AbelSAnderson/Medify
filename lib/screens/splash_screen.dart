@@ -12,7 +12,7 @@ import 'home_screen.dart';
 import 'login_screen.dart';
 
 class SplashScreen extends StatelessWidget {
-  const SplashScreen({Key key}) : super(key: key);
+  const SplashScreen({Key? key}) : super(key: key);
 
   final ImageProvider logo = const AssetImage("assets/launcher_icons/RXMedifyLogo.png");
 
@@ -59,7 +59,8 @@ class SplashScreen extends StatelessWidget {
           end: Alignment(3, 0),
           colors: [
             Theme.of(context).primaryColor,
-            Theme.of(context).accentColor,
+            // TODO-FIX
+            // Theme.of(context).accentColor,
           ],
         ),
       ),

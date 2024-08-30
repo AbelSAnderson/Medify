@@ -10,12 +10,11 @@ import 'package:medify/database1/models/medication_info.dart';
 import 'package:medify/repositories/medication_event_repository.dart';
 import 'package:medify/repositories/medication_info_repository.dart';
 import 'package:medify/repositories/user_repository.dart';
-import 'package:meta/meta.dart';
-
-part 'medication_form_state.dart';
 
 class MedicationFormCubit extends Cubit<MedicationFormState> {
-  MedicationFormCubit(this.medicationQueries, this.medicationInfoRepository, this.medicationEventRepository, this.userRepository) : super(MedicationFormState.initial());
+  MedicationFormCubit(this.medicationQueries, this.medicationInfoRepository,
+      this.medicationEventRepository, this.userRepository)
+      : super(MedicationFormState.initial());
 
   final MedicationQueries medicationQueries;
   final MedicationInfoRepository medicationInfoRepository;
@@ -26,7 +25,7 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
     emit(state.copyWith(medication: medication));
   }
 
-  changeRepeats(String repeats) {
+  changeRepeats(String? repeats) {
     emit(state.copyWith(interval: repeats));
   }
 
@@ -43,7 +42,8 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
     var valid = _pillAmountValid(value);
     if (valid) {
       emit(state.copyWith(
-        pillAmount: parsedValue == null ? -1 : parsedValue, //if its null then the user left box empty (-1 represents empty)
+        pillAmount: parsedValue == null ? -1 : parsedValue,
+        //if its null then the user left box empty (-1 represents empty)
         isPillAmountValid: true,
       ));
     } else {
@@ -66,16 +66,89 @@ class MedicationFormCubit extends Cubit<MedicationFormState> {
   }
 
   submitForm(BuildContext context) async {
-    DateTime dateTime = DateTime(state.startDate.year, state.startDate.month, state.startDate.day, state.time.hour, state.time.minute);
-    Medication medication = state.medication;
-    MedicationInfo medicationInfo = MedicationInfo(0, state.medType, state.pillAmount, dateTime, getRepeatsInt(state.interval), medication);
+    DateTime dateTime = DateTime(state.startDate.year, state.startDate.month,
+        state.startDate.day, state.time.hour, state.time.minute);
+    Medication? medication = state.medication;
+    MedicationInfo medicationInfo = MedicationInfo(0, state.medType,
+        state.pillAmount, dateTime, getRepeatsInt(state.interval), medication);
     try {
-      var medicationFromJson = await medicationQueries.insertToApi(medication);
+      // TODO-REFACTOR
+      var medicationFromJson = await medicationQueries.insertToApi(medication!);
       medicationInfo.medication = medicationFromJson;
       var currentUser = userRepository.currentUser;
-      var medicationInfoFromApi = await medicationInfoRepository.addMedicationInfo(medicationInfo, currentUser.id);
-      var medicationEvent = MedicationEvent(0, medicationInfoFromApi.takeAt, medicationInfoFromApi, false, 0);
+      var medicationInfoFromApi = await medicationInfoRepository
+          .addMedicationInfo(medicationInfo, currentUser.id);
+      var medicationEvent = MedicationEvent(
+          0, medicationInfoFromApi.takeAt, medicationInfoFromApi, false, 0);
       medicationEventRepository.addMedicationEvents(medicationEvent);
     } catch (e) {}
+  }
+}
+
+class MedicationFormState extends Equatable {
+  // TODO-FIX
+  final Medication? medication;
+  final String interval; // Nullable?
+  final DateTime startDate;
+  final TimeOfDay time;
+  final int? pillAmount;
+  final bool isPillAmountValid;
+  final int medType;
+
+  const MedicationFormState({
+    required this.medication,
+    required this.interval,
+    required this.startDate,
+    required this.time,
+    required this.pillAmount,
+    required this.isPillAmountValid,
+    required this.medType,
+  });
+
+  MedicationFormState.initial()
+      : this(
+          medication: null,
+          interval: "Weekly",
+          startDate: DateTime.now(),
+          time: TimeOfDay.now(),
+          pillAmount: null,
+          isPillAmountValid: false,
+          medType: 0,
+        );
+
+  MedicationFormState copyWith({
+    Medication? medication,
+    String? interval,
+    DateTime? startDate,
+    TimeOfDay? time,
+    int? pillAmount,
+    bool? isPillAmountValid,
+    int? medType,
+  }) {
+    return MedicationFormState(
+      medication: medication ?? this.medication,
+      interval: interval ?? this.interval,
+      startDate: startDate ?? this.startDate,
+      time: time ?? this.time,
+      pillAmount: pillAmount ?? this.pillAmount,
+      isPillAmountValid: isPillAmountValid ?? this.isPillAmountValid,
+      medType: medType ?? this.medType,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        medication,
+        interval,
+        startDate,
+        time,
+        pillAmount,
+        isPillAmountValid,
+        medType,
+      ];
+
+  @override
+  String toString() {
+    return "${medication?.brandName} $interval $startDate $time $pillAmount $medType";
   }
 }

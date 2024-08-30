@@ -107,11 +107,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.name,
           validator: (value) {
-            if (value.length < 1) return "Name field can't be empty";
+            if (value != null && value.length < 1)
+              return "Name field can't be empty";
             return null;
           },
         ),
@@ -140,12 +142,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
-            final emailRegExp = RegExp(r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
-            if (!emailRegExp.hasMatch(value)) return "Invalid Email";
+            final emailRegExp = RegExp(
+                r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
+            if (value != null && !emailRegExp.hasMatch(value))
+              return "Invalid Email";
             return null;
           },
         ),
@@ -171,7 +176,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           obscureText: !showPassword,
           decoration: InputDecoration(
             suffixIcon: IconButton(
-              icon: !showPassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+              icon: !showPassword
+                  ? Icon(Icons.visibility)
+                  : Icon(Icons.visibility_off),
               onPressed: () {
                 setState(() {
                   showPassword = !showPassword;
@@ -183,11 +190,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
-            if (value.length < 8) return "Passwords must be 8 or more characters in length";
+            if (value != null && value.length < 8)
+              return "Passwords must be 8 or more characters in length";
             return null;
           },
         ),
@@ -213,7 +222,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           obscureText: !showConfirmPassword,
           decoration: InputDecoration(
             suffixIcon: IconButton(
-              icon: !showConfirmPassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+              icon: !showConfirmPassword
+                  ? Icon(Icons.visibility)
+                  : Icon(Icons.visibility_off),
               onPressed: () {
                 setState(() {
                   showConfirmPassword = !showConfirmPassword;
@@ -225,7 +236,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
@@ -258,13 +270,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.phone,
           validator: (value) {
-            var phoneRegExp = RegExp(r'^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$');
+            var phoneRegExp =
+                RegExp(r'^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$');
             if (value == "") return null;
-            if (!phoneRegExp.hasMatch(value)) return "Invalid Phone Number";
+            if (value != null && !phoneRegExp.hasMatch(value))
+              return "Invalid Phone Number";
             return null;
           },
         ),
@@ -331,28 +346,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ]);
       } else if (state is LoginSucceeded) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => MultiRepositoryProvider(
-                    providers: [
-                      RepositoryProvider(
-                        create: (context) => MedicationEventRepository(),
-                      ),
-                      RepositoryProvider(
-                        create: (context) => MedicationInfoRepository(),
-                      ),
-                    ],
-                    child: BlocProvider<NavBarCubit>(
-                      create: (context) => NavBarCubit(RepositoryProvider.of<UserRepository>(context)),
-                      child: MyHomePage(
-                        title: 'RX-Medify',
-                      ),
-                    ),
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => MultiRepositoryProvider(
+                providers: [
+                  RepositoryProvider(
+                    create: (context) => MedicationEventRepository(),
+                  ),
+                  RepositoryProvider(
+                    create: (context) => MedicationInfoRepository(),
+                  ),
+                ],
+                child: BlocProvider<NavBarCubit>(
+                  create: (context) => NavBarCubit(
+                      RepositoryProvider.of<UserRepository>(context)),
+                  child: MyHomePage(
+                    title: 'RX-Medify',
                   ),
                 ),
-              )
-            });
+              ),
+            ),
+          );
+        });
         return Center(child: CircularProgressIndicator.adaptive());
       }
 
@@ -366,37 +382,62 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            PlatformButton(
+            PlatformElevatedButton(
               child: Text(
                 "Register as Client",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12.sf, color: Colors.white),
               ),
               onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  BlocProvider.of<LoginCubit>(context).registerUser(nameController.text, emailController.text, passwordController.text, pharmacyNumberController.text, 0);
+                if (_formKey.currentState!.validate()) {
+                  BlocProvider.of<LoginCubit>(context).registerUser(
+                      nameController.text,
+                      emailController.text,
+                      passwordController.text,
+                      pharmacyNumberController.text,
+                      0);
                 }
               },
-              cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
-              material: (context, platform) => MaterialRaisedButtonData(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+              cupertino: (context, platform) => CupertinoElevatedButtonData(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+              ),
+              material: (context, platform) => MaterialElevatedButtonData(
+                style: ButtonStyle(
+                  shape: MaterialStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
+                    ),
+                  ),
+                ),
               ),
               color: Theme.of(context).primaryColor,
             ),
-            PlatformButton(
+            PlatformElevatedButton(
               child: Text(
                 "Register as Caregiver",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12.sf, color: Colors.white),
               ),
               onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  BlocProvider.of<LoginCubit>(context).registerUser(nameController.text, emailController.text, passwordController.text, pharmacyNumberController.text, 1);
+                if (_formKey.currentState!.validate()) {
+                  BlocProvider.of<LoginCubit>(context).registerUser(
+                      nameController.text,
+                      emailController.text,
+                      passwordController.text,
+                      pharmacyNumberController.text,
+                      1);
                 }
               },
-              cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
-              material: (context, platform) => MaterialRaisedButtonData(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+              cupertino: (context, platform) => CupertinoElevatedButtonData(
+                  padding: EdgeInsets.symmetric(horizontal: 10)),
+              material: (context, platform) => MaterialElevatedButtonData(
+                style: ButtonStyle(
+                  shape: MaterialStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
+                    ),
+                  ),
+                ),
               ),
               color: Theme.of(context).primaryColor,
             ),
@@ -423,7 +464,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           onPressed: () {
             Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => BlocProvider<LoginCubit>(
-                create: (context) => LoginCubit(RepositoryProvider.of<UserRepository>(context)),
+                create: (context) =>
+                    LoginCubit(RepositoryProvider.of<UserRepository>(context)),
                 child: LoginScreen(),
               ),
             ));

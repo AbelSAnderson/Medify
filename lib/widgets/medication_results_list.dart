@@ -14,7 +14,7 @@ import 'package:medify/scale.dart';
 class MedicationResultsList extends StatelessWidget {
   final medications;
 
-  MedicationResultsList(this.medications, {Key key}) : super(key: key);
+  MedicationResultsList(this.medications, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,8 @@ class MedicationResultsList extends StatelessWidget {
               border: Border(bottom: BorderSide(color: Colors.black26)),
             ),
             child: ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 10.sv, horizontal: 10.sh),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 10.sv, horizontal: 10.sh),
               title: Text(
                 medications[index].brandName,
                 style: TextStyle(fontSize: 16.sf),
@@ -44,13 +45,23 @@ class MedicationResultsList extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (newContext) => RepositoryProvider.value(
-                        value: RepositoryProvider.of<MedicationEventRepository>(context),
+                        value: RepositoryProvider.of<MedicationEventRepository>(
+                            context),
                         child: RepositoryProvider.value(
-                          value: RepositoryProvider.of<MedicationInfoRepository>(context),
+                          value:
+                              RepositoryProvider.of<MedicationInfoRepository>(
+                                  context),
                           child: BlocProvider.value(
                             value: BlocProvider.of<NavBarCubit>(context),
                             child: BlocProvider<MedicationFormCubit>(
-                              create: (context) => MedicationFormCubit(MedicationQueries(), RepositoryProvider.of<MedicationInfoRepository>(context), RepositoryProvider.of<MedicationEventRepository>(context), RepositoryProvider.of<UserRepository>(context)),
+                              create: (context) => MedicationFormCubit(
+                                MedicationQueries(),
+                                RepositoryProvider.of<MedicationInfoRepository>(
+                                    context),
+                                RepositoryProvider.of<
+                                    MedicationEventRepository>(context),
+                                RepositoryProvider.of<UserRepository>(context),
+                              ),
                               child: AddMedicationScreen(medications[index]),
                             ),
                           ),
@@ -61,7 +72,13 @@ class MedicationResultsList extends StatelessWidget {
                 },
               ),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MedicationDetailsScreen(medications[index])));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        MedicationDetailsScreen(medications[index]),
+                  ),
+                );
               },
             ),
           );

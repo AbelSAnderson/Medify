@@ -2,8 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:meta/meta.dart';
 
-part 'nav_bar_state.dart';
-
 class NavBarCubit extends Cubit<NavBarState> {
   NavBarCubit(this.userRepository) : super(NavBarState.initial()) {
     var user = userRepository.currentUser;
@@ -42,3 +40,36 @@ class NavBarCubit extends Cubit<NavBarState> {
     }
   }
 }
+
+@immutable
+class NavBarState {
+  final String title;
+  final int index;
+  final bool showClients;
+  final bool isError;
+
+  const NavBarState({required this.title, required this.index, required this.showClients, required this.isError});
+
+  NavBarState.initial()
+      : this(
+    title: "Home",
+    index: 0,
+    showClients: false,
+    isError: false,
+  );
+
+  NavBarState copyWith({
+    String? title,
+    int? index,
+    bool? showClients,
+    bool? isError,
+  }) {
+    return NavBarState(
+      title: title ?? this.title,
+      index: index ?? this.index,
+      showClients: showClients ?? this.showClients,
+      isError: isError ?? false,
+    );
+  }
+}
+

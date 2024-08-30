@@ -2,8 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:medify/repositories/user_repository.dart';
 
-part 'change_password_state.dart';
-
 class ChangePasswordCubit extends Cubit<ChangePasswordState> {
   ChangePasswordCubit(this.userRepository) : super(ChangePasswordInitial());
 
@@ -25,3 +23,35 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
     }
   }
 }
+
+abstract class ChangePasswordState extends Equatable {
+  const ChangePasswordState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ChangePasswordInitial extends ChangePasswordState {
+  @override
+  List<Object> get props => [];
+}
+
+class ChangePasswordLoading extends ChangePasswordState {
+  @override
+  List<Object> get props => [];
+}
+
+class ChangePasswordSucceeded extends ChangePasswordState {
+  @override
+  List<Object> get props => [];
+}
+
+class ChangePasswordFailed extends ChangePasswordState {
+  final String errorMsg;
+
+  ChangePasswordFailed(this.errorMsg);
+
+  @override
+  List<Object> get props => [errorMsg];
+}
+

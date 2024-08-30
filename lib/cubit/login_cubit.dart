@@ -1,15 +1,10 @@
-import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:medify/database1/model_queries/user_queries.dart';
 import 'package:medify/database1/api_handler.dart';
-import 'package:medify/database1/model_queries/user_queries.dart';
 import 'package:medify/database1/models/user.dart';
 import 'package:medify/repositories/user_repository.dart';
-
-part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final UserRepository userRepository;
@@ -43,7 +38,7 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  registerUser(String name, String email, String password, String pharmacyPhoneNumber, int isCaregiver) async {
+  registerUser(String name, String email, String password, String? pharmacyPhoneNumber, int isCaregiver) async {
     emit(LoginValidating());
 
     try {
@@ -90,3 +85,37 @@ class LoginCubit extends Cubit<LoginState> {
     return super.close();
   }
 }
+
+abstract class LoginState extends Equatable {
+  const LoginState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class LoginInitial extends LoginState {
+  LoginInitial();
+
+  @override
+  List<Object> get props => [];
+}
+
+class LoginValidating extends LoginState {
+  @override
+  List<Object> get props => [];
+}
+
+class LoginSucceeded extends LoginState {
+  @override
+  List<Object> get props => [];
+}
+
+class LoginFailed extends LoginState {
+  final String errorMessage;
+
+  LoginFailed(this.errorMessage);
+
+  @override
+  List<Object> get props => [errorMessage];
+}
+

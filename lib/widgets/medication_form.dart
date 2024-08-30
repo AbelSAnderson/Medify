@@ -7,7 +7,6 @@ import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/database1/models/medication.dart';
 import 'package:medify/widgets/medicine_type.dart';
 import 'package:date_format/date_format.dart';
-import 'medicine_type.dart';
 import 'package:medify/scale.dart';
 
 class MedicationForm extends StatelessWidget {
@@ -31,7 +30,8 @@ class MedicationForm extends StatelessWidget {
       ).then(
         (value) {
           if (value != null) {
-            BlocProvider.of<MedicationFormCubit>(context).changeStartDate(value);
+            BlocProvider.of<MedicationFormCubit>(context)
+                .changeStartDate(value);
           }
         },
       );
@@ -68,9 +68,7 @@ class MedicationForm extends StatelessWidget {
         maximumDate: DateTime.now().add(Duration(days: 365)),
         mode: CupertinoDatePickerMode.date,
         onDateTimeChanged: (value) {
-          if (value != null) {
-            BlocProvider.of<MedicationFormCubit>(context).changeStartDate(value);
-          }
+          BlocProvider.of<MedicationFormCubit>(context).changeStartDate(value);
         },
       ),
     );
@@ -78,7 +76,8 @@ class MedicationForm extends StatelessWidget {
 
   Widget _cupertinoTimePicker(BuildContext context, TimeOfDay initialTime) {
     //we dont need the date (just time)
-    var initialDateTime = DateTime(2000, 1, 1, initialTime.hour, initialTime.minute);
+    var initialDateTime =
+        DateTime(2000, 1, 1, initialTime.hour, initialTime.minute);
     return Container(
       height: 300.sv,
       child: CupertinoDatePicker(
@@ -86,9 +85,7 @@ class MedicationForm extends StatelessWidget {
         mode: CupertinoDatePickerMode.time,
         onDateTimeChanged: (value) {
           var time = TimeOfDay(hour: value.hour, minute: value.minute);
-          if (value != null) {
-            BlocProvider.of<MedicationFormCubit>(context).changeTime(time);
-          }
+          BlocProvider.of<MedicationFormCubit>(context).changeTime(time);
         },
       ),
     );
@@ -96,9 +93,9 @@ class MedicationForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //set medication to the medication that is being added
+    // Set medication to the medication that is being added
     BlocProvider.of<MedicationFormCubit>(context).changeMedication(medication);
-    //initial value for pill amount textfield
+    // Initial value for pill amount textfield
     BlocProvider.of<MedicationFormCubit>(context).changePillAmount("");
     return BlocBuilder<MedicationFormCubit, MedicationFormState>(
       builder: (context, state) {
@@ -110,13 +107,15 @@ class MedicationForm extends StatelessWidget {
               child: Wrap(
                 runSpacing: 10.sv,
                 children: [
-                  _nameField(state.medication.brandName),
+                  // TODO-FIX
+                  _nameField(state.medication!.brandName),
                   _repeatsField(context, state.interval),
                   _startDateField(context, state.startDate),
                   _timeField(context, state.time),
                   _pillAmountField(context, state),
                   MedicineType(onMedIndexChanged: (index) {
-                    BlocProvider.of<MedicationFormCubit>(context).changeMedicationType(index);
+                    BlocProvider.of<MedicationFormCubit>(context)
+                        .changeMedicationType(index);
                   }),
                   _submitButton(context),
                 ],
@@ -150,7 +149,8 @@ class MedicationForm extends StatelessWidget {
             children: [
               Align(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
                   child: Text(
                     medName,
                     style: TextStyle(fontSize: 14.sf),
@@ -164,7 +164,7 @@ class MedicationForm extends StatelessWidget {
     );
   }
 
-  Widget _repeatsField(BuildContext context, String repeats) {
+  Widget _repeatsField(BuildContext context, String? repeats) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -193,7 +193,8 @@ class MedicationForm extends StatelessWidget {
                 ),
               ),
             ),
-            items: <String>["Daily", "Weekly", "Bi-Monthly", "Monthly"].map((String value) {
+            items: <String>["Daily", "Weekly", "Bi-Monthly", "Monthly"]
+                .map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(
@@ -202,8 +203,9 @@ class MedicationForm extends StatelessWidget {
                 ),
               );
             }).toList(),
-            onChanged: (String newValue) {
-              BlocProvider.of<MedicationFormCubit>(context).changeRepeats(newValue);
+            onChanged: (String? newValue) {
+              BlocProvider.of<MedicationFormCubit>(context)
+                  .changeRepeats(newValue);
             },
           ),
         ),
@@ -324,13 +326,17 @@ class MedicationForm extends StatelessWidget {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.number,
           validator: (value) {
-            return state.isPillAmountValid ? null : "Please enter a valid number";
+            return state.isPillAmountValid
+                ? null
+                : "Please enter a valid number";
           },
-          onChanged: (value) => BlocProvider.of<MedicationFormCubit>(context).changePillAmount(value),
+          onChanged: (value) => BlocProvider.of<MedicationFormCubit>(context)
+              .changePillAmount(value),
         ),
       ],
     );
@@ -338,9 +344,9 @@ class MedicationForm extends StatelessWidget {
 
   Widget _submitButton(BuildContext context) {
     return Center(
-      child: PlatformButton(
+      child: PlatformElevatedButton(
         onPressed: () {
-          if (_formKey.currentState.validate()) {
+          if (_formKey.currentState!.validate()) {
             BlocProvider.of<MedicationFormCubit>(context).submitForm(context);
             BlocProvider.of<NavBarCubit>(context).updateIndex(0);
             Navigator.of(context).pop();
@@ -350,9 +356,17 @@ class MedicationForm extends StatelessWidget {
           "Add Medication",
           style: TextStyle(fontSize: 14.sf, color: Colors.white),
         ),
-        cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
-        material: (context, platform) => MaterialRaisedButtonData(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+        cupertino: (context, platform) => CupertinoElevatedButtonData(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+        ),
+        material: (context, platform) => MaterialElevatedButtonData(
+          style: ButtonStyle(
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+              ),
+            ),
+          ),
         ),
         color: Theme.of(context).primaryColor,
       ),

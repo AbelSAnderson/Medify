@@ -3,34 +3,45 @@ import 'package:equatable/equatable.dart';
 import 'package:medify/database1/model_queries/medication_event_queries.dart';
 import 'package:medify/database1/models/medication_event.dart';
 
-part 'client_details_state.dart';
-
 class ClientDetailsCubit extends Cubit<ClientDetailsState> {
-  ClientDetailsCubit(this.medicationEventQueries) : super(ClientDetailsInitial());
-
+  List<MedicationEvent>? allMedications;
   final MedicationEventQueries medicationEventQueries;
 
-  List<MedicationEvent> allMedications;
+  ClientDetailsCubit(this.medicationEventQueries)
+      : super(ClientDetailsInitial());
 
   loadClientMedications(int userId) async {
     await Future<void>.delayed(Duration(milliseconds: 100));
     emit(ClientDetailsLoading());
-    allMedications = await medicationEventQueries.retrieveAllFromApiForUser(userId);
-    emit(ClientDetailsLoaded(_sortMedications(allMedications)));
+    allMedications =
+        await medicationEventQueries.retrieveAllFromApiForUser(userId);
+    emit(ClientDetailsLoaded(_sortMedications(allMedications!)));
   }
 
   filterMedications(String value) {
     emit(ClientDetailsLoading());
 
-    var filteredMeds = allMedications.where((element) {
+    var filteredMeds = allMedications?.where((element) {
       var todayDateTime = DateTime.now();
-      var todayDate = DateTime(todayDateTime.year, todayDateTime.month, todayDateTime.day);
-      var medDate = DateTime(element.datetime.year, element.datetime.month, element.datetime.day);
+      var todayDate = DateTime(
+        todayDateTime.year,
+        todayDateTime.month,
+        todayDateTime.day,
+      );
+      var medDate = DateTime(
+        element.datetime.year,
+        element.datetime.month,
+        element.datetime.day,
+      );
+
       var filterDays = _getFilterDaysAmount(value);
-      return medDate.isAfter(todayDate.subtract(Duration(days: filterDays))) || medDate.isAtSameMomentAs(todayDate.subtract(Duration(days: filterDays)));
+      return medDate.isAfter(todayDate.subtract(Duration(days: filterDays))) ||
+          medDate.isAtSameMomentAs(todayDate.subtract(
+            Duration(days: filterDays),
+          ));
     });
 
-    emit(ClientDetailsLoaded(filteredMeds.toList()));
+    emit(ClientDetailsLoaded(filteredMeds?.toList() ?? []));
   }
 
   int _getFilterDaysAmount(String value) {
@@ -69,4 +80,35 @@ class ClientDetailsCubit extends Cubit<ClientDetailsState> {
         return 0;
     }
   }
+}
+
+abstract class ClientDetailsState extends Equatable {
+  const ClientDetailsState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ClientDetailsInitial extends ClientDetailsState {
+  @override
+  List<Object> get props => [];
+}
+
+class ClientDetailsLoading extends ClientDetailsState {
+  @override
+  List<Object> get props => [];
+}
+
+class ClientDetailsLoaded extends ClientDetailsState {
+  final List<MedicationEvent> medications;
+
+  const ClientDetailsLoaded([this.medications = const []]);
+
+  @override
+  List<Object> get props => [medications];
+}
+
+class ClientDetailsError extends ClientDetailsState {
+  @override
+  List<Object> get props => [];
 }

@@ -95,7 +95,8 @@ class ShowMedicationsList extends StatelessWidget {
           decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
           child: ListTile(
             title: Text(
-              med.medicationInfo.medication.brandName,
+              // TODO-FIX
+              med.medicationInfo.medication!.brandName,
               style: TextStyle(fontSize: 18.sf),
             ),
             subtitle: Text(
@@ -162,6 +163,7 @@ class _FilterMedicationsDropDownState extends State<FilterMedicationsDropDown> {
           );
         }).toList(),
         onChanged: (value) {
+          if (value == null) return;
           setState(() {
             dropDownValue = value;
             BlocProvider.of<ClientDetailsCubit>(context).filterMedications(value);

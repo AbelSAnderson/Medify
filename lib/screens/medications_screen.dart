@@ -41,7 +41,8 @@ class MedicationsScreen extends StatelessWidget {
             child: ListTile(
               contentPadding: EdgeInsets.symmetric(vertical: 12.sv, horizontal: 12.sh),
               title: Text(
-                med.medication.brandName,
+                // TODO-FIX
+                med.medication!.brandName,
                 style: TextStyle(fontSize: 20.sf),
               ),
               trailing: Icon(

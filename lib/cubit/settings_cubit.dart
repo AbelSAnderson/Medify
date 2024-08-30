@@ -1,9 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-part 'settings_state.dart';
 
 class SettingsCubit extends Cubit<SettingsState> {
   SettingsCubit() : super(SettingsState.initial());
@@ -23,4 +20,30 @@ class SettingsCubit extends Cubit<SettingsState> {
     secureStorage.delete(key: "email");
     secureStorage.delete(key: "password");
   }
+}
+
+class SettingsState extends Equatable {
+  final double fontScaleFactor;
+
+  const SettingsState({
+    required this.fontScaleFactor,
+  });
+
+  SettingsState.initial()
+      : this(
+          fontScaleFactor: 1.5,
+        );
+
+  SettingsState copyWith({
+    double? fontScaleFactor,
+  }) {
+    return SettingsState(
+      fontScaleFactor: fontScaleFactor ?? this.fontScaleFactor,
+    );
+  }
+
+  @override
+  List<Object> get props => [
+        fontScaleFactor,
+      ];
 }

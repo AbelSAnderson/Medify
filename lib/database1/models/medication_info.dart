@@ -7,13 +7,13 @@ part 'medication_info.g.dart';
 @HiveType(typeId: 2)
 class MedicationInfo extends ModelBase {
   @HiveField(0)
-  int id;
+  int? id;
 
   @HiveField(1)
   int medicationType;
 
   @HiveField(2)
-  int pillsRemaining;
+  int? pillsRemaining;
 
   @HiveField(3)
   DateTime takeAt;
@@ -22,9 +22,10 @@ class MedicationInfo extends ModelBase {
   int repeat;
 
   @HiveField(5)
-  Medication medication;
+  Medication? medication;
 
-  MedicationInfo(this.id, this.medicationType, this.pillsRemaining, this.takeAt, this.repeat, this.medication);
+  MedicationInfo(this.id, this.medicationType, this.pillsRemaining, this.takeAt,
+      this.repeat, this.medication);
 
   // Decode the Medication Info from a json file
   MedicationInfo.fromJson(Map<String, dynamic> json)
@@ -42,7 +43,7 @@ class MedicationInfo extends ModelBase {
         'take_at': takeAt.toString(),
         'repeat_interval': repeat,
         'user_id': userId,
-        'medication_id': medication.id,
+        'medication_id': medication?.id,
       };
 }
 
@@ -52,5 +53,7 @@ class MedicationInfoList {
 
   MedicationInfoList(this.medicationInfo);
 
-  MedicationInfoList.from(List<dynamic> medicationInfoJson) : medicationInfo = medicationInfoJson.map((e) => MedicationInfo.fromJson(e)).toList();
+  MedicationInfoList.from(List<dynamic> medicationInfoJson)
+      : medicationInfo =
+            medicationInfoJson.map((e) => MedicationInfo.fromJson(e)).toList();
 }

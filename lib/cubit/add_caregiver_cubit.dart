@@ -2,8 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:medify/database1/model_queries/caregivers_queries.dart';
 
-part 'add_caregiver_state.dart';
-
 class AddCaregiverCubit extends Cubit<AddCaregiverState> {
   AddCaregiverCubit(this.caregiversQueries) : super(AddCaregiverState.initial());
 
@@ -26,3 +24,33 @@ class AddCaregiverCubit extends Cubit<AddCaregiverState> {
     }
   }
 }
+
+class AddCaregiverState extends Equatable {
+  final String response;
+  final bool isLoading;
+
+  const AddCaregiverState({
+    required this.response,
+    required this.isLoading,
+  });
+
+  AddCaregiverState.initial()
+      : this(
+    response: "",
+    isLoading: false,
+  );
+
+  AddCaregiverState copyWith({
+    String? response,
+    bool? isLoading,
+  }) {
+    return AddCaregiverState(
+      response: response ?? this.response,
+      isLoading: isLoading ?? false,
+    );
+  }
+
+  @override
+  List<Object> get props => [response, isLoading];
+}
+

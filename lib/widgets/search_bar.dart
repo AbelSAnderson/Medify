@@ -11,7 +11,7 @@ class SearchBar extends StatelessWidget {
 
   final _controller = TextEditingController();
 
-  SearchBar({this.onSearch, this.hintText});
+  SearchBar({required this.onSearch, required this.hintText});
 
   @override
   Widget build(BuildContext context) {
@@ -30,22 +30,20 @@ class SearchBar extends StatelessWidget {
               color: Colors.grey,
             ),
             onPressed: () {
-              if (onSearch != null) {
-                if (_controller.text != "") {
-                  onSearch(_controller.text);
-                }
+              if (_controller.text != "") {
+                onSearch(_controller.text);
               }
-              //hide keyboard
-              FocusManager.instance.primaryFocus.unfocus();
+              // hide keyboard
+              FocusManager.instance.primaryFocus?.unfocus();
             },
           ),
-          border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(35.0))),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(35.0)),
+          ),
         ),
         onSubmitted: (inputText) {
-          if (onSearch != null) {
-            if (inputText != "") {
-              onSearch(inputText);
-            }
+          if (inputText != "") {
+            onSearch(inputText);
           }
         },
       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants.dart';
+import 'package:medify/constants.dart';
 import 'package:medify/scale.dart';
 
 class MedicineType extends StatefulWidget {
@@ -8,7 +8,7 @@ class MedicineType extends StatefulWidget {
 
   final Function onMedIndexChanged;
 
-  MedicineType({@required this.onMedIndexChanged});
+  MedicineType({required this.onMedIndexChanged});
 }
 
 class MedicineTypeState extends State<MedicineType> {

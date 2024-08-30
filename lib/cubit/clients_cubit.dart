@@ -3,8 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:medify/database1/model_queries/client_queries.dart';
 import 'package:medify/database1/models/user_connection.dart';
 
-part 'clients_state.dart';
-
 class ClientsCubit extends Cubit<ClientsState> {
   ClientsCubit(this.clientQueries) : super(ClientsInitial());
 
@@ -89,4 +87,35 @@ class ClientsCubit extends Cubit<ClientsState> {
   List<UserConnection> _sortUserConnections(List<UserConnection> userConnections) {
     return userConnections..sort((a, b) => a.status.index.compareTo(b.status.index));
   }
+}
+
+abstract class ClientsState extends Equatable {
+  const ClientsState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ClientsInitial extends ClientsState {
+  @override
+  List<Object> get props => [];
+}
+
+class ClientsLoadingInProgress extends ClientsState {
+  @override
+  List<Object> get props => [];
+}
+
+class ClientsLoaded extends ClientsState {
+  final List<UserConnection> clients;
+
+  const ClientsLoaded([this.clients = const []]);
+
+  @override
+  List<Object> get props => [clients];
+}
+
+class ClientsError extends ClientsState {
+  @override
+  List<Object> get props => [];
 }

@@ -5,9 +5,9 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/constants.dart';
 import 'package:medify/cubit/calendar_cubit.dart';
 import 'package:medify/database1/models/medication_event.dart';
+import 'package:medify/scale.dart';
 import 'package:medify/widgets/confirmation_dialog.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:medify/scale.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -16,31 +16,25 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   var _events = {};
-  List _selectedEvents = [];
+  List<MedicationEvent> _selectedEvents = [];
   var _selectedDay;
-  CalendarController _calendarController = CalendarController();
-  final _today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  final _today =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   var _calendarCreated = false;
 
   @override
   void initState() {
     super.initState();
-    _calendarController = CalendarController();
     _selectedDay = _today;
   }
 
-  @override
-  void dispose() {
-    _calendarController.dispose();
-    super.dispose();
-  }
-
-  void _onDaySelected(DateTime day, List events, List holidays) {
-    _selectedDay = day;
-    setState(() {
-      _selectedEvents = events;
-    });
-  }
+  // TODO-FIX
+  // void _onDaySelected(DateTime day, List events, List holidays) {
+  //   _selectedDay = day;
+  //   setState(() {
+  //     _selectedEvents = events;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +79,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   ),
                   TextButton(
                     child: Text("Try Again"),
-                    onPressed: () => BlocProvider.of<CalendarCubit>(context).getAllMedicationEvents(),
+                    onPressed: () => BlocProvider.of<CalendarCubit>(context)
+                        .getAllMedicationEvents(),
                   ),
                 ],
               ),
@@ -99,7 +94,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   _buildTableCalendar(CalendarLoaded state) {
     _events = state.medicationEvents;
-    var date = DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
+    var date =
+        DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day);
     _selectedEvents = _events[date] ?? [];
 
     // if (_calendarCreated) {
@@ -107,34 +103,42 @@ class _CalendarScreenState extends State<CalendarScreen> {
     // }
     return TableCalendar(
       key: UniqueKey(),
-      calendarController: _calendarController,
-      events: _events,
+      eventLoader: (DateTime dateTime) {
+        // TODO-FIX
+        return _events[dateTime];
+      },
       startingDayOfWeek: StartingDayOfWeek.sunday,
       availableGestures: AvailableGestures.none,
-      startDay: DateTime.now().subtract(Duration(days: 30)),
-      endDay: DateTime.now().add(Duration(days: 30)),
-      initialSelectedDay: _selectedDay,
-      initialCalendarFormat: MediaQuery.of(context).orientation == Orientation.portrait ? CalendarFormat.month : CalendarFormat.week,
+      firstDay: DateTime.now().subtract(Duration(days: 30)),
+      lastDay: DateTime.now().add(Duration(days: 30)),
+      focusedDay: _selectedDay,
+      calendarFormat:
+          MediaQuery.of(context).orientation == Orientation.portrait
+              ? CalendarFormat.month
+              : CalendarFormat.week,
       calendarStyle: CalendarStyle(
-        selectedColor: Theme.of(context).primaryColor,
-        todayColor: Theme.of(context).primaryColorLight,
-        markersColor: Theme.of(context).accentColor,
+        // TODO-FIX
+        // selectedColor: Theme.of(context).primaryColor,
+        // todayColor: Theme.of(context).primaryColorLight,
+        // markersColor: Theme.of(context).accentColor,
         outsideDaysVisible: true,
       ),
       rowHeight: 50.sv,
       headerStyle: HeaderStyle(
         formatButtonVisible: false,
-        centerHeaderTitle: true,
-        formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
+        titleCentered: true,
+        formatButtonTextStyle:
+            TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
         formatButtonDecoration: BoxDecoration(
           color: Colors.deepOrange[400],
           borderRadius: BorderRadius.circular(16.0),
         ),
       ),
-      onCalendarCreated: (first, last, format) {
-        _calendarCreated = true;
-      },
-      onDaySelected: _onDaySelected,
+      // TODO-FIX
+      // onCalendarCreated: (first, last, format) {
+      //   _calendarCreated = true;
+      // },
+      // onDaySelected: _onDaySelected,
       headerVisible: true,
     );
   }
@@ -159,7 +163,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       child: Row(
                         children: [
                           Image(
-                            image: getMedTypeImage(event.medicationInfo.medicationType, false),
+                            image: getMedTypeImage(
+                                event.medicationInfo.medicationType, false),
                             width: 40.sf,
                             height: 40.sf,
                           ),
@@ -168,7 +173,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             child: Padding(
                               padding: EdgeInsets.only(left: 10.sh),
                               child: Text(
-                                event.medicationInfo.medication.brandName,
+                                // TODO-FIX
+                                event.medicationInfo.medication!.brandName,
                                 style: TextStyle(fontSize: 14.sf),
                                 overflow: TextOverflow.fade,
                                 softWrap: false,
@@ -184,7 +190,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         "Taken",
                         style: TextStyle(
                           fontSize: 14.sf,
-                          color: event.medTaken ? Colors.black : Colors.transparent,
+                          color: event.medTaken
+                              ? Colors.black
+                              : Colors.transparent,
                         ),
                       ),
                     ),
@@ -197,7 +205,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                     Flexible(
                       flex: 2,
-                      child: !event.medTaken ? _takenIconButton(event) : _undoIconButton(event),
+                      child: !event.medTaken
+                          ? _takenIconButton(event)
+                          : _undoIconButton(event),
                     ),
                   ],
                 ),
@@ -225,7 +235,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ],
       ),
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(50))),
       behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.symmetric(horizontal: 60.sh, vertical: 25.sv),
     );
@@ -240,8 +251,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
         size: 32.sf,
       ),
       onPressed: () async {
-        await BlocProvider.of<CalendarCubit>(context).takeMedication(medicationEvent);
-        BlocProvider.of<CalendarCubit>(context).checkMedsCompleteForDay(this._selectedEvents);
+        await BlocProvider.of<CalendarCubit>(context)
+            .takeMedication(medicationEvent);
+        BlocProvider.of<CalendarCubit>(context)
+            .checkMedsCompleteForDay(this._selectedEvents);
       },
     );
   }
@@ -254,7 +267,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
         style: TextStyle(
           fontSize: 14.sf,
           fontWeight: FontWeight.bold,
-          color: Theme.of(context).accentColor,
+          // TODO-FIX
+          // color: Theme.of(context).accentColor,
         ),
       ),
       onPressed: () {
@@ -263,7 +277,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
           builder: (newContext) => BlocProvider.value(
             value: BlocProvider.of<CalendarCubit>(context),
             child: ConfirmationDialog(
-              confirmClicked: () => BlocProvider.of<CalendarCubit>(context).undoTakeMedication(medicationEvent),
+              confirmClicked: () => BlocProvider.of<CalendarCubit>(context)
+                  .undoTakeMedication(medicationEvent),
               title: "Undo Take Medication",
               message: "Are you want to undo taking the medication?",
               buttonTitle: "Undo",

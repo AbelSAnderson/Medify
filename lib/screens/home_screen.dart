@@ -23,7 +23,7 @@ import 'package:medify/screens/search_medication_screen.dart';
 import 'clients_screen.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({required this.title, Key? key}) : super(key: key);
 
   final String title;
 
@@ -76,12 +76,14 @@ class _MyHomePageState extends State<MyHomePage> {
         currentIndex: index,
         itemChanged: (index) => BlocProvider.of<NavBarCubit>(context).updateIndex(index),
         material: (context, platform) => MaterialNavBarData(
-          selectedItemColor: Theme.of(context).accentColor,
+          // TODO-FIX
+          // selectedItemColor: Theme.of(context).accentColor,
           unselectedItemColor: Colors.black54,
           showUnselectedLabels: true,
         ),
         cupertino: (context, platform) => CupertinoTabBarData(
-          activeColor: Theme.of(context).accentColor,
+          // TODO-FIX
+          // activeColor: Theme.of(context).accentColor,
           inactiveColor: Colors.black54,
         ),
         items: !showClients

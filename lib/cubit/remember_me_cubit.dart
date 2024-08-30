@@ -6,8 +6,6 @@ import 'package:medify/database1/model_queries/user_queries.dart';
 import 'package:medify/database1/models/user.dart';
 import 'package:medify/repositories/user_repository.dart';
 
-part 'remember_me_state.dart';
-
 class RememberMeCubit extends Cubit<RememberMeState> {
   RememberMeCubit(this.userRepository) : super(RememberMeInitial());
 
@@ -20,6 +18,7 @@ class RememberMeCubit extends Cubit<RememberMeState> {
     if (isLoggedIn == "true") {
       var email = await secureStorage.read(key: "email");
       var password = await secureStorage.read(key: "password");
+      if (email == null || password == null) return;
 
       try {
         var jsonResponse = await new UserQueries().login(email, password);
@@ -44,3 +43,31 @@ class RememberMeCubit extends Cubit<RememberMeState> {
     }
   }
 }
+
+abstract class RememberMeState extends Equatable {
+  const RememberMeState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class RememberMeInitial extends RememberMeState {
+  @override
+  List<Object> get props => [];
+}
+
+class RememberMeLoading extends RememberMeState {
+  @override
+  List<Object> get props => [];
+}
+
+class RememberMeSuccess extends RememberMeState {
+  @override
+  List<Object> get props => [];
+}
+
+class RememberMeFailure extends RememberMeState {
+  @override
+  List<Object> get props => [];
+}
+

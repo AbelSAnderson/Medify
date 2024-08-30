@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/app_exceptions.dart';
 import 'package:medify/cubit/search_cubit.dart';
 import 'package:medify/widgets/medication_results_list.dart';
-import 'package:medify/widgets/search_bar.dart';
+import 'package:medify/widgets/search_bar.dart' as SearchBar;
 import 'package:medify/scale.dart';
 
 class SearchMedicationScreen extends StatefulWidget {
@@ -45,7 +45,7 @@ class _SearchMedicationScreenState extends State<SearchMedicationScreen> {
         }
         return Column(
           children: [
-            SearchBar(
+            SearchBar.SearchBar(
               onSearch: (inputText) => BlocProvider.of<SearchCubit>(context).searchFor(inputText),
               hintText: "Search for a medication",
             ),

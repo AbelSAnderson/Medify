@@ -7,7 +7,9 @@ import 'package:medify/scale.dart';
 class EditProfileDialog extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
-  final nameController = TextEditingController(text: "q1w2d3gz"); //need this unique value because widget keeps rebuilding resetting text
+  final nameController = TextEditingController(
+      text:
+          "q1w2d3gz"); //need this unique value because widget keeps rebuilding resetting text
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
 
@@ -17,7 +19,9 @@ class EditProfileDialog extends StatelessWidget {
       scrollable: true,
       insetPadding: EdgeInsets.symmetric(horizontal: 20.sh, vertical: 20.sv),
       contentPadding: EdgeInsets.symmetric(horizontal: 10.sh, vertical: 10.sv),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(25)),
+      ),
       title: Padding(
         padding: EdgeInsets.symmetric(vertical: 10.sv),
         child: Text(
@@ -32,8 +36,8 @@ class EditProfileDialog extends StatelessWidget {
           builder: (context, state) {
             if (state is ProfileLoaded) {
               var user = state.user;
-              //widget keeps rebuilding when changing text fields focus - this makes sure the values don't keep resetting
-              //Note: The value can be anything that the user won't enter by mistake lol
+              // widget keeps rebuilding when changing text fields focus - this makes sure the values don't keep resetting
+              // Note: The value can be anything that the user won't enter by mistake lol
               if (nameController.text == "q1w2d3gz") {
                 nameController.text = user.name ?? "";
                 emailController.text = user.email ?? "";
@@ -77,7 +81,8 @@ class EditProfileDialog extends StatelessWidget {
                                 SizedBox(height: 12.5.sv),
                                 Text(
                                   state.errorMsg,
-                                  style: TextStyle(fontSize: 14.sf, color: Colors.red),
+                                  style: TextStyle(
+                                      fontSize: 14.sf, color: Colors.red),
                                 ),
                               ],
                             );
@@ -119,11 +124,12 @@ class EditProfileDialog extends StatelessWidget {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.name,
           validator: (value) {
-            if (value.length < 1) return "Name field can't be empty";
+            if (value != null && value.length < 1) return "Name field can't be empty";
             return null;
           },
         ),
@@ -152,12 +158,14 @@ class EditProfileDialog extends StatelessWidget {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
-            final emailRegExp = RegExp(r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
-            if (!emailRegExp.hasMatch(value)) return "Invalid Email";
+            final emailRegExp = RegExp(
+                r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
+            if (value != null && !emailRegExp.hasMatch(value)) return "Invalid Email";
             return null;
           },
         ),
@@ -186,13 +194,15 @@ class EditProfileDialog extends StatelessWidget {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.phone,
           validator: (value) {
-            var phoneRegExp = RegExp(r'^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$');
+            var phoneRegExp =
+                RegExp(r'^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$');
             if (value == "") return null;
-            if (!phoneRegExp.hasMatch(value)) return "Invalid Phone Number";
+            if (value != null && !phoneRegExp.hasMatch(value)) return "Invalid Phone Number";
             return null;
           },
         ),
@@ -209,8 +219,10 @@ class EditProfileDialog extends StatelessWidget {
           style: TextStyle(fontSize: 14.sf),
         ),
         onPressed: () {
-          if (_formKey.currentState.validate()) {
-            var user = (BlocProvider.of<ProfileCubit>(context).state as ProfileLoaded).user;
+          if (_formKey.currentState!.validate()) {
+            var user =
+                (BlocProvider.of<ProfileCubit>(context).state as ProfileLoaded)
+                    .user;
             user.name = nameController.text;
             user.email = emailController.text;
             user.pharmacyNumber = phoneController.text;
@@ -218,7 +230,8 @@ class EditProfileDialog extends StatelessWidget {
           }
         },
         style: ElevatedButton.styleFrom(
-          primary: Theme.of(context).primaryColor,
+          // TODO-FIX
+          // primary: Theme.of(context).primaryColor,
           padding: EdgeInsets.symmetric(horizontal: 16.sh),
         ),
       ),

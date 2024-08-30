@@ -22,7 +22,8 @@ class MedicationInfoRepository {
   }
 
   Future<void> deleteMedicationInfo(MedicationInfo medicationInfo) async {
-    await medicationInfoQueries.deleteFromApi(medicationInfo.id);
+    if (medicationInfo.id == null) return;
+    await medicationInfoQueries.deleteFromApi(medicationInfo.id!);
     medicationInfos.removeWhere((element) => element.id == medicationInfo.id);
     streamController.add(medicationInfos);
   }

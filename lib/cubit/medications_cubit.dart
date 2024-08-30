@@ -8,18 +8,22 @@ import 'package:medify/repositories/medication_event_repository.dart';
 import 'package:medify/repositories/medication_info_repository.dart';
 import 'package:medify/repositories/user_repository.dart';
 
-part 'medications_state.dart';
-
 class MedicationsCubit extends Cubit<MedicationsState> {
   final MedicationInfoQueries medicationInfoQueries;
   final MedicationInfoRepository medicationInfoRepository;
   final UserRepository userRepository;
   final MedicationEventRepository medicationEventRepository;
-  StreamSubscription _streamSubscription;
+  late StreamSubscription _streamSubscription;
 
-  MedicationsCubit(this.medicationInfoQueries, this.medicationInfoRepository, this.userRepository, this.medicationEventRepository) : super(MedicationsInitial()) {
+  MedicationsCubit(
+    this.medicationInfoQueries,
+    this.medicationInfoRepository,
+    this.userRepository,
+    this.medicationEventRepository,
+  ) : super(MedicationsInitial()) {
     //whenever medication info list changes, update state with new data
-    _streamSubscription = medicationInfoRepository.streamController.stream.listen((data) {
+    _streamSubscription =
+        medicationInfoRepository.streamController.stream.listen((data) {
       emit(MedicationsLoading());
       _wait();
       emit(MedicationsLoaded(data));
@@ -61,4 +65,35 @@ class MedicationsCubit extends Cubit<MedicationsState> {
     _streamSubscription.cancel();
     return super.close();
   }
+}
+
+abstract class MedicationsState extends Equatable {
+  const MedicationsState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class MedicationsInitial extends MedicationsState {
+  @override
+  List<Object> get props => [];
+}
+
+class MedicationsLoading extends MedicationsState {
+  @override
+  List<Object> get props => [];
+}
+
+class MedicationsLoaded extends MedicationsState {
+  final List<MedicationInfo> medications;
+
+  const MedicationsLoaded([this.medications = const []]);
+
+  @override
+  List<Object> get props => [medications];
+}
+
+class MedicationsError extends MedicationsState {
+  @override
+  List<Object> get props => [];
 }

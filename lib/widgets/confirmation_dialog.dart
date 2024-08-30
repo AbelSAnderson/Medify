@@ -10,10 +10,10 @@ class ConfirmationDialog extends StatelessWidget {
   final bool popScreen;
 
   ConfirmationDialog({
-    @required this.confirmClicked,
-    @required this.title,
-    @required this.message,
-    @required this.buttonTitle,
+    required this.confirmClicked,
+    required this.title,
+    required this.message,
+    required this.buttonTitle,
     this.popScreen = false,
   });
 
@@ -23,7 +23,9 @@ class ConfirmationDialog extends StatelessWidget {
       scrollable: true,
       insetPadding: EdgeInsets.symmetric(horizontal: 20.sh, vertical: 20.sv),
       contentPadding: EdgeInsets.symmetric(horizontal: 10.sh, vertical: 10.sv),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(25)),
+      ),
       title: Padding(
         padding: EdgeInsets.symmetric(vertical: 10.sv),
         child: Text(
@@ -55,7 +57,7 @@ class ConfirmationDialog extends StatelessWidget {
 
   Widget _removeButton(BuildContext context) {
     return Center(
-      child: PlatformButton(
+      child: PlatformElevatedButton(
         child: Text(
           buttonTitle,
           textAlign: TextAlign.center,
@@ -68,9 +70,17 @@ class ConfirmationDialog extends StatelessWidget {
             Navigator.of(context).pop();
           }
         },
-        cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
-        material: (context, platform) => MaterialRaisedButtonData(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+        cupertino: (context, platform) => CupertinoElevatedButtonData(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+        ),
+        material: (context, platform) => MaterialElevatedButtonData(
+          style: ButtonStyle(
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+              ),
+            ),
+          ),
         ),
         color: Colors.red,
       ),

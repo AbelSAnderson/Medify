@@ -7,12 +7,11 @@ import 'package:medify/database1/models/medication_event.dart';
 import 'package:medify/repositories/medication_event_repository.dart';
 import 'package:meta/meta.dart';
 
-part 'calendar_state.dart';
-
+// TODO-REFACTOR
 class CalendarCubit extends Cubit<CalendarState> {
   final MedicationEventQueries medicationEventQueries;
   final MedicationEventRepository medicationEventRepository;
-  StreamSubscription _streamSubscription;
+  late StreamSubscription _streamSubscription;
 
   CalendarCubit(this.medicationEventQueries, this.medicationEventRepository) : super(CalendarInitial()) {
     _streamSubscription = medicationEventRepository.streamController.stream.listen((events) {
@@ -44,14 +43,14 @@ class CalendarCubit extends Cubit<CalendarState> {
       emit(CalendarLoadInProgress());
       try {
         var medEvents = previousState.medicationEvents;
-        //get date of the medication event and take out the time from it
+        // Get date of the medication event and take out the time from it
         var medDate = medicationEvent.datetime;
         medDate = DateTime(medDate.year, medDate.month, medDate.day);
         medicationEvent.medTaken = true;
         medicationEvent.amountTaken = 1;
         await medicationEventQueries.updateToApi(medicationEvent);
-        medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).medTaken = true;
-        medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).amountTaken = 1;
+        medEvents[medDate]!.firstWhere((element) => element.id == medicationEvent.id).medTaken = true;
+        medEvents[medDate]!.firstWhere((element) => element.id == medicationEvent.id).amountTaken = 1;
         emit(CalendarLoaded(medEvents));
       } catch (e) {
         emit(CalendarFailure());
@@ -66,14 +65,14 @@ class CalendarCubit extends Cubit<CalendarState> {
       emit(CalendarLoadInProgress());
       try {
         var medEvents = previousState.medicationEvents;
-        //get date of the medication event and take out the time from it
+        // Get date of the medication event and take out the time from it
         var medDate = medicationEvent.datetime;
         medDate = DateTime(medDate.year, medDate.month, medDate.day);
         medicationEvent.medTaken = false;
         medicationEvent.amountTaken = 0;
         await medicationEventQueries.updateToApi(medicationEvent);
-        medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).medTaken = false;
-        medEvents[medDate].firstWhere((element) => element.id == medicationEvent.id).amountTaken = 0;
+        medEvents[medDate]!.firstWhere((element) => element.id == medicationEvent.id).medTaken = false;
+        medEvents[medDate]!.firstWhere((element) => element.id == medicationEvent.id).amountTaken = 0;
         emit(CalendarLoaded(medEvents));
       } catch (e) {
         emit(CalendarFailure());
@@ -99,11 +98,11 @@ class CalendarCubit extends Cubit<CalendarState> {
       var date = DateTime(dateTime.year, dateTime.month, dateTime.day);
 
       if (eventsMapped[date] == null) {
-        //create new list
+        // Create new entry
         eventsMapped[date] = [eventsList[i]];
       } else {
-        //clone the list and add the new value
-        eventsMapped[date] = List.from(eventsMapped[date])..addAll([eventsList[i]]);
+        // Clone the list and add the new value
+        eventsMapped[date] = eventsMapped[date]!..addAll([eventsList[i]]);
       }
     }
 
@@ -120,3 +119,34 @@ class CalendarCubit extends Cubit<CalendarState> {
     return super.close();
   }
 }
+
+@immutable
+abstract class CalendarState extends Equatable {
+  const CalendarState();
+}
+
+class CalendarInitial extends CalendarState {
+  @override
+  List<Object> get props => [];
+}
+
+class CalendarLoadInProgress extends CalendarState {
+  @override
+  List<Object> get props => [];
+}
+
+class CalendarLoaded extends CalendarState {
+  final Map<DateTime, List<MedicationEvent>> medicationEvents;
+  final bool medsComplete;
+
+  const CalendarLoaded([this.medicationEvents = const {}, this.medsComplete = false]);
+
+  @override
+  List<Object> get props => [medicationEvents, medsComplete];
+}
+
+class CalendarFailure extends CalendarState {
+  @override
+  List<Object> get props => [];
+}
+

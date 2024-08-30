@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -94,7 +92,8 @@ class _LoginScreenState extends State<LoginScreen> {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
@@ -122,7 +121,9 @@ class _LoginScreenState extends State<LoginScreen> {
           obscureText: !showPassword,
           decoration: InputDecoration(
             suffixIcon: IconButton(
-              icon: !showPassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+              icon: !showPassword
+                  ? Icon(Icons.visibility)
+                  : Icon(Icons.visibility_off),
               onPressed: () {
                 setState(() {
                   showPassword = !showPassword;
@@ -133,7 +134,8 @@ class _LoginScreenState extends State<LoginScreen> {
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 32),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
           ),
           keyboardType: TextInputType.visiblePassword,
           validator: (value) {
@@ -205,7 +207,8 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ],
           child: BlocProvider<NavBarCubit>(
-            create: (context) => NavBarCubit(RepositoryProvider.of<UserRepository>(context)),
+            create: (context) =>
+                NavBarCubit(RepositoryProvider.of<UserRepository>(context)),
             child: MyHomePage(
               title: 'RX-Medify',
             ),
@@ -218,22 +221,31 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _loginButton(BuildContext context) {
     return Center(
-      child: PlatformButton(
+      child: PlatformElevatedButton(
         child: Text(
           "Login",
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 14.sf, color: Colors.white),
         ),
         onPressed: () {
-          if (_formKey.currentState.validate()) {
-            BlocProvider.of<LoginCubit>(context).loginUser(emailController.text, passwordController.text);
+          if (_formKey.currentState!.validate()) {
+            BlocProvider.of<LoginCubit>(context)
+                .loginUser(emailController.text, passwordController.text);
           }
         },
         color: Theme.of(context).primaryColor,
-        material: (context, platform) => MaterialRaisedButtonData(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+        material: (context, platform) => MaterialElevatedButtonData(
+          style: ButtonStyle(
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+              ),
+            ),
+          ),
         ),
-        cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+        cupertino: (context, platform) => CupertinoElevatedButtonData(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+        ),
       ),
     );
   }
@@ -255,7 +267,8 @@ class _LoginScreenState extends State<LoginScreen> {
           onPressed: () {
             Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => BlocProvider<LoginCubit>(
-                create: (context) => LoginCubit(RepositoryProvider.of<UserRepository>(context)),
+                create: (context) =>
+                    LoginCubit(RepositoryProvider.of<UserRepository>(context)),
                 child: RegisterScreen(),
               ),
             ));

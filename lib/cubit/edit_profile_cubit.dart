@@ -3,8 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:medify/database1/models/user.dart';
 import 'package:medify/repositories/user_repository.dart';
 
-part 'edit_profile_state.dart';
-
 class EditProfileCubit extends Cubit<EditProfileState> {
   EditProfileCubit(this.userRepository) : super(EditProfileInitial());
 
@@ -20,4 +18,35 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       emit(EditProfileFailed("Email already used."));
     }
   }
+}
+
+abstract class EditProfileState extends Equatable {
+  const EditProfileState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class EditProfileInitial extends EditProfileState {
+  @override
+  List<Object> get props => [];
+}
+
+class EditProfileLoading extends EditProfileState {
+  @override
+  List<Object> get props => [];
+}
+
+class EditProfileSucceeded extends EditProfileState {
+  @override
+  List<Object> get props => [];
+}
+
+class EditProfileFailed extends EditProfileState {
+  final String errorMsg;
+
+  EditProfileFailed(this.errorMsg);
+
+  @override
+  List<Object> get props => [errorMsg];
 }

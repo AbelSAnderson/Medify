@@ -22,15 +22,14 @@ class ApiHandler {
     return _medifyAPIHandler;
   }
 
-  ApiHandler._openFDAApi() {
-    url = "https://api.fda.gov/drug/label.json";
-    _dataName = "results";
-  }
+  ApiHandler._openFDAApi()
+      : url = "https://api.fda.gov/drug/label.json",
+        _dataName = "results";
 
-  ApiHandler._medifyApi() {
-    url = "https://rxmedify.com/medify_api/api/v1/";
-    _dataName = "data";
-    _useToken = true;
+  ApiHandler._medifyApi()
+      : url = "https://rxmedify.com/medify_api/api/v1/",
+        _dataName = "data",
+        _useToken = true {
     retrieveToken();
   }
 
@@ -39,7 +38,8 @@ class ApiHandler {
     var responseJson;
 
     try {
-      final response = await http.get(Uri.parse(this.url + url), headers: _getHeaders());
+      final response =
+          await http.get(Uri.parse(this.url + url), headers: _getHeaders());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -49,10 +49,12 @@ class ApiHandler {
   }
 
   /// Retrieve Data with a Get Request
-  Future<dynamic> getPostData(String url, Map<String, dynamic> body, {bool filterResponse = true}) async {
+  Future<dynamic> getPostData(String url, Map<String, dynamic> body,
+      {bool filterResponse = true}) async {
     var responseJson;
     try {
-      final response = await http.post(Uri.parse(this.url + url), headers: _getHeaders(), body: jsonEncode(body));
+      final response = await http.post(Uri.parse(this.url + url),
+          headers: _getHeaders(), body: jsonEncode(body));
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -62,12 +64,14 @@ class ApiHandler {
   }
 
   /// Retrieve Data with a Put Request
-  Future<dynamic> getPutData(String url, Map<String, dynamic> body, {bool filterResponse = true}) async {
+  Future<dynamic> getPutData(String url, Map<String, dynamic> body,
+      {bool filterResponse = true}) async {
     var responseJson;
     try {
       print(_getHeaders().toString());
       print(_token);
-      final response = await http.put(Uri.parse(this.url + url), headers: _getHeaders(), body: jsonEncode(body));
+      final response = await http.put(Uri.parse(this.url + url),
+          headers: _getHeaders(), body: jsonEncode(body));
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -77,10 +81,12 @@ class ApiHandler {
   }
 
   /// Retrieve Data with a Delete Request
-  Future<dynamic> getDeleteData(String url, {bool filterResponse = true}) async {
+  Future<dynamic> getDeleteData(String url,
+      {bool filterResponse = true}) async {
     var responseJson;
     try {
-      final response = await http.delete(Uri.parse(this.url + url), headers: _getHeaders());
+      final response =
+          await http.delete(Uri.parse(this.url + url), headers: _getHeaders());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -104,7 +110,8 @@ class ApiHandler {
         throw UnauthorisedException(response.body.toString());
       case 500:
       default:
-        throw FetchDataException('Communication Error with Server. StatusCode : ${response.statusCode}');
+        throw FetchDataException(
+            'Communication Error with Server. StatusCode : ${response.statusCode}');
     }
   }
 

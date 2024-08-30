@@ -12,13 +12,15 @@ class MedicationOccurrenceDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_medication.medication.brandName),
+        // TODO-FIX
+        title: Text(_medication.medication!.brandName),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             OccuranceDetails(_medication),
-            MedicationDetails(_medication.medication),
+            // TODO-FIX
+            MedicationDetails(_medication.medication!),
           ],
         ),
       ),
