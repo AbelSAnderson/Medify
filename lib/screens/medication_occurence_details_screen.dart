@@ -18,7 +18,7 @@ class MedicationOccurrenceDetailsScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            OccuranceDetails(_medication),
+            OccurrenceDetails(_medication),
             // TODO-FIX
             MedicationDetails(_medication.medication!),
           ],

@@ -10,13 +10,14 @@ import 'package:medify/scale.dart';
 import 'package:medify/widgets/confirmation_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class OccuranceDetails extends StatelessWidget {
+class OccurrenceDetails extends StatelessWidget {
   final MedicationInfo medication;
 
-  OccuranceDetails(this.medication);
+  OccurrenceDetails(this.medication);
 
   _launchCaller(BuildContext context, String phoneNum) async {
     var url = "tel:$phoneNum";
+    // TODO-FIX
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -24,16 +25,20 @@ class OccuranceDetails extends StatelessWidget {
         context: context,
         builder: (context) => AlertDialog(
           scrollable: true,
-          insetPadding: EdgeInsets.symmetric(horizontal: 20.sh, vertical: 20.sv),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20.sh, vertical: 12.5.sv),
+          insetPadding:
+              EdgeInsets.symmetric(horizontal: 20.sh, vertical: 20.sv),
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: 20.sh, vertical: 12.5.sv),
           titlePadding: EdgeInsets.only(left: 20.sh, right: 20.sh, top: 20.sv),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25))),
           title: Text("No Phone App"),
           content: Container(
             width: 300.sh,
             child: Column(
               children: [
-                Text("Unable to redirect. Your device does not have a phone app."),
+                Text(
+                    "Unable to redirect. Your device does not have a phone app."),
                 Align(
                   alignment: Alignment.bottomRight,
                   child: TextButton(
@@ -72,10 +77,12 @@ class OccuranceDetails extends StatelessWidget {
               ),
               padding: EdgeInsets.symmetric(vertical: 8.sv),
               decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.grey, width: 2)),
+                border:
+                    Border(bottom: BorderSide(color: Colors.grey, width: 2)),
               ),
             ),
-            (medication.pillsRemaining != null && medication.pillsRemaining != -1)
+            (medication.pillsRemaining != null &&
+                    medication.pillsRemaining != -1)
                 ? Column(
                     children: [
                       SizedBox(height: 20.sv),
@@ -93,7 +100,13 @@ class OccuranceDetails extends StatelessWidget {
             ),
             SizedBox(height: 20.sv),
             Text(
-              "Start Date: ${formatDate(medication.takeAt, [MM, ' ', dd, ', ', yyyy])}",
+              "Start Date: ${formatDate(medication.takeAt, [
+                    MM,
+                    ' ',
+                    dd,
+                    ', ',
+                    yyyy
+                  ])}",
               style: TextStyle(fontSize: 16.sf),
             ),
             SizedBox(height: 20.sv),
@@ -107,7 +120,7 @@ class OccuranceDetails extends StatelessWidget {
               children: [
                 Flexible(
                   flex: 2,
-                  child: PlatformButton(
+                  child: PlatformElevatedButton(
                     child: Text(
                       "Contact Pharmacy",
                       style: TextStyle(fontSize: 14.sf, color: Colors.white),
@@ -115,18 +128,31 @@ class OccuranceDetails extends StatelessWidget {
                     ),
                     onPressed: () {
                       //Show phone dialler
-                      _launchCaller(context, RepositoryProvider.of<UserRepository>(context).currentUser.pharmacyNumber);
+                      _launchCaller(
+                          context,
+                          RepositoryProvider.of<UserRepository>(context)
+                              .currentUser
+                              .pharmacyNumber);
                     },
-                    cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
-                    material: (context, platform) => MaterialRaisedButtonData(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                    cupertino: (context, platform) =>
+                        CupertinoElevatedButtonData(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                    ),
+                    material: (context, platform) => MaterialElevatedButtonData(
+                      style: ButtonStyle(
+                        shape: MaterialStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                          ),
+                        ),
+                      ),
                     ),
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
                 Flexible(
                   flex: 2,
-                  child: PlatformButton(
+                  child: PlatformElevatedButton(
                     child: Text(
                       "Remove Medication",
                       style: TextStyle(fontSize: 14.sf, color: Colors.white),
@@ -138,18 +164,30 @@ class OccuranceDetails extends StatelessWidget {
                         builder: (newContext) => BlocProvider.value(
                           value: BlocProvider.of<MedicationsCubit>(context),
                           child: ConfirmationDialog(
-                            confirmClicked: () => BlocProvider.of<MedicationsCubit>(context).deleteMedication(medication),
+                            confirmClicked: () =>
+                                BlocProvider.of<MedicationsCubit>(context)
+                                    .deleteMedication(medication),
                             title: "Remove Medication",
-                            message: "Are you sure you want to remove this medication?",
+                            message:
+                                "Are you sure you want to remove this medication?",
                             buttonTitle: "Remove",
                             popScreen: true,
                           ),
                         ),
                       );
                     },
-                    cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
-                    material: (context, platform) => MaterialRaisedButtonData(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                    cupertino: (context, platform) =>
+                        CupertinoElevatedButtonData(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                        ),
+                    material: (context, platform) => MaterialElevatedButtonData(
+                      style: ButtonStyle(
+                        shape: MaterialStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                          ),
+                        ),
+                      ),
                     ),
                     color: Colors.red,
                   ),

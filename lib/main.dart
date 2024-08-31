@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/screens/splash_screen.dart';
-import 'package:responsive_framework/responsive_wrapper.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 void main() async {
   // Ensure Widgets are initialized before starting the database
@@ -51,30 +51,47 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
+        // TODO-CHECK
+        if (child == null) return Container();
+
         // Setup scaling for mobile (this is independent from the ResponsiveWrapper Scaling for Tablets)
         Scale().setup(context, Size(411.43, 683.43));
-        List<ResponsiveBreakpoint> breakpoints = [];
+        List<Breakpoint> breakpoints = [];
 
         // Don't have any breakpoints for mobile (we only want to use responsive wrapper for tablets)
         // This fixes the breakpoints hitting on mobile for landscape orientation causing it to scale and looks huge
         if (!Scale().isMobile) {
           breakpoints.addAll([
-            ResponsiveBreakpoint.resize(400, name: MOBILE),
-            ResponsiveBreakpoint.autoScale(600, name: TABLET, scaleFactor: 1),
-            ResponsiveBreakpoint.autoScale(950, name: "TabletLarge", scaleFactor: 1),
+            Breakpoint(start: 400, end: 600, name: MOBILE),
+            Breakpoint(start: 600, end: 950, name: TABLET),
+            Breakpoint(start: 950, end: double.infinity, name: "TabletLarge"),
+
+            // Breakpoint.resize(400, name: MOBILE),
+            // Breakpoint.autoScale(600, name: TABLET, scaleFactor: 1),
+            // Breakpoint.autoScale(950, name: "TabletLarge", scaleFactor: 1),
           ]);
+
+          child = ResponsiveScaledBox(
+            width: ResponsiveValue<double>(context, conditionalValues: [
+              Condition.equals(name: MOBILE, value: 400),
+              Condition.between(start: 600, end: 950, value: 600),
+            ]).value,
+            child: child,
+          );
         }
+
         return BlocProvider<SettingsCubit>(
           create: (context) => SettingsCubit(),
           child: BlocBuilder<SettingsCubit, SettingsState>(
             buildWhen: (previous, current) => previous.fontScaleFactor != current.fontScaleFactor,
             builder: (context, state) {
-              return ResponsiveWrapper.builder(
-                child,
-                minWidth: 400,
-                defaultScale: false,
+
+              // TODO-CHECK: https://github.com/Codelessly/ResponsiveFramework/blob/master/migration_0.2.0_to_1.0.0.md
+              return ResponsiveBreakpoints.builder(
                 breakpoints: breakpoints,
-                mediaQueryData: MediaQuery.of(context).copyWith(textScaleFactor: state.fontScaleFactor / 1.5),
+                // mediaQueryData: MediaQuery.of(context).copyWith(textScaleFactor: state.fontScaleFactor / 1.5),
+
+                child: child!,
               );
             },
           ),

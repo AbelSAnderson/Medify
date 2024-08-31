@@ -7,7 +7,6 @@ import 'package:medify/cubit/edit_profile_cubit.dart';
 import 'package:medify/cubit/medications_cubit.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
 import 'package:medify/cubit/profile_cubit.dart';
-import 'package:medify/cubit/settings_cubit.dart';
 import 'package:medify/database1/model_queries/caregivers_queries.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/screens/medications_screen.dart';
@@ -60,7 +59,8 @@ class ProfileScreen extends StatelessWidget {
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
           if (state is ProfileInitial) {
-            var user = RepositoryProvider.of<UserRepository>(context).currentUser;
+            var user =
+                RepositoryProvider.of<UserRepository>(context).currentUser;
             BlocProvider.of<ProfileCubit>(context).loadProfile(user);
           }
           if (state is ProfileLoading) {
@@ -74,23 +74,30 @@ class ProfileScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.sh, vertical: 16.sv),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 16.sh, vertical: 16.sv),
                     child: Text(
-                      RepositoryProvider.of<UserRepository>(context).currentUser.name,
+                      RepositoryProvider.of<UserRepository>(context)
+                          .currentUser
+                          .name,
                       style: TextStyle(fontSize: 32.sf),
                       textAlign: TextAlign.center,
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.sh, vertical: 16.sv),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 16.sh, vertical: 16.sv),
                     child: Container(
-                      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(color: Colors.black26))),
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.sv),
                         child: BlocBuilder<MedicationsCubit, MedicationsState>(
                           builder: (context, state) {
                             if (state is MedicationsInitial) {
-                              BlocProvider.of<MedicationsCubit>(context).loadMedications();
+                              BlocProvider.of<MedicationsCubit>(context)
+                                  .loadMedications();
                             }
                             if (state is MedicationsLoading) {
                               return Center(
@@ -99,7 +106,8 @@ class ProfileScreen extends StatelessWidget {
                             }
                             if (state is MedicationsLoaded) {
                               return Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Flexible(
                                     flex: 2,
@@ -110,27 +118,45 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                   Flexible(
                                     flex: 2,
-                                    child: PlatformButton(
+                                    child: PlatformElevatedButton(
                                         child: Text(
                                           "View Medications",
-                                          style: TextStyle(fontSize: 14.sf, color: Colors.white),
+                                          style: TextStyle(
+                                              fontSize: 14.sf,
+                                              color: Colors.white),
                                           textAlign: TextAlign.center,
                                         ),
                                         onPressed: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (newContext) => BlocProvider.value(
-                                                value: BlocProvider.of<MedicationsCubit>(context),
-                                                child: MedicationsScreen(state.medications),
+                                              builder: (newContext) =>
+                                                  BlocProvider.value(
+                                                value: BlocProvider.of<
+                                                    MedicationsCubit>(context),
+                                                child: MedicationsScreen(
+                                                    state.medications),
                                               ),
                                             ),
                                           );
                                         },
-                                        material: (context, platform) => MaterialRaisedButtonData(
-                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                                        cupertino: (context, platform) =>
+                                            CupertinoElevatedButtonData(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 10),
                                             ),
-                                        cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+                                        material: (context, platform) =>
+                                            MaterialElevatedButtonData(
+                                              style: ButtonStyle(
+                                                shape: MaterialStatePropertyAll(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(4)),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                         color: Theme.of(context).primaryColor),
                                   ),
                                 ],
@@ -147,7 +173,10 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                     TextButton(
                                       child: Text("Try Again"),
-                                      onPressed: () => BlocProvider.of<MedicationsCubit>(context).loadMedications(),
+                                      onPressed: () =>
+                                          BlocProvider.of<MedicationsCubit>(
+                                                  context)
+                                              .loadMedications(),
                                     ),
                                   ],
                                 ),
@@ -160,7 +189,8 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.sh, vertical: 16.sv),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 16.sh, vertical: 16.sv),
                     child: Text(
                       "Caregivers",
                       style: TextStyle(fontSize: 24.sf),
@@ -168,8 +198,9 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   _caregiversList(context),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12.sh, vertical: 12.sv),
-                    child: PlatformButton(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 12.sh, vertical: 12.sv),
+                    child: PlatformElevatedButton(
                       child: Text(
                         "Add Caregiver",
                         style: TextStyle(fontSize: 14.sf, color: Colors.white),
@@ -178,15 +209,27 @@ class ProfileScreen extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context) => BlocProvider<AddCaregiverCubit>(
-                            create: (context) => AddCaregiverCubit(CaregiversQueries()),
+                            create: (context) =>
+                                AddCaregiverCubit(CaregiversQueries()),
                             child: AddCaregiverAlertDialog(),
                           ),
                         );
                       },
-                      material: (context, platform) => MaterialRaisedButtonData(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                      cupertino: (context, platform) =>
+                          CupertinoElevatedButtonData(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
                       ),
-                      cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+                      material: (context, platform) =>
+                          MaterialElevatedButtonData(
+                        style: ButtonStyle(
+                          shape: MaterialStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                            ),
+                          ),
+                        ),
+                      ),
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
@@ -224,7 +267,8 @@ class ProfileScreen extends StatelessWidget {
             return Container(
               height: MediaQuery.of(context).size.height * 0.35,
               child: RefreshIndicator(
-                onRefresh: () => BlocProvider.of<CaregiversCubit>(context).loadCaregivers(),
+                onRefresh: () =>
+                    BlocProvider.of<CaregiversCubit>(context).loadCaregivers(),
                 child: ListView.builder(
                   itemCount: state.caregivers.length,
                   itemBuilder: (context, index) {
@@ -232,7 +276,9 @@ class ProfileScreen extends StatelessWidget {
                     return Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.sh),
                       child: Container(
-                        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black26))),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.black26))),
                         child: ListTile(
                           title: Text(
                             "${caregiver.name}",
@@ -249,11 +295,16 @@ class ProfileScreen extends StatelessWidget {
                               showDialog(
                                 context: context,
                                 builder: (newContext) => BlocProvider.value(
-                                  value: BlocProvider.of<CaregiversCubit>(context),
+                                  value:
+                                      BlocProvider.of<CaregiversCubit>(context),
                                   child: ConfirmationDialog(
-                                    confirmClicked: () => BlocProvider.of<CaregiversCubit>(context).removeCaregiver(caregiver),
+                                    confirmClicked: () =>
+                                        BlocProvider.of<CaregiversCubit>(
+                                                context)
+                                            .removeCaregiver(caregiver),
                                     title: "Remove Caregiver",
-                                    message: "Are you sure you want to remove this caregiver?",
+                                    message:
+                                        "Are you sure you want to remove this caregiver?",
                                     buttonTitle: "Remove",
                                   ),
                                 ),
@@ -283,7 +334,8 @@ class ProfileScreen extends StatelessWidget {
                         "Reload",
                         style: TextStyle(fontSize: 14.sf),
                       ),
-                      onPressed: () => BlocProvider.of<CaregiversCubit>(context).loadCaregivers(),
+                      onPressed: () => BlocProvider.of<CaregiversCubit>(context)
+                          .loadCaregivers(),
                     ),
                   ],
                 ),
@@ -299,13 +351,15 @@ class ProfileScreen extends StatelessWidget {
 
 class AddCaregiverAlertDialog extends StatelessWidget {
   final emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       scrollable: true,
       insetPadding: EdgeInsets.symmetric(horizontal: 20.sh, vertical: 20.sv),
       contentPadding: EdgeInsets.symmetric(horizontal: 16.sh, vertical: 16.sv),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25))),
       title: Text(
         "Add Caregiver",
         style: TextStyle(fontSize: 22.sf, color: Colors.black),
@@ -360,18 +414,27 @@ class AddCaregiverAlertDialog extends StatelessWidget {
   }
 
   Widget _sendRequestButton(BuildContext context) {
-    return PlatformButton(
+    return PlatformElevatedButton(
       child: Text(
         "Send Request",
         style: TextStyle(fontSize: 14.sf, color: Colors.white),
       ),
       onPressed: () {
-        BlocProvider.of<AddCaregiverCubit>(context).addCaregiver(emailController.text);
+        BlocProvider.of<AddCaregiverCubit>(context)
+            .addCaregiver(emailController.text);
       },
-      material: (context, platform) => MaterialRaisedButtonData(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+      cupertino: (context, platform) => CupertinoElevatedButtonData(
+        padding: EdgeInsets.symmetric(horizontal: 10),
       ),
-      cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
+      material: (context, platform) => MaterialElevatedButtonData(
+        style: ButtonStyle(
+          shape: MaterialStatePropertyAll(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4)),
+            ),
+          ),
+        ),
+      ),
       color: Theme.of(context).primaryColor,
     );
   }
@@ -387,7 +450,8 @@ class AddCaregiverAlertDialog extends StatelessWidget {
           counterText: "",
           hintText: "Caregiver's email",
           isDense: true,
-          border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(25.0))),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25.0))),
           contentPadding: EdgeInsets.symmetric(vertical: 14.sv, horizontal: 14),
         ),
         keyboardType: TextInputType.emailAddress,

@@ -5,6 +5,7 @@ class Scale {
   late final Size size;
   late final Size _deviceScreenSize;
 
+  bool isSetup = false;
   static Scale _singleton = Scale._init();
 
   factory Scale() {
@@ -36,9 +37,13 @@ class Scale {
   /// [size] refers to the size of the original device you create the UI for.
   /// This Must always be called before any other method on this class
   void setup(BuildContext context, Size screenSize) {
+    // TODO-FIX Why does this hit twice?
+    if (isSetup) return;
+
     final MediaQueryData mediaQuery = MediaQuery.of(context);
     _deviceScreenSize = mediaQuery.size;
     size = screenSize;
+    isSetup = true;
   }
 
   /// Get the number scaled horizontally.

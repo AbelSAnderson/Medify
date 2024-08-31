@@ -94,7 +94,7 @@ class ResetPasswordDialog extends StatelessWidget {
 
   Widget _submitButton(BuildContext context) {
     return Center(
-      child: PlatformButton(
+      child: PlatformElevatedButton(
         child: Text(
           "Reset Password",
           textAlign: TextAlign.center,
@@ -103,9 +103,18 @@ class ResetPasswordDialog extends StatelessWidget {
         onPressed: () {
           BlocProvider.of<ResetPasswordCubit>(context).resetPassword(emailController.text);
         },
-        cupertino: (context, platform) => CupertinoButtonData(padding: EdgeInsets.symmetric(horizontal: 10)),
-        material: (context, platform) => MaterialRaisedButtonData(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+        cupertino: (context, platform) =>
+            CupertinoElevatedButtonData(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+            ),
+        material: (context, platform) => MaterialElevatedButtonData(
+          style: ButtonStyle(
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+              ),
+            ),
+          ),
         ),
         color: Theme.of(context).primaryColor,
       ),
