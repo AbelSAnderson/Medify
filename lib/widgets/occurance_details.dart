@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/constants.dart';
 import 'package:medify/cubit/medications_cubit.dart';
-import 'package:medify/database1/models/medication_info.dart';
+import 'package:medify/database/models/medication_info.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';
 import 'package:medify/widgets/confirmation_dialog.dart';

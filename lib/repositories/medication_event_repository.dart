@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:medify/database1/model_queries/medication_event_queries.dart';
-import 'package:medify/database1/models/medication_event.dart';
-import 'package:medify/database1/models/medication_info.dart';
+import 'package:medify/database/model_queries/medication_event_queries.dart';
+import 'package:medify/database/models/medication_event.dart';
+import 'package:medify/database/models/medication_info.dart';
 
 class MedicationEventRepository {
   final StreamController<List<MedicationEvent>> streamController = StreamController();

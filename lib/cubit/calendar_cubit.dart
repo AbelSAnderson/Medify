@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:medify/database1/model_queries/medication_event_queries.dart';
-import 'package:medify/database1/models/medication_event.dart';
+import 'package:medify/database/model_queries/medication_event_queries.dart';
+import 'package:medify/database/models/medication_event.dart';
 import 'package:medify/repositories/medication_event_repository.dart';
 import 'package:meta/meta.dart';
 

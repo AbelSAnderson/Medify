@@ -1,5 +1,5 @@
-import 'package:medify/database1/model_base.dart';
-import 'package:medify/database1/models/user.dart';
+import 'package:medify/database/model_base.dart';
+import 'package:medify/database/models/user.dart';
 
 ///Model for the user's connections
 class UserConnection extends ModelBase {

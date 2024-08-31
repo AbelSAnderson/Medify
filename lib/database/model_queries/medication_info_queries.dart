@@ -1,4 +1,4 @@
-import 'package:medify/database1/models/medication_info.dart';
+import 'package:medify/database/models/medication_info.dart';
 import '../api_handler.dart';
 import '../database_query_base.dart';
 

@@ -1,6 +1,6 @@
-import 'package:medify/database1/api_handler.dart';
-import 'package:medify/database1/models/user.dart';
-import 'package:medify/database1/database_query_base.dart';
+import 'package:medify/database/api_handler.dart';
+import 'package:medify/database/models/user.dart';
+import 'package:medify/database/database_query_base.dart';
 
 /// Class to Handle User Queries
 class UserQueries extends DatabaseQueryBase<User> {

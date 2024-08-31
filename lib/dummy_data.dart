@@ -1,9 +1,9 @@
-import 'package:medify/database1/models/medication_event.dart';
-import 'package:medify/database1/models/user_connection.dart';
+import 'package:medify/database/models/medication_event.dart';
+import 'package:medify/database/models/user_connection.dart';
 
-import 'database1/models/medication.dart';
-import 'database1/models/medication_info.dart';
-import 'database1/models/user.dart';
+import 'database/models/medication.dart';
+import 'database/models/medication_info.dart';
+import 'database/models/user.dart';
 
 // TODO-CHECK: Do we need this?
 // Map<DateTime, List<MedicationEvent>> getMedicationEvents(Map<DateTime, List<MedicationEvent>> events) {

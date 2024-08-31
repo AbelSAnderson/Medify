@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:medify/cubit/remember_me_cubit.dart';
 import 'package:medify/cubit/settings_cubit.dart';
-import 'package:medify/database1/database_handler.dart';
+import 'package:medify/database/database_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medify/repositories/user_repository.dart';
 import 'package:medify/scale.dart';

@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
-import 'package:medify/database1/model_base.dart';
-import 'package:medify/database1/models/medication.dart';
+import 'package:medify/database/model_base.dart';
+import 'package:medify/database/models/medication.dart';
 
 part 'medication_info.g.dart';
 

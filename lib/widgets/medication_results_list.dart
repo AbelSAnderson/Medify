@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:medify/cubit/nav_bar_cubit.dart';
-import 'package:medify/database1/model_queries/medication_queries.dart';
+import 'package:medify/database/model_queries/medication_queries.dart';
 import 'package:medify/cubit/medication_form_cubit.dart';
 import 'package:medify/repositories/medication_event_repository.dart';
 import 'package:medify/repositories/medication_info_repository.dart';
